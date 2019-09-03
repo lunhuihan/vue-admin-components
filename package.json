@@ -10,7 +10,7 @@
     "dist",
     "src"
   ],
-  "homepage": "https://www.bychjh.com:808/vue-admin-components",
+  "homepage": "http://www.bychjh.com:808/vue-admin-components",
   "scripts": {
     "dev": "webpack-dev-server --content-base example/ --open --inline --hot --config build/webpack.dev.config.js",
     "dist:style": "gulp --gulpfile build/build-style.js",
