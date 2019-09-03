@@ -5,7 +5,7 @@ vue-admin-components 是根据管理台的常用业务抽象出来的组件库�
 此组件库依赖iview,因此使用vue-admin-components的应用网站可以使用iview的任何组件。
 
 ### 文档
-<a href="https://www.bychjh.com/vue-admin-components" target="_blank">vue-admin-components</a>
+<a href="https://www.bychjh.com:808/vue-admin-components" target="_blank">vue-admin-components</a>
 
 ### npm 安装
 
