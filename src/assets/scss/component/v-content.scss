@@ -1,0 +1,16 @@
+@charset "utf-8";
+.v-content {
+  min-width: 860px;
+  position: fixed;
+  top: $nav-height;
+  left: $sidebar-width;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  padding: $space-system;
+  overflow: auto;
+  transition: left $transition-time;
+  &.open{
+    left: $sidebar-fold-width;
+  }
+}

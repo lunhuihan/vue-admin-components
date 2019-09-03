@@ -1,0 +1,196 @@
+@charset "utf-8";
+
+.v-component {
+  position: relative;
+  font-size: $font-m-size;
+  font-family: 'Microsoft YaHei', 'arial';
+}
+input[type='password'],
+input[type='tel'],
+input[type='text'],
+input[type='number'] {
+  @include placeholder {
+    color: $border-dark-color;
+  }
+}
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+.v-component{
+  .ivu-notice-notice {
+    background: #f6fdfd;
+    border: 1px solid #e5f7f6;
+    box-shadow: none;
+    .ivu-notice-content {
+      display: flex;
+      align-items: center;
+      .ivu-icon-md-megaphone {
+        color: $theme-color;
+      }
+    }
+  }
+}
+.ivu-modal-mask {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+.v-modal {
+  .ivu-modal-header {
+    background: $bg-color;
+    border-radius: $border-radius $border-radius 0 0;
+    text-align: center;
+    height: $action-btn-height;
+    .ivu-modal-header-inner{
+      font-size: 16px;
+      font-weight: normal;
+      color: $text-color;
+    }
+  }
+  .ivu-modal-close {
+    top: 6px;
+    right: 6px;
+  }
+  .ivu-form-item {
+    position: relative;
+  }
+  .ivu-select-placeholder,
+  .ivu-select-item,
+  .ivu-input,
+  .ivu-btn {
+    font-size: 14px !important;
+  }
+  .ivu-btn[disabled]{
+    background: $theme-color;
+    border-color: $theme-color;
+    color: white;
+  }
+  .ivu-modal-body {
+    padding: 30px;
+    font-size: 14px;
+  }
+  &.center {
+    .ivu-modal-fullscreen {
+      .ivu-modal-content {
+        width: $full-modal-width;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .ivu-modal-body {
+        padding-bottom: 70px;
+      }
+      .action-wrap {
+        padding: 12px 18px 12px 18px;
+        width: $full-modal-width;
+        left: 50%;
+        margin-left: -$full-modal-width/2;
+        position: fixed;
+        border-top: 1px solid #e8eaec;
+        bottom: 0;
+        z-index: 10;
+      }
+    }
+  }
+  .action-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    .ivu-btn {
+      width: $action-btn-width;
+      margin-right: 20px;
+      &:last-child{
+        margin-right: 0;
+      }
+    }
+  }
+}
+.v-component,.v-modal {
+  .ivu-message-notice-content {
+    .ivu-message-error {
+      color: $error-color;
+    }
+    .ivu-message-success {
+      color: $success-color;
+    }
+    .ivu-message-warning {
+      color: $warning-color;
+    }
+  }
+  .ivu-tooltip-content {
+    .ivu-tooltip-inner {
+      white-space: normal;
+    }
+  }
+  .ivu-notice {
+    .ivu-notice-title {
+      display: none;
+    }
+    .ivu-notice-custom-content {
+      display: flex;
+      align-items: center;
+    }
+    .ivu-notice-icon-info,
+    .ivu-notice-icon-warning {
+      position: static;
+      display: inline-flex;
+    }
+    .ivu-notice-desc {
+      margin-right: 20px;
+      margin-left: 10px !important;
+    }
+  }
+  /* .ivu-form-item-content {
+    display: flex;
+  } */
+  .ivu-form-item-label {
+    font-size: 14px !important;
+  }
+  .ivu-table table {
+    font-size: 14px;
+  }
+  .ivu-menu-dark {
+    background: $sidebar-bg-color;
+    color: white !important;
+    .ivu-menu-item-active {
+      background: $theme-color !important;
+      color: white !important;
+    }
+  }
+  .ivu-table-fixed-body {
+    background: white;
+  }
+  .ivu-table {
+    .action-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .ivu-btn {
+        margin-right: 10px;
+        padding: 5px 10px;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+    .ivu-table-tip td{
+      height: 150px;
+    }
+  }
+}
+
+.ivu-btn{
+  font-size: 14px;
+  height: 32px;
+  padding: 0 15px;
+  &.ivu-btn-large{
+    height: 36px;
+  }
+  &.ivu-btn-small{
+    height: 28px;
+    font-size: 12px;
+    padding: 0 10px;
+  }
+}

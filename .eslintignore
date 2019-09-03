@@ -1,0 +1,7 @@
+/build/
+/config/
+/src/apis/
+node_modules/
+/src/components/v-sidebar/
+/src/components/wx-bind/
+/*.js

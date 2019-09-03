@@ -1,0 +1,17 @@
+@charset "utf-8";
+.confirm-input {
+  .input-item {
+    @include square(48px);
+    box-sizing: border-box;
+    border: 1px solid $border-dark-color;
+    border-radius: $border-radius;
+    text-align: center;
+    line-height: 50px;
+    font-size: 24px !important;
+    margin: 10px 5px;
+    &:focus {
+      border-color: $theme-color;
+      color: $theme-color;
+    }
+  }
+}

@@ -1,0 +1,11 @@
+@charset "utf-8";
+.delete-modal{
+  text-align: center;
+  .ivu-modal-body{
+    padding: 30px;
+  }
+  .delete-tip,.input-tip{
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+}

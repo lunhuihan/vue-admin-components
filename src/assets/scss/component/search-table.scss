@@ -1,0 +1,111 @@
+@charset "utf-8";
+.v-search-table {
+  $font-default: 14px;
+  .search-box {
+    .ivu-form {
+      display: flex;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      font-size: 0;
+    }
+    .ivu-form-item{
+      display: inline-flex;
+      margin-bottom: $space-system;
+      &.ivu-form-item-slot{
+        .ivu-form-item-content{
+          font-size: $font-m-size !important;
+        }
+      }
+      .ivu-form-item-label {
+        padding: 9px 12px 9px 0;
+      }
+      .ivu-form-item-content{
+        margin-left: 0 !important;
+        font-size: 0 !important;
+      }
+    }
+    .ivu-input-with-search {
+      &.input-search-clear {
+        .ivu-input-icon-clear {
+          display: inline-block;
+          right: 50px;
+        }
+      }
+    }
+    .ivu-input-wrapper{
+      .ivu-input-with-suffix ~ .ivu-input-icon-clear{
+        right: 30px;
+        color: red;
+      }
+    }
+    .ivu-radio-large {
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .ivu-radio-group{
+      font-size: 0 !important;
+    }
+    .ivu-radio-default {
+      font-size: $font-default;
+    }
+    .action-wrap{
+      display: inline-flex;
+      flex: 1;
+      justify-content: flex-end;
+      margin-bottom: 24px;
+      .ivu-btn{
+        margin-right: 10px;
+      }
+      .fold-bar{
+        width: 55px;
+        display: inline-flex;
+        align-items: center;
+        font-size: $font-default;
+        color: $theme-color;
+        cursor: pointer;
+        .ivu-icon{
+          margin-left: 5px;
+        }
+      }
+    }
+    .action-line-feed-wrap{
+      margin-bottom: $space-system;
+      text-align: center;
+      font-size: 0;
+      .ivu-btn{
+        margin-right: 10px;
+      }
+    }
+  }
+  .ivu-table-wrapper {
+    border-radius: 4px;
+    overflow: hidden;
+    td.draggable-col{
+      cursor: pointer;
+    }
+    .ivu-table-cell{
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+  .page-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: $space-system;
+    .ivu-page-prev,
+    .ivu-page-next {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      a {
+        display: inline-flex;
+        align-items: center;
+      }
+    }
+  }
+  .ivu-date-picker{
+    font-size: $font-size;
+  }
+}
