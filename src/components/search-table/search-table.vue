@@ -1,6 +1,6 @@
 <template>
   <div class="v-component v-search-table">
-    <search-box ref="search-box" :fields="currentSearchConfig.fields" :options="currentSearchConfig.options"
+    <search-box ref="search-box" :fields="searchConfig.fields" :options="searchConfig.options"
       @on-search="dealSearch" @on-event="dealEvent">
       <template v-slot:search-prepend="{ search }">
         <slot name="search-prepend" :search="search"></slot>
@@ -124,7 +124,6 @@ export default {
     },
     currentTableConfig () {
       let { columns = [], ...options } = this.tableConfig
-      let search = this.$refs['search-box'] ? this.$refs['search-box'].search : {}
       columns.forEach((item) => {
         if (item.type === 'expand' && item.slot && typeOf(item.slot) === 'string') {
           item.render = (h, params) => {
@@ -151,17 +150,6 @@ export default {
         options
       }
     },
-    currentSearchConfig () {
-      let { fields, ...options } = this.searchConfig
-      let searchDefaultOptions = {
-        showSearchBtn: true,
-        showResetBtn: true
-      }
-      return {
-        fields,
-        options: Object.assign(searchDefaultOptions, options)
-      }
-    },
     tableSlotList () {
       let result = []
       let columns = this.tableConfig.columns || []
@@ -175,6 +163,10 @@ export default {
   },
   created () { },
   mounted () {
+    let vm = this.findVm()
+    vm.$refs['_search-box'] = this.$refs['search-box']
+    vm.$refs['_table-box'] = this.$refs['table-box']
+    vm.$refs['_page-box'] = this.$refs['page-box']
   },
   methods: {
     dealSearch (search, done, page = 1) { // 搜索
@@ -184,7 +176,8 @@ export default {
     },
     dealEvent (fnName, ...rest) {
       let target = this.findVm()
-      let params = rest.concat(this.$refs['search-box'].search)
+      let pageBox = this.$refs['page-box']
+      let params = rest.concat(this.$refs['search-box'].search, pageBox.current, pageBox.currentPageConfig.pageSize)
       if (typeOf(fnName) === 'function') {
         fnName.bind(target)(...params)
       }

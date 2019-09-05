@@ -1,7 +1,7 @@
 export default {
   labelWidth: 140,
-  showSearchBtn: false,
-  showResetBtn: false,
+  hiddenSearchBtn: true,
+  hiddenResetBtn: true,
   className: 'event-table',
   fields: [
     {

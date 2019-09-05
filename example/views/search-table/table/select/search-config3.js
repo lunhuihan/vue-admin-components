@@ -1,8 +1,8 @@
 export default {
   ref: 'search3',
   labelWidth: 50,
-  showSearchBtn: false,
-  showResetBtn: false,
+  hiddenSearchBtn: true,
+  hiddenResetBtn: true,
   fields: [
     {
       name: 'name',

@@ -3,7 +3,7 @@
     <!-- prepend插槽 -->
     <slot name="search-prepend" :search="search"></slot>
     <!-- 表单域 -->
-    <Form class="search-box-form" :ref="options.ref || ''" inline :label-width="Number(options.labelWidth)"
+    <Form class="search-box-form" inline :label-width="Number(options.labelWidth)"
       :label-position="options.labelPosition ? options.labelPosition : 'right'">
       <FormItem v-for="(item, index) in fields" :key="`field-${index}`" :label="item.label"
         :label-width="item.labelWidth" :class="{'ivu-form-item-slot': isSlot(item.slot)}"
@@ -11,36 +11,70 @@
         <!-- 系统内置组件 -->
         <template v-if="!isSlot(item.slot)">
           <!-- Input -->
-          <Input v-if="item.component === 'Input'" :ref="item.name" v-model.trim="search[item.name]"
-            :style="calFieldStyle(item)" :class="calFieldClass(item)" :type="item.type" :placeholder="item.placeholder"
-            :size="item.size" :clearable="typeOf(item.clearable) === 'boolean' ? item.clearable : true"
-            :disabled="item.disabled" :readonly="item.readonly" :maxlength="item.maxlength" :icon="item.icon"
-            :search="item.search" :enter-button="item.enterButton" :number="item.number" :autofocus="item.autofocus"
-            :element-id="item.elementId" :autocomplete="item.autocomplete || 'off'"
-            @on-enter="() => { dealEvent(item.onEnter, item) }" @on-click="() => { dealEvent(item.onClick, item) }"
-            @on-change="(val) => { dealEvent(item.onChange, val, item) }"
-            @on-focus="() => { dealEvent(item.onFocus, item) }" @on-blur="() => { dealEvent(item.onBlur, item) }"
-            @on-keyup="(val) => { dealEvent(item.onKeyup, val, item) }"
-            @on-keydown="(val) => { dealEvent(item.onKeydown, val, item) }"
-            @on-keypress="(val) => { dealEvent(item.onKeypress, val, item) }"
-            @on-clear="() => { dealEvent(item.onClear, item) }"
-            @on-search="(val) => { dealEvent(item.onSearch, val, item) }">
-          <!-- 前置slot -->
-          <template v-slot:prepend v-if="(!item.type || item.type === 'text') && item.prependSlot">
-            <slot :name="item.prependSlot" :search="search" :field="item">
-            </slot>
+          <template v-if="item.component === 'Input'">
+            <Input v-if="item.type !== 'number'" :ref="item.name" v-model.trim="search[item.name]"
+              :style="calFieldStyle(item)" :class="calFieldClass(item)" :type="item.type"
+              :placeholder="item.placeholder" :size="item.size"
+              :clearable="typeOf(item.clearable) === 'boolean' ? item.clearable : true" :disabled="item.disabled"
+              :readonly="item.readonly" :maxlength="item.maxlength" :icon="item.icon" :search="item.search"
+              :enter-button="item.enterButton" :number="item.number" :autofocus="item.autofocus"
+              :element-id="item.elementId" :autocomplete="item.autocomplete || 'off'"
+              @on-enter="() => { dealEvent(item.onEnter, item) }" @on-click="() => { dealEvent(item.onClick, item) }"
+              @on-change="(val) => { dealEvent(item.onChange, val, item) }"
+              @on-focus="() => { dealEvent(item.onFocus, item) }" @on-blur="() => { dealEvent(item.onBlur, item) }"
+              @on-keyup="(val) => { dealEvent(item.onKeyup, val, item) }"
+              @on-keydown="(val) => { dealEvent(item.onKeydown, val, item) }"
+              @on-keypress="(val) => { dealEvent(item.onKeypress, val, item) }"
+              @on-clear="() => { dealEvent(item.onClear, item) }"
+              @on-search="(val) => { dealEvent(item.onSearch, val, item) }">
+            <!-- 前置slot -->
+            <template v-slot:prepend v-if="(!item.type || item.type === 'text') && item.prependSlot">
+              <slot :name="item.prependSlot" :search="search" :field="item">
+              </slot>
+            </template>
+            <!-- 后置slot -->
+            <template v-slot:append v-if="(!item.type || item.type === 'text') && item.appendSlot">
+              <slot :name="item.appendSlot" :search="search" :field="item">
+              </slot>
+            </template>
+            <!-- 前置图标 -->
+            <Icon v-if="item.prefix" :type="item.prefix" slot="prefix" />
+            <!-- 后置图标 -->
+            <Icon v-if="item.suffix" :type="item.suffix" slot="suffix"
+              @click.native="() => { dealEvent(item.onClick, item) }" />
+            </Input>
+            <Input v-else :ref="item.name" v-model.number="search[item.name]"
+              :style="calFieldStyle(item)" :class="calFieldClass(item)" :type="item.type"
+              :placeholder="item.placeholder" :size="item.size"
+              :clearable="typeOf(item.clearable) === 'boolean' ? item.clearable : true" :disabled="item.disabled"
+              :readonly="item.readonly" :maxlength="item.maxlength" :icon="item.icon" :search="item.search"
+              :enter-button="item.enterButton" :number="item.number" :autofocus="item.autofocus"
+              :element-id="item.elementId" :autocomplete="item.autocomplete || 'off'"
+              @on-enter="() => { dealEvent(item.onEnter, item) }" @on-click="() => { dealEvent(item.onClick, item) }"
+              @on-change="(val) => { dealEvent(item.onChange, val, item) }"
+              @on-focus="() => { dealEvent(item.onFocus, item) }" @on-blur="() => { dealEvent(item.onBlur, item) }"
+              @on-keyup="(val) => { dealEvent(item.onKeyup, val, item) }"
+              @on-keydown="(val) => { dealEvent(item.onKeydown, val, item) }"
+              @on-keypress="(val) => { dealEvent(item.onKeypress, val, item) }"
+              @on-clear="() => { dealEvent(item.onClear, item) }"
+              @on-search="(val) => { dealEvent(item.onSearch, val, item) }">
+            <!-- 前置slot -->
+            <template v-slot:prepend v-if="(!item.type || item.type === 'text') && item.prependSlot">
+              <slot :name="item.prependSlot" :search="search" :field="item">
+              </slot>
+            </template>
+            <!-- 后置slot -->
+            <template v-slot:append v-if="(!item.type || item.type === 'text') && item.appendSlot">
+              <slot :name="item.appendSlot" :search="search" :field="item">
+              </slot>
+            </template>
+            <!-- 前置图标 -->
+            <Icon v-if="item.prefix" :type="item.prefix" slot="prefix" />
+            <!-- 后置图标 -->
+            <Icon v-if="item.suffix" :type="item.suffix" slot="suffix"
+              @click.native="() => { dealEvent(item.onClick, item) }" />
+            </Input>
           </template>
-          <!-- 后置slot -->
-          <template v-slot:append v-if="(!item.type || item.type === 'text') && item.appendSlot">
-            <slot :name="item.appendSlot" :search="search" :field="item">
-            </slot>
-          </template>
-          <!-- 前置图标 -->
-          <Icon v-if="item.prefix" :type="item.prefix" slot="prefix" />
-          <!-- 后置图标 -->
-          <Icon v-if="item.suffix" :type="item.suffix" slot="suffix"
-            @click.native="() => { dealEvent(item.onClick, item) }" />
-          </Input>
 
           <!-- Select -->
           <template v-if="item.component === 'Select'">
@@ -187,10 +221,10 @@
         <!-- 操作按钮不换行 -->
         <template v-if="!options.actionLineFeed">
           <slot name="action-prepend" :search="search"></slot>
-          <FormItem v-if="options.showSearchBtn" :label-width="0">
+          <FormItem v-if="!options.hiddenSearchBtn" :label-width="0">
             <Button type="primary" icon="md-search" :loading="searchBtnLoading" @click="onSearch">搜索</Button>
           </FormItem>
-          <FormItem v-if="options.showResetBtn" :label-width="0">
+          <FormItem v-if="!options.hiddenResetBtn" :label-width="0">
             <Button type="primary" ghost icon="md-refresh" :loading="resetBtnLoading" @click="onReset">重置</Button>
           </FormItem>
           <slot name="action-append" :search="search"></slot>
@@ -198,13 +232,13 @@
       </template>
       <div class="action-wrap" v-else>
         <slot name="action-prepend" :search="search"></slot>
-        <Button v-if="options.showSearchBtn" type="primary" icon="md-search" :loading="searchBtnLoading"
+        <Button v-if="!options.hiddenSearchBtn" type="primary" icon="md-search" :loading="searchBtnLoading"
           @click="onSearch">搜索</Button>
-        <Button v-if="options.showResetBtn" type="primary" ghost icon="md-refresh" :loading="resetBtnLoading"
+        <Button v-if="!options.hiddenResetBtn" type="primary" ghost icon="md-refresh" :loading="resetBtnLoading"
           @click="onReset">重置</Button>
         <slot name="action-append" :search="search"></slot>
         <template
-          v-if="options.showSearchBtn || options.showResetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append']">
+          v-if="!options.hiddenSearchBtn || !options.hiddenResetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append']">
           <span class="fold-bar" v-if="isFold" @click="toggleFold(false)">
             展开
             <Icon type="ios-arrow-down" size="16" /></span>
@@ -215,11 +249,11 @@
       </div>
     </Form>
     <div class="action-line-feed-wrap"
-      v-if="!options.fold && options.actionLineFeed && (options.showSearchBtn || options.showResetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append'])">
+      v-if="!options.fold && options.actionLineFeed && (!options.hiddenSearchBtn || !options.hiddenResetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append'])">
       <slot name="action-prepend" :search="search"></slot>
-      <Button v-if="options.showSearchBtn" type="primary" icon="md-search" :loading="searchBtnLoading"
+      <Button v-if="!options.hiddenSearchBtn" type="primary" icon="md-search" :loading="searchBtnLoading"
         @click="onSearch">搜索</Button>
-      <Button v-if="options.showResetBtn" type="primary" ghost icon="md-refresh" :loading="resetBtnLoading"
+      <Button v-if="!options.hiddenResetBtn" type="primary" ghost icon="md-refresh" :loading="resetBtnLoading"
         @click="onReset">重置</Button>
       <slot name="action-append" :search="search"></slot>
     </div>
@@ -229,7 +263,6 @@
 </template>
 
 <script>
-import collect from '../../utils/collect'
 import { typeOf, deepCopy } from '../../utils/assist'
 import findVm from '../../mixins/find-vm'
 import Time from '../../utils/time'
@@ -238,9 +271,6 @@ const time = new Time()
 
 const componentTypeRange = ['Input', 'Select', 'DatePicker', 'RadioGroup', 'Checkbox', 'CheckboxGroup', 'Switch', 'Cascader']
 const labelPositionRange = ['left', 'right']
-const defaulFieldWidth = 150
-const btnFnTypeRange = ['search', 'reset']
-
 
 export default {
   name: 'SearchBox',
@@ -307,7 +337,7 @@ export default {
         return {}
       },
       validator ({ labelPosition }) {
-        if (labelPosition && !labelPositionRange.includes(val)) {
+        if (labelPosition && !labelPositionRange.includes(labelPosition)) {
           throw new RangeError(`search-config的labelPosition属性不支持${labelPositionRange.join('、')}以外的值！`)
         }
         return true
@@ -347,10 +377,6 @@ export default {
     this._dealFieldFold = timeout(this.dealFieldFold)
   },
   mounted () {
-    if (this.options.ref) {
-      let vm = this.findVm()
-      vm.$refs[this.options.ref] = this.$refs[this.options.ref]
-    }
     if (!!this.options.fold) {
       setTimeout(() => {
         this.dealFieldFold()
@@ -366,28 +392,30 @@ export default {
     initSearchVal () {
       let result = {}
       this.fields.forEach(({ value, name, component, falseValue = false, multiple = false, remote, remoteMethod }) => {
-        if (typeOf(value) === 'undefined') {
-          switch (component) {
-            case 'CheckboxGroup':
-            case 'Cascader':
-              result[name] = []
-              break
-            case 'Switch':
-            case 'Checkbox':
-              result[name] = falseValue
-              break
-            case 'Select':
-              if (multiple) {
+        if (!slot) {
+          if (typeOf(value) === 'undefined') {
+            switch (component) {
+              case 'CheckboxGroup':
+              case 'Cascader':
                 result[name] = []
-              } else {
+                break
+              case 'Switch':
+              case 'Checkbox':
+                result[name] = falseValue
+                break
+              case 'Select':
+                if (multiple) {
+                  result[name] = []
+                } else {
+                  result[name] = ''
+                }
+                break
+              default:
                 result[name] = ''
-              }
-              break
-            default:
-              result[name] = ''
+            }
+          } else {
+            result[name] = value
           }
-        } else {
-          result[name] = value
         }
 
         if (component === 'Select' && remote && remoteMethod) { // 远程搜索
