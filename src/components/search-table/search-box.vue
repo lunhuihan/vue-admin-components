@@ -222,19 +222,19 @@
         <template v-if="!options.actionLineFeed">
           <slot name="action-prepend" :search="search"></slot>
           <FormItem v-if="!options.hiddenSearchBtn" :label-width="0">
-            <Button type="primary" icon="md-search" :loading="searchBtnLoading" @click="onSearch">搜索</Button>
+            <Button type="primary" :icon="options.hiddenActionIcon ? '' : 'md-search'" :loading="searchBtnLoading" @click="onSearch">搜索</Button>
           </FormItem>
           <FormItem v-if="!options.hiddenResetBtn" :label-width="0">
-            <Button type="primary" ghost icon="md-refresh" :loading="resetBtnLoading" @click="onReset">重置</Button>
+            <Button type="primary" ghost :icon="options.hiddenActionIcon ? '' : 'md-refresh'" :loading="resetBtnLoading" @click="onReset">重置</Button>
           </FormItem>
           <slot name="action-append" :search="search"></slot>
         </template>
       </template>
       <div class="action-wrap" v-else>
         <slot name="action-prepend" :search="search"></slot>
-        <Button v-if="!options.hiddenSearchBtn" type="primary" icon="md-search" :loading="searchBtnLoading"
+        <Button v-if="!options.hiddenSearchBtn" type="primary" :icon="options.hiddenActionIcon ? '' : 'md-search'" :loading="searchBtnLoading"
           @click="onSearch">搜索</Button>
-        <Button v-if="!options.hiddenResetBtn" type="primary" ghost icon="md-refresh" :loading="resetBtnLoading"
+        <Button v-if="!options.hiddenResetBtn" type="primary" ghost :icon="options.hiddenActionIcon ? '' : 'md-refresh'" :loading="resetBtnLoading"
           @click="onReset">重置</Button>
         <slot name="action-append" :search="search"></slot>
         <template
@@ -251,9 +251,9 @@
     <div class="action-line-feed-wrap"
       v-if="!options.fold && options.actionLineFeed && (!options.hiddenSearchBtn || !options.hiddenResetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append'])">
       <slot name="action-prepend" :search="search"></slot>
-      <Button v-if="!options.hiddenSearchBtn" type="primary" icon="md-search" :loading="searchBtnLoading"
+      <Button v-if="!options.hiddenSearchBtn" type="primary" :icon="options.hiddenActionIcon ? '' : 'md-search'" :loading="searchBtnLoading"
         @click="onSearch">搜索</Button>
-      <Button v-if="!options.hiddenResetBtn" type="primary" ghost icon="md-refresh" :loading="resetBtnLoading"
+      <Button v-if="!options.hiddenResetBtn" type="primary" ghost :icon="options.hiddenActionIcon ? '' : 'md-refresh'" :loading="resetBtnLoading"
         @click="onReset">重置</Button>
       <slot name="action-append" :search="search"></slot>
     </div>
@@ -391,7 +391,7 @@ export default {
     },
     initSearchVal () {
       let result = {}
-      this.fields.forEach(({ value, name, component, falseValue = false, multiple = false, remote, remoteMethod }) => {
+      this.fields.forEach(({ value, name, component, falseValue = false, multiple = false, remote, remoteMethod, slot }) => {
         if (!slot) {
           if (typeOf(value) === 'undefined') {
             switch (component) {

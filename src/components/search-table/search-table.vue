@@ -1,6 +1,6 @@
 <template>
   <div class="v-component v-search-table">
-    <search-box ref="search-box" :fields="searchConfig.fields" :options="searchConfig.options"
+    <search-box ref="search-box" :fields="currentSearchConfig.fields" :options="currentSearchConfig.options"
       @on-search="dealSearch" @on-event="dealEvent">
       <template v-slot:search-prepend="{ search }">
         <slot name="search-prepend" :search="search"></slot>
@@ -147,6 +147,13 @@ export default {
       }
       return {
         columns,
+        options
+      }
+    },
+    currentSearchConfig () {
+      let { fields, ...options } = this.searchConfig
+      return {
+        fields,
         options
       }
     },

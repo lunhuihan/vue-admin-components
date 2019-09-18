@@ -1,6 +1,6 @@
 <template>
   <div class="v-component v-sidebar" :class="classes">
-    <Menu theme="dark" :active-name="activeRouteName" :open-names="openedMenus" @on-select="selectMenu">
+    <Menu theme="dark" :active-name="activeRouteName" :accordion="accordion" :open-names="openedMenus" @on-select="selectMenu">
       <div v-show="!fold">
         <div v-for="(menu, index) in menuList" :key="index">
           <component :is="getMenuType(menu)" :name="menu.routeName || `${index}`" v-if="!menu.hidden">
@@ -72,6 +72,14 @@ export default {
     className: {
       type: String,
       default: ''
+    },
+    accordion: {
+      type: Boolean,
+      default: false
+    },
+    width: {
+      type: [String, Number],
+      default: 160
     }
   },
   data () {
@@ -93,7 +101,41 @@ export default {
   created () {
     this.updateOpenedMenus()
   },
+  mounted () {
+    this.addSidebarWidthStyle()
+  },
   methods: {
+    addSidebarWidthStyle () {
+      let style = document.createElement('style')
+      let foldWidth = 66
+      style.innerHTML = `
+        .v-sidebar{
+          width: ${parseFloat(this.width)}px !important;
+        }
+        .v-sidebar .ivu-menu{
+          width: ${parseFloat(this.width)}px !important;
+        }
+        .v-sidebar.fold{
+          width: ${foldWidth}px !important;
+        }
+        .v-sidebar.fold .ivu-menu{
+          width: ${foldWidth}px !important;
+        }
+        .v-content{
+          left: ${parseFloat(this.width)}px !important;
+        }
+        .v-content.open{
+          left: ${foldWidth}px !important;
+        }
+        .v-nav .logo-wrap{
+          width: ${parseFloat(this.width)}px !important;
+        }
+        .v-nav.fold .logo-wrap{
+          width: ${foldWidth}px !important;
+        }
+      `
+      document.body.appendChild(style)
+    },
     getMenuType (item) {
       return item.children && item.children.length ? 'Submenu' : 'MenuItem'
     },

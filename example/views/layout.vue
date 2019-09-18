@@ -5,7 +5,7 @@
       <div class="center">这是slot的内容</div>
     </v-nav>
     <!-- layout -->
-    <v-sidebar :menu-list="menuList" :active-route-name="activeRouteName" @select="selectMenu" :fold="fold"></v-sidebar>
+    <v-sidebar :menu-list="menuList" :active-route-name="activeRouteName" :width="180" @select="selectMenu" :fold="fold"></v-sidebar>
     <!-- content -->
     <v-content :open="fold">
       <router-view />

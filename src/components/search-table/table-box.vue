@@ -1,8 +1,8 @@
 <template>
-  <div class="table-box" :class="options.className">
+  <div class="table-box" >
     <!-- prepend插槽 -->
     <slot name="table-prepend"></slot>
-    <Table :ref="options.ref || ''" :width="options.width" :height="options.height" :columns="columns" :data="data" :stripe="typeOf(options.stripe) === 'boolean' ? options.stripe : true"
+    <Table :ref="options.ref || ''" :class="options.className" :width="options.width" :height="options.height" :columns="columns" :data="data" :stripe="typeOf(options.stripe) === 'boolean' ? options.stripe : true"
       :border="typeOf(options.border) === 'boolean' ? options.border : true" :row-class-name="(row, index) => { return dealReturnEvent(options.rowClassName, row, index) }" :loading="loading"
       :show-header="options.showHeader" :max-height="options.maxHeight" :disabled-hover="options.disabledHover"
       :highlight-row="options.highlightRow" :size="options.size" :no-data-text="options.noDataText"
