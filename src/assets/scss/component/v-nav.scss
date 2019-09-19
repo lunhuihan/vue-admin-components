@@ -25,6 +25,7 @@
     align-items: center;
     justify-content: center;
     color: $theme-color;
+    transition: all  $transition-time;
     cursor: pointer;
     .logo-img{
       width: 30px;

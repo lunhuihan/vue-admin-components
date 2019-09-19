@@ -8,7 +8,6 @@
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 9;
-  border-right: 1px solid $border-color;
   background: $sidebar-bg-color;
   transition: width $transition-time;
   &.fold {

@@ -1,8 +1,9 @@
 <template>
   <div class="layout-page">
     <!-- nav -->
-    <v-nav :logo="logo" system-name="综合管理台" user-name="轮回韩" :fold="fold" @on-fold="toggle">
-      <div class="center">这是slot的内容</div>
+    <v-nav :logo="logo" system-name="综合管理台" user-name="轮回韩" :height="60" :fold="fold" @on-fold="toggle">
+      <div class="center" slot="center">这是slot的内容</div>
+      <!-- <div class="user" slot="user">这是替换用户部分的内容</div> -->
     </v-nav>
     <!-- layout -->
     <v-sidebar :menu-list="menuList" :active-route-name="activeRouteName" :width="180" @select="selectMenu" :fold="fold"></v-sidebar>
