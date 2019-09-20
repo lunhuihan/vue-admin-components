@@ -48,6 +48,7 @@
 <script>
 import collect from '../../utils/collect'
 import { typeOf } from '../../utils/assist'
+import { defaultOpts } from '../../utils/constant'
 export default {
   name: 'VSidebar',
   props: {
@@ -79,7 +80,11 @@ export default {
     },
     width: {
       type: [String, Number],
-      default: 160
+      default: defaultOpts.sidebarWidth
+    },
+    activeBgColor: {
+      type: String,
+      default: defaultOpts.activeBgColor
     }
   },
   data () {
@@ -102,18 +107,22 @@ export default {
     this.updateOpenedMenus()
   },
   mounted () {
-    this.addSidebarWidthStyle()
+    this.addWidthStyle()
+    this.addActiveBgStyle()
   },
   methods: {
-    addSidebarWidthStyle () {
+    addWidthStyle () {
+      let width = parseFloat(this.width)
+      if (width === defaultOpts.sidebarWidth) return
+
       let style = document.createElement('style')
       let foldWidth = 66
       style.innerHTML = `
         .v-sidebar{
-          width: ${parseFloat(this.width)}px !important;
+          width: ${parseFloat(width)}px !important;
         }
         .v-sidebar .ivu-menu{
-          width: ${parseFloat(this.width)}px !important;
+          width: ${parseFloat(width)}px !important;
         }
         .v-sidebar.fold{
           width: ${foldWidth}px !important;
@@ -122,16 +131,32 @@ export default {
           width: ${foldWidth}px !important;
         }
         .v-content{
-          left: ${parseFloat(this.width)}px !important;
+          left: ${parseFloat(width)}px !important;
         }
         .v-content.open{
           left: ${foldWidth}px !important;
         }
         .v-nav .logo-wrap{
-          width: ${parseFloat(this.width)}px !important;
+          width: ${parseFloat(width)}px !important;
         }
         .v-nav.fold .logo-wrap{
           width: ${foldWidth}px !important;
+        }
+      `
+      document.body.appendChild(style)
+    },
+    addActiveBgStyle () {
+      if (this.activeBgColor === defaultOpts.activeBgColor) return
+      let style = document.createElement('style')
+      style.innerHTML = `
+        .v-sidebar .ivu-menu-vertical .ivu-menu-item-active{
+          background: ${this.activeBgColor} !important;
+        }
+        .v-sidebar .ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item-active{
+          background: ${this.activeBgColor} !important;
+        }
+        .v-sidebar .ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item-active:hover{
+          background: ${this.activeBgColor} !important;
         }
       `
       document.body.appendChild(style)

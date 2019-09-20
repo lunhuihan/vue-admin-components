@@ -6,7 +6,7 @@
       <!-- <div class="user" slot="user">这是替换用户部分的内容</div> -->
     </v-nav>
     <!-- layout -->
-    <v-sidebar :menu-list="menuList" :active-route-name="activeRouteName" :width="180" @select="selectMenu" :fold="fold"></v-sidebar>
+    <v-sidebar :menu-list="menuList" :active-route-name="activeRouteName" active-bg-color="#5dcbc8"  @select="selectMenu" :fold="fold"></v-sidebar>
     <!-- content -->
     <v-content :open="fold">
       <router-view />

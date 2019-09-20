@@ -17,13 +17,11 @@
 
 <script>
 import vNavLogo from '../v-nav-logo'
+import { defaultOpts } from '../../utils/constant'
 export default {
   name: 'VNav',
   props: {
-    systemName: {
-      type: String,
-      required: true
-    },
+    systemName: String,
     logo: String,
     userName: String,
     headimg: String,
@@ -33,7 +31,7 @@ export default {
     },
     height: {
       type: [Number, String],
-      default: 60
+      default: defaultOpts.navHeight
     }
   },
   data () {
@@ -45,6 +43,7 @@ export default {
   },
   methods: {
     addSidebarWidthStyle () {
+      if (this.height === defaultOpts.navHeight) return
       let style = document.createElement('style')
       style.innerHTML = `
         .v-nav{

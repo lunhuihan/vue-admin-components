@@ -25,3 +25,10 @@ export const componentNames = [
   'iTable',
   'Demo'
 ]
+
+export const defaultOpts = {
+  sidebarWidth: 160,
+  navHeight: 60,
+  activeBgColor: '#2d8cf0',
+  bgColor: '#354053'
+}
