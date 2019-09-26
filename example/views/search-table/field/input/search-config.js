@@ -27,12 +27,15 @@ export default {
     {
       name: 'tel1',
       component: 'Input',
-      label: '手机号',
-      labelWidth: 60,
+      label: '数字类型',
+      labelWidth: 70,
       placeholder: '清空属性',
       clearable: true,
       number: true,
-      maxlength: 11
+      maxlength: 11,
+      onBlur (field, search) { 
+        console.log('search:', search)
+      }
     },
     {
       name: 'icon',
