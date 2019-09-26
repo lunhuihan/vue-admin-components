@@ -1,22 +1,26 @@
 <template>
   <div class="v-component v-nav" :class="{'fold': fold}">
-    <v-nav-logo :logo="logo" :system-name="systemName" @handle-logo="handleLogo"></v-nav-logo>
+    <div class="logo-wrap" @click="handleLogo">
+      <slot name="logo">
+        <img class="logo-img" :src="logo" alt="" v-if="logo">
+        <p class="logo-name">{{systemName}}</p>
+      </slot>
+    </div>
     <Icon type="md-menu" class="fold-bar" size="24" @click="handleFold" />
     <div class="slot-wrap">
       <slot name="center"></slot>
     </div>
-    <slot name="user">
-      <div class="user-wrap">
+    <div class="user-wrap">
+      <slot name="user">
         <Avatar icon="ios-person" :src="headimg" class="avator" size="small" />
         <span class="name">{{userName}}</span>
         <Icon type="md-log-out" size="16" @click="handleLogout" />
-      </div>
-    </slot>
+      </slot>
+    </div>
   </div>
 </template>
 
 <script>
-import vNavLogo from '../v-nav-logo'
 import { defaultOpts } from '../../utils/constant'
 export default {
   name: 'VNav',
@@ -72,7 +76,6 @@ export default {
     }
   },
   components: {
-    vNavLogo
   }
 }
 </script>

@@ -12,14 +12,14 @@
         <template v-if="!isSlot(item.slot)">
           <!-- Input -->
           <template v-if="item.component === 'Input'">
-            <Input v-if="item.type !== 'number'" :ref="item.name" v-model.trim="search[item.name]"
-              :style="calFieldStyle(item)" :class="calFieldClass(item)" :type="item.type"
+            <Input :ref="item.name" v-model.trim="search[item.name]"
+              :style="calFieldStyle(item)" :class="calFieldClass(item)" :type="item.type" :number="item.number"
               :placeholder="item.placeholder" :size="item.size"
               :clearable="typeOf(item.clearable) === 'boolean' ? item.clearable : true" :disabled="item.disabled"
               :readonly="item.readonly" :maxlength="item.maxlength" :icon="item.icon" :search="item.search"
-              :enter-button="item.enterButton" :number="item.number" :autofocus="item.autofocus"
-              :element-id="item.elementId" :autocomplete="item.autocomplete || 'off'"
-              @on-enter="() => { dealEvent(item.onEnter, item) }" @on-click="() => { dealEvent(item.onClick, item) }"
+              :enter-button="item.enterButton" :autofocus="item.autofocus" :element-id="item.elementId"
+              :autocomplete="item.autocomplete || 'off'" @on-enter="() => { dealEvent(item.onEnter, item) }"
+              @on-click="() => { dealEvent(item.onClick, item) }"
               @on-change="(val) => { dealEvent(item.onChange, val, item) }"
               @on-focus="() => { dealEvent(item.onFocus, item) }" @on-blur="() => { dealEvent(item.onBlur, item) }"
               @on-keyup="(val) => { dealEvent(item.onKeyup, val, item) }"
@@ -43,37 +43,19 @@
             <Icon v-if="item.suffix" :type="item.suffix" slot="suffix"
               @click.native="() => { dealEvent(item.onClick, item) }" />
             </Input>
-            <Input v-else :ref="item.name" v-model.number="search[item.name]"
-              :style="calFieldStyle(item)" :class="calFieldClass(item)" :type="item.type"
-              :placeholder="item.placeholder" :size="item.size"
-              :clearable="typeOf(item.clearable) === 'boolean' ? item.clearable : true" :disabled="item.disabled"
-              :readonly="item.readonly" :maxlength="item.maxlength" :icon="item.icon" :search="item.search"
-              :enter-button="item.enterButton" :number="item.number" :autofocus="item.autofocus"
-              :element-id="item.elementId" :autocomplete="item.autocomplete || 'off'"
-              @on-enter="() => { dealEvent(item.onEnter, item) }" @on-click="() => { dealEvent(item.onClick, item) }"
-              @on-change="(val) => { dealEvent(item.onChange, val, item) }"
-              @on-focus="() => { dealEvent(item.onFocus, item) }" @on-blur="() => { dealEvent(item.onBlur, item) }"
-              @on-keyup="(val) => { dealEvent(item.onKeyup, val, item) }"
-              @on-keydown="(val) => { dealEvent(item.onKeydown, val, item) }"
-              @on-keypress="(val) => { dealEvent(item.onKeypress, val, item) }"
-              @on-clear="() => { dealEvent(item.onClear, item) }"
-              @on-search="(val) => { dealEvent(item.onSearch, val, item) }">
-            <!-- 前置slot -->
-            <template v-slot:prepend v-if="(!item.type || item.type === 'text') && item.prependSlot">
-              <slot :name="item.prependSlot" :search="search" :field="item">
-              </slot>
-            </template>
-            <!-- 后置slot -->
-            <template v-slot:append v-if="(!item.type || item.type === 'text') && item.appendSlot">
-              <slot :name="item.appendSlot" :search="search" :field="item">
-              </slot>
-            </template>
-            <!-- 前置图标 -->
-            <Icon v-if="item.prefix" :type="item.prefix" slot="prefix" />
-            <!-- 后置图标 -->
-            <Icon v-if="item.suffix" :type="item.suffix" slot="suffix"
-              @click.native="() => { dealEvent(item.onClick, item) }" />
-            </Input>
+          </template>
+
+          <!-- InputNumber -->
+          <template v-if="item.component === 'InputNumber'">
+            <InputNumber :max="item.max || Infinity" :min="item.min || -Infinity" v-model="search[item.name]"
+              :style="calFieldStyle(item)" :class="calFieldClass(item)" :step="item.step || 1" :disabled="item.disabled"
+              :placeholder="item.placeholder" :readonly="item.readonly" :editable="item.editable"
+              :precision="item.precision" :element-id="item.elementId" :formatter="item.formatter" :parser="item.parser"
+              :active-change="typeOf(item.activeChange) === 'boolean' ? item.activeChange : true"
+              @on-change="(val) => { dealEvent(item.onChange, val, item)}"
+              @on-focus="(event) => { dealEvent(item.onFocus, event, item)}"
+              @on-blur="() => { dealEvent(item.onBlur, item)}">
+            </InputNumber>
           </template>
 
           <!-- Select -->
@@ -222,20 +204,22 @@
         <template v-if="!options.actionLineFeed">
           <slot name="action-prepend" :search="search"></slot>
           <FormItem v-if="!options.hiddenSearchBtn" :label-width="0">
-            <Button type="primary" :icon="options.hiddenActionIcon ? '' : 'md-search'" :loading="searchBtnLoading" @click="onSearch">搜索</Button>
+            <Button type="primary" :icon="options.hiddenActionIcon ? '' : 'md-search'" :loading="searchBtnLoading"
+              @click="onSearch">搜索</Button>
           </FormItem>
           <FormItem v-if="!options.hiddenResetBtn" :label-width="0">
-            <Button type="primary" ghost :icon="options.hiddenActionIcon ? '' : 'md-refresh'" :loading="resetBtnLoading" @click="onReset">重置</Button>
+            <Button type="primary" ghost :icon="options.hiddenActionIcon ? '' : 'md-refresh'" :loading="resetBtnLoading"
+              @click="onReset">重置</Button>
           </FormItem>
           <slot name="action-append" :search="search"></slot>
         </template>
       </template>
       <div class="action-wrap" v-else>
         <slot name="action-prepend" :search="search"></slot>
-        <Button v-if="!options.hiddenSearchBtn" type="primary" :icon="options.hiddenActionIcon ? '' : 'md-search'" :loading="searchBtnLoading"
-          @click="onSearch">搜索</Button>
-        <Button v-if="!options.hiddenResetBtn" type="primary" ghost :icon="options.hiddenActionIcon ? '' : 'md-refresh'" :loading="resetBtnLoading"
-          @click="onReset">重置</Button>
+        <Button v-if="!options.hiddenSearchBtn" type="primary" :icon="options.hiddenActionIcon ? '' : 'md-search'"
+          :loading="searchBtnLoading" @click="onSearch">搜索</Button>
+        <Button v-if="!options.hiddenResetBtn" type="primary" ghost :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
+          :loading="resetBtnLoading" @click="onReset">重置</Button>
         <slot name="action-append" :search="search"></slot>
         <template
           v-if="!options.hiddenSearchBtn || !options.hiddenResetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append']">
@@ -251,10 +235,10 @@
     <div class="action-line-feed-wrap"
       v-if="!options.fold && options.actionLineFeed && (!options.hiddenSearchBtn || !options.hiddenResetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append'])">
       <slot name="action-prepend" :search="search"></slot>
-      <Button v-if="!options.hiddenSearchBtn" type="primary" :icon="options.hiddenActionIcon ? '' : 'md-search'" :loading="searchBtnLoading"
-        @click="onSearch">搜索</Button>
-      <Button v-if="!options.hiddenResetBtn" type="primary" ghost :icon="options.hiddenActionIcon ? '' : 'md-refresh'" :loading="resetBtnLoading"
-        @click="onReset">重置</Button>
+      <Button v-if="!options.hiddenSearchBtn" type="primary" :icon="options.hiddenActionIcon ? '' : 'md-search'"
+        :loading="searchBtnLoading" @click="onSearch">搜索</Button>
+      <Button v-if="!options.hiddenResetBtn" type="primary" ghost :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
+        :loading="resetBtnLoading" @click="onReset">重置</Button>
       <slot name="action-append" :search="search"></slot>
     </div>
     <!-- append插槽 -->
@@ -269,7 +253,7 @@ import Time from '../../utils/time'
 import timeout from '../../utils/timeout'
 const time = new Time()
 
-const componentTypeRange = ['Input', 'Select', 'DatePicker', 'RadioGroup', 'Checkbox', 'CheckboxGroup', 'Switch', 'Cascader']
+const componentTypeRange = ['Input', 'InputNumber', 'Select', 'DatePicker', 'RadioGroup', 'Checkbox', 'CheckboxGroup', 'Switch', 'Cascader']
 const labelPositionRange = ['left', 'right']
 
 export default {
@@ -410,6 +394,9 @@ export default {
                   result[name] = ''
                 }
                 break
+              case 'InputNumber':
+                result[name] = 1
+                break
               default:
                 result[name] = ''
             }
@@ -542,6 +529,7 @@ export default {
     onReset () {
       this.resetBtnLoading = true
       this.search = deepCopy(this.originSearch)
+      this.$emit('on-reset', this.search)
       this.$emit('on-search', this.search, () => {
         this.resetBtnLoading = false
       })

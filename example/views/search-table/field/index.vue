@@ -22,6 +22,10 @@ export default {
           routeName: 'search-table-field-input'
         },
         {
+          title: 'InputNumber',
+          routeName: 'search-table-field-input-number'
+        },
+        {
           title: 'Select',
           routeName: 'search-table-field-select'
         },

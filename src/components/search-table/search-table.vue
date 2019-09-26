@@ -1,7 +1,7 @@
 <template>
   <div class="v-component v-search-table">
     <search-box ref="search-box" :fields="currentSearchConfig.fields" :options="currentSearchConfig.options"
-      @on-search="dealSearch" @on-event="dealEvent">
+      @on-search="dealSearch" @on-reset="dealReset" @on-event="dealEvent">
       <template v-slot:search-prepend="{ search }">
         <slot name="search-prepend" :search="search"></slot>
       </template>
@@ -180,6 +180,10 @@ export default {
       let pageBox = this.$refs['page-box']
       pageBox.changePage(page)
       this.$emit('on-search', search, page, pageBox.currentPageConfig.pageSize, done)
+    },
+    dealReset (search, page = 1) {
+      let pageBox = this.$refs['page-box']
+      this.$emit('on-reset', search, page, pageBox.currentPageConfig.pageSize)
     },
     dealEvent (fnName, ...rest) {
       let target = this.findVm()

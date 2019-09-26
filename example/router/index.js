@@ -33,6 +33,11 @@ export default new Router({
               component: resolve => { require(['../views/search-table/field/input/index.vue'], resolve ) }
             },
             {
+              path: 'input-number',
+              name: 'search-table-field-input-number',
+              component: resolve => { require(['../views/search-table/field/input-number/index.vue'], resolve ) }
+            },
+            {
               path: 'select',
               name: 'search-table-field-select',
               component: resolve => { require(['../views/search-table/field/select/index.vue'], resolve ) }
