@@ -1,7 +1,7 @@
 {
   "name": "vue-admin-components",
   "description": "some common admin components for vue2.0",
-  "version": "0.0.30",
+  "version": "0.0.32",
   "author": "hanjiahui",
   "license": "MIT",
   "private": false,
@@ -23,12 +23,10 @@
     "url": "https://github.com/lunhuihan/vue-admin-components"
   },
   "dependencies": {
-    "@xkeshi/vue-qrcode": "^1.0.0",
     "babel-preset-env": "^1.7.0",
     "gulp-sass": "^4.0.2",
     "iview": "^3.4.2",
-    "node-sass": "^4.11.0",
-    "vue-lazy-component": "^0.1.5"
+    "node-sass": "^4.11.0"
   },
   "devDependencies": {
     "autoprefixer-loader": "^2.0.0",
