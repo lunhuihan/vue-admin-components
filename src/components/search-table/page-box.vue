@@ -1,5 +1,5 @@
 <template>
-  <div class="page-box" :class="currentPageConfig.className" v-if="total">
+  <div class="page-box" :class="currentPageConfig.className">
     <div class="page-prepend-content">
       <slot name="page-prepend"></slot>
     </div>
