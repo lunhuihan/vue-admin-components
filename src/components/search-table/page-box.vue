@@ -3,7 +3,7 @@
     <div class="page-prepend-content">
       <slot name="page-prepend"></slot>
     </div>
-    <Page :current="current" :total="total" :page-size="currentPageConfig.pageSize"
+    <Page :current="current" :total="total" :page-size="currentPageSize"
       :page-size-opts="currentPageConfig.pageSizeOpts" :placement="currentPageConfig.placement"
       :show-total="currentPageConfig.showTotal" :show-elevator="currentPageConfig.showElevator"
       :show-sizer="currentPageConfig.showSizer" :class-name="currentPageConfig.className"
@@ -40,7 +40,14 @@ export default {
   },
   computed: {
     currentPageConfig () {
-      return { ...this.defaulConfig, ...this.pageConfig }
+      return { ...this.defaulConfig, ...window.$CONFIG.page, ...this.pageConfig }
+    },
+    currentPageSize () {
+      let { pageSize, pageSizeOpts } = this.currentPageConfig
+      if (pageSizeOpts.includes(pageSize)) {
+        return pageSize
+      }
+      return pageSizeOpts[0]
     }
   },
   created () { },

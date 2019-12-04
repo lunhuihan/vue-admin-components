@@ -1,4 +1,5 @@
 import filter from './utils/filter'
+import { typeOf } from './utils/assist'
 
 import VNav from './components/v-nav'
 import VSidebar from './components/v-sidebar'
@@ -16,6 +17,12 @@ const components = {
   SearchTable
 }
 
+const defaultConfig = {
+  page: {
+    pageSizeOpts: [10, 20, 30, 40]
+  }
+}
+
 const install = function(Vue, opts = {}) {
   if (install.installed) return
   Object.keys(components).forEach(key => {
@@ -25,6 +32,10 @@ const install = function(Vue, opts = {}) {
   Object.entries(filter).forEach(([key, value]) => {
     Vue.filter(`$${key}`, value)
   })
+
+  if (typeOf(opts) !== 'object') return
+
+  window.$CONFIG = { ...defaultConfig, ...opts }
 }
 if (typeof window !== 'undefined' && window.Vue) {
   install(window.Vue)

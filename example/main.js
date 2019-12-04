@@ -10,7 +10,11 @@ import '../src/assets/scss/common.scss'
 
 Vue.config.productionTip = false
 Vue.use(iView)
-Vue.use(VueAdminComponents)
+Vue.use(VueAdminComponents, {
+  page: {
+    pageSizeOpts: [20, 50, 100]
+  }
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

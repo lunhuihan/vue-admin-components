@@ -299,6 +299,9 @@ export default {
       label: '选择即改变',
       labelWidth: 100,
       changeOnSelect: true,
+      onChange (val) {
+        console.log('onChange:', val)
+      },
       data: [
         {
           value: 'beijing',
@@ -427,6 +430,10 @@ export default {
       component: 'Cascader',
       label: '动态加载数据项',
       labelWidth: 150,
+      changeOnSelect: true,
+      onChange (val) {
+        console.log('onChange:', val)
+      },
       data: [
         {
           label: '武汉',
@@ -441,7 +448,7 @@ export default {
           children: []
         }
       ],
-      loadData(item, callback, field, search) {
+      loadData (item, callback, field, search) {
         item.loading = true
         setTimeout(() => {
           if (item.value === 'wuhan') {

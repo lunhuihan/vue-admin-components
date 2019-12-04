@@ -1,6 +1,6 @@
 export default {
   total: 80,
-  pageSize: 15,
+  pageSize: 30,
   pageSizeOpts: [15, 30],
   showTotal: true,
   showElevator: true,
