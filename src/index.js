@@ -18,8 +18,10 @@ const components = {
 }
 
 const defaultConfig = {
-  page: {
-    pageSizeOpts: [10, 20, 30, 40]
+  searchTable: {
+    pageConfig: {
+      pageSizeOpts: [10, 20, 30, 40]
+    }
   }
 }
 

@@ -77,11 +77,19 @@ export default {
   computed: {
     tableSlotList () {
       let result = []
-      this.columns.forEach((column) => {
-        if (Object.keys(column).includes('slot')) {
-          result.push(column.slot)
-        }
-      })
+      let columns = this.columns || []
+      let getSlot = (columns, result) => {
+        columns.forEach((column) => {
+          if (Object.keys(column).includes('slot')) {
+            result.push(column.slot)
+          }
+          let children = column.children || []
+          if (children.length) {
+            getSlot(children, result)
+          }
+        })
+      }
+      getSlot(columns, result)
       return result
     }
   },

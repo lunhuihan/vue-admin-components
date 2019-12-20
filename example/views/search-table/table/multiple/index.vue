@@ -16,6 +16,11 @@
     <Divider />
     <search-table :search-config="searchConfig3" :table-config="tableConfig3" :table-data="tableData3" @on-search="getData">
     </search-table>
+    <search-table :search-config="searchConfig6" :table-config="tableConfig6" :table-data="tableData6" @on-search="getData">
+      <template v-slot:amt="{row}">
+        {{ row.amt | money }}
+      </template>
+    </search-table>
     <Divider />
     <search-table :search-config="searchConfig4" :table-config="tableConfig" :table-data="tableData" @on-search="getData">
       <div class="header" slot="header">这是页头</div>
@@ -33,15 +38,19 @@ import searchConfig2 from './search-config2'
 import searchConfig3 from './search-config3'
 import searchConfig4 from './search-config4'
 import searchConfig5 from './search-config5'
+import searchConfig6 from './search-config6'
 import tableConfig from './table-config'
 import tableConfig2 from './table-config2'
 import tableConfig3 from './table-config3'
 import tableConfig5 from './table-config5'
+import tableConfig6 from './table-config6'
 import tableData from './data'
 import tableData2 from './data2'
 import tableData3 from './data3'
 import tableData5 from './data5'
+import tableData6 from './data6'
 import expandRow from './expand-row'
+import filter from '../../../../utils/filter'
 
 export default {
   data () {
@@ -51,13 +60,16 @@ export default {
       searchConfig3,
       searchConfig4,
       searchConfig5,
+      searchConfig6,
       tableConfig,
       tableConfig2,
       tableConfig3,
       tableConfig5,
+      tableConfig6,
       tableData,
       tableData3,
-      tableData5
+      tableData5,
+      tableData6
     }
   },
   created () {
@@ -86,6 +98,9 @@ export default {
   },
   components: {
     expandRow
+  },
+  filters: {
+    money: filter.money
   }
 }
 </script>

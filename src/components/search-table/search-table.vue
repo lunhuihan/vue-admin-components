@@ -160,11 +160,18 @@ export default {
     tableSlotList () {
       let result = []
       let columns = this.tableConfig.columns || []
-      columns.forEach((column) => {
-        if (Object.keys(column).includes('slot')) {
-          result.push(column.slot)
-        }
-      })
+      let getSlot = (columns, result) => {
+        columns.forEach((column) => {
+          if (Object.keys(column).includes('slot')) {
+            result.push(column.slot)
+          }
+          let children = column.children || []
+          if (children.length) {
+            getSlot(children, result)
+          }
+        })
+      }
+      getSlot(columns, result)
       return result
     }
   },

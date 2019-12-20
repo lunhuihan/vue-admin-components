@@ -22,7 +22,7 @@ export default {
   data () {
     return {
       current: 1,
-      defaulConfig: {
+      defaultConfig: {
         pageSize: 10,
         pageSizeOpts: [10, 20, 30, 40],
         placement: 'bottom',
@@ -35,12 +35,13 @@ export default {
         transfer: false,
         prevText: '',
         nextText: ''
-      }
+      },
+      windowPageConfig: window.$CONFIG.searchTable.pageConfig
     }
   },
   computed: {
     currentPageConfig () {
-      return { ...this.defaulConfig, ...window.$CONFIG.page, ...this.pageConfig }
+      return { ...this.defaultConfig, ...this.windowPageConfig, ...this.pageConfig }
     },
     currentPageSize () {
       let { pageSize, pageSizeOpts } = this.currentPageConfig

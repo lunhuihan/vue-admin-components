@@ -11,8 +11,10 @@ import '../src/assets/scss/common.scss'
 Vue.config.productionTip = false
 Vue.use(iView)
 Vue.use(VueAdminComponents, {
-  page: {
-    pageSizeOpts: [20, 50, 100]
+  searchTable: {
+    pageConfig: {
+      pageSizeOpts: [20, 50, 100]
+    }
   }
 })
 /* eslint-disable no-new */
