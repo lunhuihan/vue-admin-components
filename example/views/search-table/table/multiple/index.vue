@@ -20,6 +20,9 @@
       <template v-slot:amt="{row}">
         {{ row.amt | money }}
       </template>
+      <template v-slot:age="{row}">
+        {{ row.age > 18 ? '成年': '未成年' }}
+      </template>
     </search-table>
     <Divider />
     <search-table :search-config="searchConfig4" :table-config="tableConfig" :table-data="tableData" @on-search="getData">
