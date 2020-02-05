@@ -1,4 +1,7 @@
 import storage from './storage'
+const getAuthMenuList = Symbol('getAuthMenuList')
+const getCurrentSidebar = Symbol('getCurrentSidebar')
+const getSidebarByRouteName = Symbol('getSidebarByRouteName')
 
 const menuList = [
   {
@@ -26,6 +29,16 @@ const menuList = [
       {
         title: '搜索区域',
         routeName: 'search-table-field',
+        children: [
+          {
+            title: 'Input',
+            routeName: 'search-table-field-input'
+          },
+          {
+            title: '日历选择',
+            routeName: 'search-table-field-datepicker'
+          }
+        ],
         includedPages: [
           {
             routeName: 'search-table-field-input'
@@ -56,17 +69,21 @@ const menuList = [
       {
         title: '表格结果',
         routeName: 'search-table-table',
-        includedPages: [
+        children: [
           {
+            title: '基本属性',
             routeName: 'search-table-table-basic'
           },
           {
+            title: '过滤和筛选',
             routeName: 'search-table-table-select'
           },
           {
+            title: '复杂表格',
             routeName: 'search-table-table-multiple'
           },
           {
+            title: '事件处理',
             routeName: 'search-table-table-event'
           }
         ]
@@ -93,18 +110,17 @@ class Menu {
    * @returns
    * @memberof Menu
    */
-  getSidebarMenuList() {
+  static getSidebarMenuList() {
     let sidebarMenuList = storage.getSession(this.menuStorageName, [])
     if (sidebarMenuList.length) {
       return sidebarMenuList
     } else {
-      let authMenuList = this.getAuthMenuList(menuList)
+      let authMenuList = this[getAuthMenuList](menuList)
       storage.setSession(this.menuStorageName, authMenuList)
       return authMenuList
     }
   }
-  getAuthMenuList(list) {
-    // let permissions = helper.getUserInfo('permissions')
+  static [getAuthMenuList](list) {
     let result = []
     list.forEach(
       ({
@@ -123,13 +139,13 @@ class Menu {
         }
 
         if (children.length) {
-          item.children = this.getAuthMenuList(children)
+          item.children = this[getAuthMenuList](children)
         }
         if (item.children && item.children.length) {
           item.routeName = item.children[0].routeName
         }
         if (includedPages.length) {
-          item.includedPages = this.getAuthMenuList(includedPages)
+          item.includedPages = this[getAuthMenuList](includedPages)
         }
         if (item.includedPages && item.includedPages.length) {
           item.routeName = item.includedPages[0].routeName
@@ -141,7 +157,7 @@ class Menu {
     )
     return result
   }
-  clearSidebarMenuList() {
+  static clearSidebarMenuList() {
     storage.removeSession(this.menuStorageName)
   }
   /**
@@ -150,18 +166,21 @@ class Menu {
    * @param {String} currentRouteName
    * @memberof Menu
    */
-  getActiveRouteName(currentRouteName) {
+  static getActiveRouteName(currentRouteName) {
     if (currentRouteName === homeMenu.routeName) return currentRouteName
 
-    let currentSidebar = this.getCurrentSidebar(currentRouteName)
-
+    let currentSidebar = this[getCurrentSidebar](currentRouteName)
     if (!currentSidebar) return ''
-
-    if (!currentSidebar.children || !currentSidebar.children.length) {
-      return currentSidebar.routeName
-    } else {
-      return currentSidebar.children[0].routeName
+    let routeName = ''
+    let getName = sidebar => {
+      if (sidebar.children && sidebar.children.length) {
+        getName(sidebar.children[0])
+      } else {
+        routeName = sidebar.routeName
+      }
     }
+    getName(currentSidebar)
+    return routeName
   }
   /**
    * 获取面包屑数据
@@ -169,13 +188,13 @@ class Menu {
    * @param {String} currentRouteName
    * @memberof Menu
    */
-  getBreadcrumbList(currentRouteName) {
+  static getBreadcrumbList(currentRouteName) {
     let result = []
 
     if (homeMenu.routeName === currentRouteName) {
       result.push(homeMenu)
     }
-    let currentSidebar = this.getCurrentSidebar(currentRouteName)
+    let currentSidebar = this[getCurrentSidebar](currentRouteName)
     if (currentSidebar) {
       result.push(homeMenu)
       result.push({
@@ -199,11 +218,11 @@ class Menu {
    * @param {String} currentRouteName
    * @memberof Menu
    */
-  getCurrentSidebar(currentRouteName) {
+  static [getCurrentSidebar](currentRouteName) {
     let menuList = this.getSidebarMenuList()
-    return this.getSidebarByRouteName(menuList, currentRouteName)
+    return this[getSidebarByRouteName](menuList, currentRouteName)
   }
-  getSidebarByRouteName(list, routeName) {
+  static [getSidebarByRouteName](list, routeName) {
     for (let i = 0; i < list.length; i++) {
       let item = list[i]
       if (item.routeName && item.routeName === routeName) {
@@ -212,7 +231,7 @@ class Menu {
         }
       }
       if (item.children && item.children.length) {
-        let childResult = this.getSidebarByRouteName(item.children, routeName)
+        let childResult = this[getSidebarByRouteName](item.children, routeName)
         if (childResult) {
           return {
             ...item,
@@ -221,7 +240,7 @@ class Menu {
         }
       }
       if (item.includedPages && item.includedPages.length) {
-        let includedResult = this.getSidebarByRouteName(
+        let includedResult = this[getSidebarByRouteName](
           item.includedPages,
           routeName
         )
@@ -233,4 +252,4 @@ class Menu {
   }
 }
 
-export default new Menu()
+export default Menu

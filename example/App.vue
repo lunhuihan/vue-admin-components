@@ -19,6 +19,6 @@ export default {
 </script>
 <style>
 .v-content {
-  background: #eee;
+  background: #f5f5f5;
 }
 </style>

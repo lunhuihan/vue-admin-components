@@ -28,6 +28,8 @@ export const componentNames = [
 
 export const defaultOpts = {
   sidebarWidth: 160,
+  sidebarHorizontalWidth: 150,
+  sidebarHorizontalSubWidth: 120,
   navHeight: 60,
   activeBgColor: '#2d8cf0',
   bgColor: '#354053'
