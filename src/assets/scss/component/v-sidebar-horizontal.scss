@@ -1,7 +1,6 @@
 @charset "utf-8";
 
 $sub-p-l: 22px !default;
-$sub-p-ml: 25px !default;
 .v-sidebar-horizontal {
   position: fixed;
   left: 0;
@@ -15,6 +14,9 @@ $sub-p-ml: 25px !default;
     background: $sidebar-dark-bg-color;
     transition: width $transition-time;
     .sidebar-nav-link {
+      &:first-child{
+        margin-top: 0;
+      }
       margin: 10px 0;
       padding: 0 15px;
       border-left: 3px solid transparent;
@@ -60,7 +62,7 @@ $sub-p-ml: 25px !default;
         .ivu-icon {
           position: absolute;
           top: 15px;
-          left: 8px;
+          left: 6px;
           transition: all $transition-time;
           &.fold{
             transform: rotate(-90deg);
@@ -68,7 +70,7 @@ $sub-p-ml: 25px !default;
         }
       }
       .sidebar-link{
-        padding-left: $sub-p-ml;
+        padding-left: $sub-p-l;
       }
     }
     .sidebar-link{

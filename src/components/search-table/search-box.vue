@@ -390,6 +390,7 @@ export default {
   },
   created () {
     this._dealFieldFold = timeout(this.dealFieldFold)
+    this.$on('viewChange', this._dealFieldFold)
   },
   mounted () {
     if (!!this.options.fold) {

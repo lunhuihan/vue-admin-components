@@ -1,7 +1,7 @@
 {
   "name": "vue-admin-components",
   "description": "some common admin components for vue2.0",
-  "version": "0.0.39",
+  "version": "0.0.40",
   "author": "hanjiahui",
   "license": "MIT",
   "private": false,
@@ -25,8 +25,8 @@
   "dependencies": {
     "babel-preset-env": "^1.7.0",
     "gulp-sass": "^4.0.2",
-    "iview": "^3.5.3",
-    "node-sass": "^4.11.0"
+    "node-sass": "^4.11.0",
+    "view-design": "^4.1.2"
   },
   "devDependencies": {
     "autoprefixer-loader": "^2.0.0",

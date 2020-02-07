@@ -32,6 +32,10 @@
     <Divider />
     <search-table :search-config="searchConfig5" :table-config="tableConfig5" :table-data="tableData5" @on-search="getData">
     </search-table>
+    <search-table :search-config="searchConfig5" :table-config="tableConfig5" :table-data="tableData5" @on-search="getData">
+    </search-table>
+    <search-table row-key="name" :search-config="searchConfig7" :table-config="tableConfig7" :table-data="tableData7" @on-search="getData">
+    </search-table>
   </div>
 </template>
 
@@ -42,16 +46,19 @@ import searchConfig3 from './search-config3'
 import searchConfig4 from './search-config4'
 import searchConfig5 from './search-config5'
 import searchConfig6 from './search-config6'
+import searchConfig7 from './search-config7'
 import tableConfig from './table-config'
 import tableConfig2 from './table-config2'
 import tableConfig3 from './table-config3'
 import tableConfig5 from './table-config5'
 import tableConfig6 from './table-config6'
+import tableConfig7 from './table-config7'
 import tableData from './data'
 import tableData2 from './data2'
 import tableData3 from './data3'
 import tableData5 from './data5'
 import tableData6 from './data6'
+import tableData7 from './data7'
 import expandRow from './expand-row'
 import filter from '../../../../utils/filter'
 
@@ -64,15 +71,18 @@ export default {
       searchConfig4,
       searchConfig5,
       searchConfig6,
+      searchConfig7,
       tableConfig,
       tableConfig2,
       tableConfig3,
       tableConfig5,
       tableConfig6,
+      tableConfig7,
       tableData,
       tableData3,
       tableData5,
-      tableData6
+      tableData6,
+      tableData7
     }
   },
   created () {
