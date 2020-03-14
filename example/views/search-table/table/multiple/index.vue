@@ -34,7 +34,7 @@
     </search-table>
     <search-table :search-config="searchConfig5" :table-config="tableConfig5" :table-data="tableData5" @on-search="getData">
     </search-table>
-    <search-table row-key="name" :search-config="searchConfig7" :table-config="tableConfig7" :table-data="tableData7" @on-search="getData">
+    <search-table :search-config="searchConfig7" :table-config="tableConfig7" :table-data="tableData7" @on-search="getData">
     </search-table>
   </div>
 </template>

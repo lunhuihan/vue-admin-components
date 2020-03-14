@@ -187,7 +187,9 @@ export default {
         } else {
           if (this.autoJump) {
             this.$emit('select', menu)
-            this.$router.push({ name: routeName })
+            if (this.routeName !== routeName) {
+              this.$router.push({ name: routeName }).catch(err => {err})
+            }
           }
         }
       }
@@ -196,7 +198,6 @@ export default {
     toggle (menu) {
       let fold = menu.fold
       this.$set(menu, 'fold', !!!fold)
-      console.log('menu:', menu)
     }
   },
   components: {

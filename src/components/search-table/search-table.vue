@@ -211,6 +211,9 @@ export default {
     },
     dealPageSizeChange () {
       this.dealSearch(this.$refs['search-box'].search, () => { })
+    },
+    search () {
+      this.$refs['search-box'].onSearch()
     }
   },
   components: {

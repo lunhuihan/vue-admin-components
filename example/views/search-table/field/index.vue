@@ -70,7 +70,7 @@ export default {
     toPage (name) {
       this.$router.push({
         name
-      })
+      }).catch(err => {err})
     }
   }
 }

@@ -535,6 +535,7 @@ export default {
       let form = searchBox.querySelector('.search-box-form')
       let formItems = form.querySelectorAll('.ivu-form-item')
       let actionWrap = form.querySelector('.action-wrap')
+      if (!actionWrap) return
       let actionWidth = 0
       let children = actionWrap.children
       for (let i = 0, len = children.length; i < len; i++) {

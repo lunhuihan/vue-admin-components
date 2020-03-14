@@ -191,7 +191,7 @@ export default {
       this.$emit('select', menu)
 
       if (this.autoJump) {
-        this.$router.push({ name })
+        this.$router.push({ name }).catch(err => {err})
       }
     },
     calDropdownActive ({ children, routeName }) {
