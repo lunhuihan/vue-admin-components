@@ -7,6 +7,7 @@ const menuList = [
   {
     title: 'search-table',
     icon: 'ios-apps',
+    className: 'test',
     children: [
       {
         title: '综合',

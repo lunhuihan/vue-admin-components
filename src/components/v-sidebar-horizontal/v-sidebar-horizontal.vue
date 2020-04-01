@@ -1,7 +1,7 @@
 <template>
   <div class="v-component v-sidebar-horizontal" :class="classes">
     <ul class="sidebar-nav">
-      <li class="sidebar-nav-link" :class="{active: index === activeSidebarNavIndex}" v-for="(menu, index) in menuList"
+      <li class="sidebar-nav-link" :class="[{active: index === activeSidebarNavIndex}, menu.className]" v-for="(menu, index) in menuList"
         :key="index" @click="selectMenu(menu)">
         <template v-if="menu.icon">
           <Icon :custom="menu.icon" :size="menu.iconSize || 18" v-if="menu.iconCustom" />
@@ -14,12 +14,12 @@
       <li class="sidebar-sub-item" v-for="(subMenu, index) in menuList[activeSidebarNavIndex].children"
         :key="`sub-${index}`">
         <template v-if="!subMenu.children || !subMenu.children.length">
-          <div class="sidebar-link" :class="{active: activeRouteName === subMenu.routeName}" @click.stop="selectMenu(subMenu)">{{subMenu.title}}</div>
+          <div class="sidebar-link" :class="{active: (autoJump && activeRouteName === subMenu.routeName) || (!autoJump && selectRouteName === subMenu.routeName) }" @click.stop="selectMenu(subMenu)">{{subMenu.title}}</div>
         </template>
         <template v-else>
           <div class="sidebar-sub-title" @click="toggle(subMenu)"><Icon type="ios-arrow-down" :class="{'fold': subMenu.fold}"/>{{subMenu.title}}</div>
           <ul class="sidebar-third" v-show="!!!subMenu.fold">
-            <li class="sidebar-link" :class="{active: activeRouteName === thirdMenu.routeName}"
+            <li class="sidebar-link" :class="{active: (autoJump && activeRouteName === thirdMenu.routeName) || (!autoJump && selectRouteName === thirdMenu.routeName) }"
               v-for="(thirdMenu, index) in subMenu.children" :key="`third-${index}`" @click.stop="selectMenu(thirdMenu)">{{thirdMenu.title}}</li>
           </ul>
         </template>
@@ -57,10 +57,6 @@ export default {
       type: String,
       default: ''
     },
-    accordion: {
-      type: Boolean,
-      default: false
-    },
     width: {
       type: [String, Number],
       default: defaultOpts.sidebarHorizontalWidth
@@ -76,7 +72,12 @@ export default {
   },
   data () {
     return {
-      openedMenus: []
+      selectRouteName: this.activeRouteName
+    }
+  },
+  watch: {
+    activeRouteName (val) {
+      this.selectRouteName = val
     }
   },
   computed: {
@@ -107,8 +108,9 @@ export default {
       })
     },
     activeSidebarNavIndex () { // 激活的一级菜单序号
+    let currentRouteName = this.autoJump ? this.activeRouteName : this.selectRouteName
       for (let i = 0, len = this.menuRouteNameList.length; i < len; i++) {
-        if (this.menuRouteNameList[i].includes(this.activeRouteName)) {
+        if (this.menuRouteNameList[i].includes(currentRouteName)) {
           return i
         }
       }
@@ -185,11 +187,13 @@ export default {
         if (children && children.length) {
           toPage(children[0])
         } else {
+          this.$emit('select', menu)
           if (this.autoJump) {
-            this.$emit('select', menu)
             if (this.routeName !== routeName) {
               this.$router.push({ name: routeName }).catch(err => {err})
             }
+          } else {
+            this.selectRouteName = routeName
           }
         }
       }

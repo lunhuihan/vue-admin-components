@@ -61,7 +61,7 @@ $sub-p-l: 22px !default;
         padding-left: $sub-p-l;
         .ivu-icon {
           position: absolute;
-          top: 15px;
+          top: 14px;
           left: 6px;
           transition: all $transition-time;
           &.fold{
@@ -82,5 +82,13 @@ $sub-p-l: 22px !default;
         background: $content-bg-color;
       }
     }
+  }
+  .sidebar-third{
+    .sidebar-link{
+      padding-left: 26px !important;
+    }
+  }
+  & + .v-content{
+    background-color: $content-bg-color;
   }
 }
