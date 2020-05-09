@@ -142,9 +142,6 @@ input[type='number'] {
       margin-left: 10px !important;
     }
   }
-  /* .ivu-form-item-content {
-    display: flex;
-  } */
   .ivu-form-item-label {
     font-size: 14px !important;
   }
@@ -178,19 +175,6 @@ input[type='number'] {
     }
     .ivu-table-tip td {
       height: 150px;
-    }
-  }
-}
-.v-component {
-  .ivu-btn {
-    font-size: 14px;
-    padding: 4px 15px 4px;
-    &.ivu-btn-large {
-      padding: 6px 15px 6px 15px;
-    }
-    &.ivu-btn-small {
-      font-size: 12px;
-      padding: 3px 7px 3px;
     }
   }
 }

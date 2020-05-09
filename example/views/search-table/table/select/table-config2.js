@@ -1,6 +1,6 @@
 export default {
   border: true,
-  onSortChange (column, key, order, search) {
+  onSortChange (column, key, order, search, current, pageSize) {
     this.tableData2 = [
       {
         name: 'Jim Green',
@@ -27,6 +27,8 @@ export default {
         date: '2016-10-02'
       }
     ]
+    console.log('current:', current)
+    console.log('pageSize:', pageSize)
   },
   columns: [
     {
