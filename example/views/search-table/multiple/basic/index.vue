@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <search-table :search-config="searchConfig" :table-config="tableConfig" :table-data="tableData" :page-config="pageConfig" :total="total"
+    <search-table :search-config="searchConfig" :table-config="tableConfig" :table-data="tableData" :page-config="pageConfig"
       :loading="loading" @on-search="getData">
     </search-table>
   </div>
@@ -20,7 +20,6 @@ export default {
       pageConfig,
       selection: [],
       tableData: [],
-      total: 0,
       loading: false
     }
   },
@@ -33,11 +32,10 @@ export default {
     this.getData()
   },
   methods: {
-    getData (search = {}, page = 1, pageSize = 10, done = () => { }) {
+    getData (search = {}, done = () => { }) {
       this.loading = true
       setTimeout(() => {
         this.tableData = data
-        this.total = 2
         this.loading = false
         done()
       }, 1000)

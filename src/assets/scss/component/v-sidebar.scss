@@ -16,6 +16,9 @@
       width: $sidebar-fold-width !important;
     }
   }
+  &.fold + .v-content{
+    left: 66px;
+  }
   .ivu-menu {
     width: $sidebar-width !important;
     .ivu-menu-item,

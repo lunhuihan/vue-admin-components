@@ -9,7 +9,7 @@
         </template>{{menu.title}}
       </li>
     </ul>
-    <ul class="sidebar-sub" v-if="hasSidebarSub">
+    <ul class="sidebar-sub" :class="{'fold': sidebarSubFold}" v-if="hasSidebarSub">
       <li class="parent-title">{{menuList[activeSidebarNavIndex].title}}</li>
       <li class="sidebar-sub-item" v-for="(subMenu, index) in menuList[activeSidebarNavIndex].children"
         :key="`sub-${index}`">
@@ -24,6 +24,7 @@
           </ul>
         </template>
       </li>
+      <div class="fold-bar" @click="sidebarSubFold = !sidebarSubFold"><Icon type="ios-arrow-back" size="18"/></div>
     </ul>
   </div>
 </template>
@@ -32,6 +33,7 @@
 import collect from '../../utils/collect'
 import { typeOf } from '../../utils/assist'
 import { defaultOpts } from '../../utils/constant'
+import eventBus from '../../utils/event'
 export default {
   name: 'VSidebarHorizontal',
   props: {
@@ -72,12 +74,19 @@ export default {
   },
   data () {
     return {
-      selectRouteName: this.activeRouteName
+      selectRouteName: this.activeRouteName,
+      sidebarSubFold: false
     }
   },
   watch: {
     activeRouteName (val) {
       this.selectRouteName = val
+    },
+    fold () {
+      eventBus.$emit('view-change')
+    },
+    sidebarSubFold () {
+      eventBus.$emit('view-change')
     }
   },
   computed: {
@@ -85,7 +94,7 @@ export default {
       let { fold, className, menuList } = this
       return [
         fold ? 'fold' : '',
-        this.hasSidebarSub ? '' : 'no-sidebar-sub',
+        this.hasSidebarSub && !this.sidebarSubFold ? '' : 'no-sidebar-sub',
         className
       ]
     },
@@ -140,8 +149,8 @@ export default {
         .v-sidebar-horizontal .sidebar-sub{
           width: ${parseFloat(subWidth)}px !important;
         }
-        .v-sidebar-horizontal.fold .sidebar-nav{
-          width: 0px !important;
+        .v-sidebar-horizontal.fold{
+          transform: translateX(${-parseFloat(width)}px);
         }
         .v-nav .logo-wrap{
           width: ${parseFloat(width)}px !important;
@@ -157,13 +166,13 @@ export default {
         .v-content{
           left: ${parseFloat(width + subWidth)}px !important;
         }
-        .v-content.open{
+        .v-sidebar-horizontal.fold + .v-content{
           left: ${parseFloat(subWidth)}px !important;
         }
         .v-sidebar-horizontal.no-sidebar-sub + .v-content{
           left: ${parseFloat(width)}px !important;
         }
-        .v-sidebar-horizontal.no-sidebar-sub + .v-content.open{
+        .v-sidebar-horizontal.no-sidebar-sub.fold + .v-content{
           left: 0px !important;
         }
       `

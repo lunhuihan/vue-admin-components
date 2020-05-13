@@ -5,10 +5,8 @@
 </template>
 
 <script>
-import emitter from '../../mixins/emitter'
 export default {
   name: 'VContent',
-  mixins: [emitter],
   props: {
     open: {
       type: Boolean,
@@ -18,13 +16,6 @@ export default {
   data () {
     return {
     }
-  },
-  watch: {
-    open (val) {
-      this.broadcast('SearchBox', 'viewChange', val)
-    }
-  },
-  methods: {
   }
 }
 </script>

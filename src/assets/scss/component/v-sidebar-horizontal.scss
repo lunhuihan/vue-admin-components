@@ -9,12 +9,13 @@ $sub-p-l: 22px !default;
   overflow-y: auto;
   z-index: 9;
   display: flex;
+  transition: transform $transition-time;
   .sidebar-nav {
     width: $sidebar-horizontal-nav-width;
     background: $sidebar-dark-bg-color;
-    transition: width $transition-time;
+    z-index: 8;
     .sidebar-nav-link {
-      &:first-child{
+      &:first-child {
         margin-top: 0;
       }
       margin: 10px 0;
@@ -34,27 +35,30 @@ $sub-p-l: 22px !default;
         color: #fff;
         border-left: $theme-color 3px solid;
       }
-      &.active{
+      &.active {
         color: #fff;
         background: $theme-color;
       }
     }
   }
   .sidebar-sub {
+    position: relative;
     width: $sidebar-horizontal-sub-width;
     background: white;
-    overflow-y: auto;
-    overflow-x: hidden;
-    .parent-title{
+    transition: transform $transition-time;
+    &.fold{
+      transform: translateX(-100%);
+    }
+    .parent-title {
       height: 60px;
       line-height: 60px;
       font-size: 1em;
       padding-left: $sub-p-l;
     }
-    .sidebar-sub-item{
+    .sidebar-sub-item {
       cursor: pointer;
       font-size: 13px;
-      .sidebar-sub-title{
+      .sidebar-sub-title {
         height: 42px;
         line-height: 42px;
         position: relative;
@@ -64,31 +68,53 @@ $sub-p-l: 22px !default;
           top: 14px;
           left: 6px;
           transition: all $transition-time;
-          &.fold{
+          &.fold {
             transform: rotate(-90deg);
           }
         }
       }
-      .sidebar-link{
+      .sidebar-link {
         padding-left: $sub-p-l;
       }
     }
-    .sidebar-link{
+    .sidebar-link {
       height: 42px;
       line-height: 42px;
       padding-left: $sub-p-l;
       font-size: 13px;
-      &.active,&:hover{
+      &.active,
+      &:hover {
         background: $content-bg-color;
       }
     }
+    .fold-bar {
+      position: absolute;
+      display: flex;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 4px 0 4px 0;
+      cursor: pointer;
+      border-radius: 12px 0 0 12px;
+      background: $bg-color;
+      box-shadow: 0px 0px 2px gainsboro;
+      color: #888b92;
+    }
+    &.fold{
+      .fold-bar {
+        transform: rotate(180deg);
+        left: 100%;
+        right: auto;
+        background: white;
+      }
+    }
   }
-  .sidebar-third{
-    .sidebar-link{
+  .sidebar-third {
+    .sidebar-link {
       padding-left: 26px !important;
     }
   }
-  & + .v-content{
+  & + .v-content {
     background-color: $content-bg-color;
   }
 }

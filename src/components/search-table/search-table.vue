@@ -1,6 +1,6 @@
 <template>
   <div class="v-component v-search-table">
-    <search-box ref="search-box" :fields="currentSearchConfig.fields" :options="currentSearchConfig.options"
+    <search-box v-if="currentSearchConfig.fields.length" ref="search-box" :fields="currentSearchConfig.fields" :options="currentSearchConfig.options"
       @on-search="dealSearch" @on-reset="dealReset" @on-event="dealEvent">
       <template v-slot:search-prepend="{ search }">
         <slot name="search-prepend" :search="search"></slot>
@@ -22,7 +22,7 @@
     <table-box ref="table-box" :columns="currentTableConfig.columns" :data="tableData"
       :options="currentTableConfig.options" :loading="loading" @on-event="dealEvent">
       <template v-slot:table-prepend="slotProps">
-        <slot name="table-prepend" :search="$refs['search-box'].search || {}"></slot>
+        <slot name="table-prepend" :search="$refs['search-box'] && $refs['search-box'].search || {}"></slot>
       </template>
       <template v-for="slot in tableSlotList" v-slot:[slot]="slotProps">
         <slot :name="slot" :row="slotProps.row" :index="slotProps.index" :column="slotProps.column"
@@ -36,13 +36,13 @@
         <slot name="footer"></slot>
       </template>
       <template v-slot:table-append="slotProps">
-        <slot name="table-append" :search="$refs['search-box'].search || {}"></slot>
+        <slot name="table-append" :search="$refs['search-box'] && $refs['search-box'].search || {}"></slot>
       </template>
     </table-box>
-    <page-box ref="page-box" :page-config="pageConfig" :total="total" @on-page-change="dealPageChange"
+    <page-box ref="page-box" v-if="typeof total === 'number'" :page-config="pageConfig" :total="total" @on-page-change="dealPageChange"
       @on-page-size-change="dealPageSizeChange" @on-event="dealEvent">
       <template v-slot:page-prepend="slotProps">
-        <slot name="page-prepend" :search="$refs['search-box'].search || {}"></slot>
+        <slot name="page-prepend" :search="$refs['search-box'] && $refs['search-box'].search || {}"></slot>
       </template>
     </page-box>
   </div>
@@ -97,8 +97,7 @@ export default {
       }
     },
     total: {
-      type: Number,
-      default: 0
+      type: Number
     },
     loading: {
       type: Boolean,
@@ -175,7 +174,7 @@ export default {
       return result
     }
   },
-  created () { },
+  created () {},
   mounted () {
     let vm = this.findVm()
     vm.$refs['_search-box'] = this.$refs['search-box']
@@ -185,17 +184,30 @@ export default {
   methods: {
     dealSearch (search, done, page = 1) { // 搜索
       let pageBox = this.$refs['page-box']
-      pageBox.changePage(page)
-      this.$emit('on-search', search, page, pageBox.currentPageConfig.pageSize, done)
+      pageBox && pageBox.changePage(page)
+      if (pageBox) {
+        this.$emit('on-search', search, page, pageBox.currentPageConfig.pageSize, done)
+      } else {
+        this.$emit('on-search', search, done)
+      }
     },
     dealReset (search, page = 1) {
       let pageBox = this.$refs['page-box']
-      this.$emit('on-reset', search, page, pageBox.currentPageConfig.pageSize)
+      if (pageBox) {
+        this.$emit('on-reset', search, page, pageBox.currentPageConfig.pageSize)
+      } else {
+        this.$emit('on-reset', search)
+      }
     },
     dealEvent (fnName, ...rest) {
       let target = this.findVm()
       let pageBox = this.$refs['page-box']
-      let params = rest.concat(this.$refs['search-box'].search, pageBox.current, pageBox.currentPageConfig.pageSize)
+      let params = []
+      if (pageBox) {
+        params = rest.concat(this.$refs['search-box'] && this.$refs['search-box'].search || {}, pageBox.current, pageBox.currentPageConfig.pageSize)
+      } else {
+        params = rest.concat(this.$refs['search-box'] && this.$refs['search-box'].search || {})
+      }
       if (typeOf(fnName) === 'function') {
         fnName.bind(target)(...params)
       }
@@ -207,13 +219,13 @@ export default {
       }
     },
     dealPageChange (page) {
-      this.dealSearch(this.$refs['search-box'].search, () => { }, page)
+      this.dealSearch(this.$refs['search-box'] && this.$refs['search-box'].search || {}, () => { }, page)
     },
     dealPageSizeChange () {
-      this.dealSearch(this.$refs['search-box'].search, () => { })
+      this.dealSearch(this.$refs['search-box'] && this.$refs['search-box'].search || {}, () => { })
     },
     search () {
-      this.$refs['search-box'].onSearch()
+      this.$refs['search-box'] && this.$refs['search-box'].onSearch()
     }
   },
   components: {

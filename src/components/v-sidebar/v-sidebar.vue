@@ -49,6 +49,7 @@
 import collect from '../../utils/collect'
 import { typeOf } from '../../utils/assist'
 import { defaultOpts } from '../../utils/constant'
+import eventBus from '../../utils/event'
 export default {
   name: 'VSidebar',
   props: {
@@ -103,6 +104,11 @@ export default {
       ]
     }
   },
+  watch: {
+    fold () {
+      eventBus.$emit('view-change')
+    }
+  },
   created () {
     this.updateOpenedMenus()
   },
@@ -133,7 +139,7 @@ export default {
         .v-content{
           left: ${parseFloat(width)}px !important;
         }
-        .v-content.open{
+        .v-sidebar.fold + .v-content{
           left: ${foldWidth}px !important;
         }
         .v-nav .logo-wrap{

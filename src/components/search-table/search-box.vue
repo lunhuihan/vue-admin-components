@@ -282,6 +282,7 @@ import { typeOf, deepCopy } from '../../utils/assist'
 import findVm from '../../mixins/find-vm'
 import Time from '../../utils/time'
 import timeout from '../../utils/timeout'
+import eventBus from '../../utils/event'
 const time = new Time()
 
 const componentTypeRange = ['Input', 'InputNumber', 'Select', 'DatePicker', 'RadioGroup', 'Checkbox', 'CheckboxGroup', 'Switch', 'Cascader']
@@ -390,7 +391,7 @@ export default {
   },
   created () {
     this._dealFieldFold = timeout(this.dealFieldFold)
-    this.$on('viewChange', this._dealFieldFold)
+    eventBus.$on('view-change', this._dealFieldFold)
   },
   mounted () {
     if (!!this.options.fold) {
