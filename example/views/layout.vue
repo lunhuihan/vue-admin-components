@@ -6,8 +6,8 @@
       <!-- <div class="user" slot="user">这是替换用户部分的内容</div> -->
     </v-nav>
     <!-- layout -->
-    <v-sidebar :menu-list="menuList" :active-route-name="activeRouteName" active-bg-color="#5dcbc8" :auto-jump="false"  @select="selectMenu" :fold="fold"></v-sidebar>
-    <!-- <v-sidebar-horizontal :menu-list="menuList" :active-route-name="activeRouteName" active-bg-color="#5dcbc8" @select="selectMenu" :fold="fold"></v-sidebar-horizontal> -->
+    <!-- <v-sidebar :menu-list="menuList" :active-route-name="activeRouteName" active-bg-color="#5dcbc8" :auto-jump="false"  @select="selectMenu" :fold="fold"></v-sidebar> -->
+    <v-sidebar-horizontal :menu-list="menuList" :active-route-name="activeRouteName" active-bg-color="#5dcbc8" @select="selectMenu" :fold="fold"></v-sidebar-horizontal>
     <!-- content -->
     <v-content>
       <router-view />

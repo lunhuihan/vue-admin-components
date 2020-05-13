@@ -1,7 +1,7 @@
 <template>
   <div class="">
-    <search-table :search-config="searchConfig" :table-config="tableConfig" :table-data="tableData" :page-config="pageConfig"
-      :loading="loading" @on-search="getData">
+    <search-table :table-config="tableConfig" :table-data="tableData" :page-config="pageConfig"
+      :loading="loading" @on-search="getData" :total="300">
     </search-table>
   </div>
 </template>
@@ -32,7 +32,11 @@ export default {
     this.getData()
   },
   methods: {
-    getData (search = {}, done = () => { }) {
+    getData (search = {}, page, pageSize, done = () => { }) {
+      console.log(search)
+      console.log(page)
+      console.log(pageSize)
+      console.log(done)
       this.loading = true
       setTimeout(() => {
         this.tableData = data

@@ -1,7 +1,12 @@
 export default {
-  onRowClick(row, index, search) { 
-    console.log(this)
-    console.log(this.$options.name)
+  onRowClick (row, index, search, page, pageSize) { 
+    console.log('-------')
+    console.log(row)
+    console.log(index)
+    console.log(search)
+    console.log(page)
+    console.log(pageSize)
+    console.log('-------')
   },
   onRowDblclick(row, index, search) { 
     console.log('row:', row)
@@ -24,6 +29,15 @@ export default {
   onFilterChange (column, search) { 
     console.log('column:', column)
     console.log('search:', search)
+  },
+  rowClassName (row, index, search) {
+    console.log('search:', search)
+    if (index === 1) {
+      return 'demo-table-info-row'
+    } else if (index === 3) {
+      return 'demo-table-error-row'
+    }
+    return ''
   },
   columns: [
     {

@@ -3,7 +3,7 @@
     <Row>
       <Col>
         <demo>
-          <search-table :search-config="searchConfig" :table-config="tableConfig" :table-data="tableData" @on-search="getData">
+          <search-table :search-config="searchConfig" :table-config="tableConfig" :table-data="tableData" @on-search="getData" :total="3">
           </search-table>
         </demo>
       </Col>

@@ -1,6 +1,6 @@
 <template>
   <div class="v-component v-search-table">
-    <search-box v-if="currentSearchConfig.fields.length" ref="search-box" :fields="currentSearchConfig.fields" :options="currentSearchConfig.options"
+    <search-box v-if="currentSearchConfig.fields && currentSearchConfig.fields.length" ref="search-box" :fields="currentSearchConfig.fields" :options="currentSearchConfig.options"
       @on-search="dealSearch" @on-reset="dealReset" @on-event="dealEvent">
       <template v-slot:search-prepend="{ search }">
         <slot name="search-prepend" :search="search"></slot>
@@ -26,7 +26,7 @@
       </template>
       <template v-for="slot in tableSlotList" v-slot:[slot]="slotProps">
         <slot :name="slot" :row="slotProps.row" :index="slotProps.index" :column="slotProps.column"
-          :search="$refs['search-box'].search || {}">
+          :search="$refs['search-box'] && $refs['search-box'].search || {}">
         </slot>
       </template>
       <template v-slot:header>
@@ -188,7 +188,7 @@ export default {
       if (pageBox) {
         this.$emit('on-search', search, page, pageBox.currentPageConfig.pageSize, done)
       } else {
-        this.$emit('on-search', search, done)
+        this.$emit('on-search', search, 1, 0, done)
       }
     },
     dealReset (search, page = 1) {
@@ -196,7 +196,7 @@ export default {
       if (pageBox) {
         this.$emit('on-reset', search, page, pageBox.currentPageConfig.pageSize)
       } else {
-        this.$emit('on-reset', search)
+        this.$emit('on-reset', search, 1, 0)
       }
     },
     dealEvent (fnName, ...rest) {
@@ -206,7 +206,7 @@ export default {
       if (pageBox) {
         params = rest.concat(this.$refs['search-box'] && this.$refs['search-box'].search || {}, pageBox.current, pageBox.currentPageConfig.pageSize)
       } else {
-        params = rest.concat(this.$refs['search-box'] && this.$refs['search-box'].search || {})
+        params = rest.concat(this.$refs['search-box'] && this.$refs['search-box'].search || {}, 1, 0)
       }
       if (typeOf(fnName) === 'function') {
         fnName.bind(target)(...params)
