@@ -1,4 +1,5 @@
 export default {
+  current: 2,
   total: 80,
   pageSize: 30,
   pageSizeOpts: [15, 30],
@@ -7,8 +8,8 @@ export default {
   showSizer: true,
   className: 'custom',
   onChange (page, pageConfig, search) { 
-    console.log('page:', page)
+    /* console.log('page:', page)
     console.log('pageConfig:', pageConfig)
-    console.log('search:', search)
+    console.log('search:', search) */
   }
 }

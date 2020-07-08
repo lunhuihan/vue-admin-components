@@ -182,13 +182,13 @@ export default {
     vm.$refs['_page-box'] = this.$refs['page-box']
   },
   methods: {
-    dealSearch (search, done, page = 1) { // 搜索
+    dealSearch (search, done, page = 1, eventType = 'search') { // 搜索
       let pageBox = this.$refs['page-box']
       pageBox && pageBox.changePage(page)
       if (pageBox) {
-        this.$emit('on-search', search, page, pageBox.currentPageConfig.pageSize, done)
+        this.$emit('on-search', search, page, pageBox.currentPageConfig.pageSize, done, eventType)
       } else {
-        this.$emit('on-search', search, 1, 0, done)
+        this.$emit('on-search', search, 1, 0, done, eventType)
       }
     },
     dealReset (search, page = 1) {
@@ -219,13 +219,19 @@ export default {
       }
     },
     dealPageChange (page) {
-      this.dealSearch(this.$refs['search-box'] && this.$refs['search-box'].search || {}, () => { }, page)
+      this.dealSearch(this.$refs['search-box'] && this.$refs['search-box'].search || {}, () => { }, page, 'pageChange')
     },
     dealPageSizeChange () {
-      this.dealSearch(this.$refs['search-box'] && this.$refs['search-box'].search || {}, () => { })
+      this.dealSearch(this.$refs['search-box'] && this.$refs['search-box'].search || {}, () => { }, 1, 'pageSizeChange')
     },
     search () {
       this.$refs['search-box'] && this.$refs['search-box'].onSearch()
+    },
+    changePage (page = 1) {
+      this.$refs['page-box'] && this.$refs['page-box'].changePage(page)
+    },
+    changePageSize (pageSize) {
+      this.$refs['page-box'] && this.$refs['page-box'].changePageSize(pageSize)
     }
   },
   components: {
