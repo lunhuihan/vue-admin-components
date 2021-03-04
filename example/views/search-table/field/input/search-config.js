@@ -63,18 +63,6 @@ export default {
       }
     },
     {
-      name: 'suffix',
-      component: 'Input',
-      label: '后置图标',
-      labelWidth: 80,
-      placeholder: '',
-      suffix: 'ios-search',
-      onClick(field, search) {
-        console.log('field:', field)
-        console.log('search:', search)
-      }
-    },
-    {
       name: 'search',
       component: 'Input',
       label: '搜索框',

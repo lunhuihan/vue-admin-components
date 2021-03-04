@@ -227,6 +227,9 @@ export default {
     search () {
       this.$refs['search-box'] && this.$refs['search-box'].onSearch()
     },
+    reset () {
+      this.$refs['search-box'] && this.$refs['search-box'].onReset()
+    },
     changePage (page = 1) {
       this.$refs['page-box'] && this.$refs['page-box'].changePage(page)
     },
