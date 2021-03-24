@@ -85,8 +85,9 @@ export default {
     fold () {
       eventBus.$emit('view-change')
     },
-    sidebarSubFold () {
+    sidebarSubFold (val) {
       eventBus.$emit('view-change')
+      this.$emit('subsidebar-toggle', val)
     }
   },
   computed: {
