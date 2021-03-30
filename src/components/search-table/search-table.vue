@@ -3,46 +3,46 @@
     <search-box v-if="currentSearchConfig.fields && currentSearchConfig.fields.length" ref="search-box" :fields="currentSearchConfig.fields" :options="currentSearchConfig.options"
       @on-search="dealSearch" @on-reset="dealReset" @on-event="dealEvent">
       <template v-slot:search-prepend="{ search }">
-        <slot name="search-prepend" :search="search"></slot>
+        <slot name="search-prepend" :search="search" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
       <template v-for="slot in fieldSlotList" v-slot:[slot]="slotProps">
         <slot :name="slot" :search="slotProps.search" :field="slotProps.field" :label="slotProps.label"
-          :value="slotProps.value"></slot>
+          :value="slotProps.value" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
       <template v-slot:search-append="slotProps">
-        <slot name="search-append" :search="slotProps.search"></slot>
+        <slot name="search-append" :search="slotProps.search" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
       <template v-slot:action-prepend="{ search }">
-        <slot name="action-prepend" :search="search"></slot>
+        <slot name="action-prepend" :search="search" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
       <template v-slot:action-append="{ search }">
-        <slot name="action-append" :search="search"></slot>
+        <slot name="action-append" :search="search" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
     </search-box>
     <table-box ref="table-box" :columns="currentTableConfig.columns" :data="tableData"
       :options="currentTableConfig.options" :loading="loading" @on-event="dealEvent">
       <template v-slot:table-prepend="slotProps">
-        <slot name="table-prepend" :search="$refs['search-box'] && $refs['search-box'].search || {}"></slot>
+        <slot name="table-prepend" :search="slotSearch()" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
       <template v-for="slot in tableSlotList" v-slot:[slot]="slotProps">
         <slot :name="slot" :row="slotProps.row" :index="slotProps.index" :column="slotProps.column"
-          :search="$refs['search-box'] && $refs['search-box'].search || {}">
+          :search="slotSearch()" :page="pageSlot" :pageSize="pageSizeSlot">
         </slot>
       </template>
       <template v-slot:header>
-        <slot name="header"></slot>
+        <slot name="header" :search="slotSearch()" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
       <template v-slot:footer>
-        <slot name="footer"></slot>
+        <slot name="footer" :search="slotSearch()" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
       <template v-slot:table-append="slotProps">
-        <slot name="table-append" :search="$refs['search-box'] && $refs['search-box'].search || {}"></slot>
+        <slot name="table-append" :search="slotSearch()" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
     </table-box>
     <page-box ref="page-box" v-if="typeof total === 'number'" :page-config="pageConfig" :total="total" @on-page-change="dealPageChange"
-      @on-page-size-change="dealPageSizeChange" @on-event="dealEvent">
+      @on-page-size-change="dealPageSizeChange" @page-size-change="pageSizeChange" @on-event="dealEvent">
       <template v-slot:page-prepend="slotProps">
-        <slot name="page-prepend" :search="$refs['search-box'] && $refs['search-box'].search || {}"></slot>
+        <slot name="page-prepend" :search="slotSearch()" :page="page" :pageSize="pageSize"></slot>
       </template>
     </page-box>
   </div>
@@ -54,6 +54,7 @@ import searchBox from './search-box'
 import tableBox from './table-box'
 import pageBox from './page-box'
 import findVm from '../../mixins/find-vm'
+import defaultPageConfig from './pageConfig'
 
 export default {
   name: 'SearchTable',
@@ -107,6 +108,9 @@ export default {
   mixins: [findVm],
   data () {
     return {
+      page: 1,
+      pageSize: 10,
+      windowPageConfig: window.$CONFIG.searchTable.pageConfig
     }
   },
   computed: {
@@ -120,6 +124,14 @@ export default {
         })
       })
       return result
+    },
+    currentPageConfig () {
+      let pageConfig = { ...defaultPageConfig, ...this.windowPageConfig, ...this.pageConfig }
+      let { pageSize, pageSizeOpts } = pageConfig
+      if (!pageSizeOpts.includes(pageSize)) {
+        pageConfig.pageSize = pageSizeOpts[0]
+      }
+      return pageConfig
     },
     currentTableConfig () {
       let { columns = [], ...options } = this.tableConfig
@@ -172,9 +184,22 @@ export default {
       }
       getSlot(columns, result)
       return result
+    },
+    pageSlot () {
+      return typeof this.total === 'number' ? this.page : ''
+    },
+    pageSizeSlot () {
+      return typeof this.total === 'number' ? this.pageSize : ''
     }
   },
-  created () {},
+  watch: {
+    currentPageConfig (val) {
+      this.pageSize = val.pageSize || 10
+    }
+  },
+  created () {
+    this.pageSize = this.currentPageConfig.pageSize
+  },
   mounted () {
     let vm = this.findVm()
     vm.$refs['_search-box'] = this.$refs['search-box']
@@ -182,6 +207,9 @@ export default {
     vm.$refs['_page-box'] = this.$refs['page-box']
   },
   methods: {
+    slotSearch () {
+      return this.$refs['search-box'] && this.$refs['search-box'].search || {}
+    },
     dealSearch (search, done, page = 1, eventType = 'search') { // 搜索
       let pageBox = this.$refs['page-box']
       pageBox && pageBox.changePage(page)
@@ -219,10 +247,14 @@ export default {
       }
     },
     dealPageChange (page) {
+      this.page = page
       this.dealSearch(this.$refs['search-box'] && this.$refs['search-box'].search || {}, () => { }, page, 'pageChange')
     },
     dealPageSizeChange () {
       this.dealSearch(this.$refs['search-box'] && this.$refs['search-box'].search || {}, () => { }, 1, 'pageSizeChange')
+    },
+    pageSizeChange (pageSize) {
+      this.pageSize = pageSize
     },
     search () {
       this.$refs['search-box'] && this.$refs['search-box'].onSearch()

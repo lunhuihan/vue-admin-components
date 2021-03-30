@@ -74,6 +74,10 @@ export default {
           value: 2
         }
       ]
+    },
+    {
+      name: 'user',
+      slot: 'user'
     }
   ]
 }

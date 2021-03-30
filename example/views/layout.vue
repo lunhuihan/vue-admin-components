@@ -7,7 +7,7 @@
     </v-nav>
     <!-- layout -->
     <!-- <v-sidebar :menu-list="menuList" :active-route-name="activeRouteName" active-bg-color="#5dcbc8" :auto-jump="false"  @select="selectMenu" :fold="fold"></v-sidebar> -->
-    <v-sidebar-horizontal :menu-list="menuList" :active-route-name="activeRouteName" active-bg-color="#5dcbc8" @select="selectMenu" :fold="fold" @subsidebar-toggle="subsidebarToggle"></v-sidebar-horizontal>
+    <v-sidebar-horizontal :menu-list="menuList" :active-route-name="activeRouteName" active-bg-color="#5dcbc8" @select="selectMenu" :fold="fold" :showFirstMenu="false" @subsidebar-toggle="subsidebarToggle"></v-sidebar-horizontal>
     <!-- content -->
     <v-content>
       <router-view />

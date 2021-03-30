@@ -10,7 +10,7 @@
       </li>
     </ul>
     <ul class="sidebar-sub" :class="{'fold': sidebarSubFold}" v-if="hasSidebarSub">
-      <li class="parent-title">{{menuList[activeSidebarNavIndex].title}}</li>
+      <li class="parent-title" v-if="showFirstMenu">{{menuList[activeSidebarNavIndex].title}}</li>
       <li class="sidebar-sub-item" v-for="(subMenu, index) in menuList[activeSidebarNavIndex].children"
         :key="`sub-${index}`">
         <template v-if="!subMenu.children || !subMenu.children.length">
@@ -70,6 +70,10 @@ export default {
     activeBgColor: {
       type: String,
       default: defaultOpts.activeBgColor
+    },
+    showFirstMenu: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -87,7 +91,7 @@ export default {
     },
     sidebarSubFold (val) {
       eventBus.$emit('view-change')
-      this.$emit('subsidebar-toggle', val)
+      this.$emit('subsidebar-toggle', !val)
     }
   },
   computed: {

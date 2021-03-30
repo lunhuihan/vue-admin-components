@@ -2,10 +2,13 @@
   <div class="">
     <search-table :search-config="searchConfig" :table-config="tableConfig" :table-data="tableData" :page-config="pageConfig" :total="total"
       :loading="loading" @on-search="getData">
-      <template v-slot:search-append="{ search }">
+      <template v-slot:search-append="{ search, page, pageSize }">
         <div class="download-tip">
-          您可以在这里下载查询明细结果（下载结果为excel文档.xls）<Button type="primary" @click="download(search)">下载</Button>
+          您可以在这里下载查询明细结果（下载结果为excel文档.xls）{{page}}--{{pageSize}}<Button type="primary" @click="download(search)">下载</Button>
         </div>
+      </template>
+       <template v-slot:user="{search, page, pageSize}">
+        搜索项自定义：{{page}}--{{pageSize}}
       </template>
       <template v-slot:transTime="{row}">
         {{row.transTime | date }}
@@ -17,22 +20,24 @@
         <tag color="success" v-if="row.transStatus === 1">{{row.transStatusDesc}}</tag>
         <tag color="error" v-if="row.transStatus === 2">{{row.transStatusDesc}}</tag>
       </template>
-      <template v-slot:action="{row}">
-        <Button type="success" size="small">交易明细</Button>
+      <template v-slot:action="{row, page, pageSize}">
+        <Button type="success" size="small">交易明细{{page}}---{{pageSize}}</Button>
         <Button type="primary" size="small">电子回单</Button>
       </template>
-      <template v-slot:table-prepend="{search}">
+      <template v-slot:table-prepend="{search, page, pageSize}">
+        {{page}}--{{pageSize}}
         <Alert show-icon class="table-tooltip">已选择<span class="stress">{{selectNum}}</span>项<span
             class="stress delete-btn">删除</span></Alert>
         <Button type="success" size="small" @click="test(search)">详细信息</Button>
       </template>
-      <template v-slot:table-append="{search}">
+      <template v-slot:table-append="{search, page, pageSize}">
+        {{page}}--{{pageSize}}
         <Alert show-icon class="table-tooltip">已选择<span class="stress">{{selectNum}}</span>项<span
             class="stress delete-btn">删除</span></Alert>
         <Button type="success" size="small" @click="test(search)">详细信息</Button>
       </template>
-      <template v-slot:page-prepend>
-        <span class="stress">每天提现截止时间: 22:00</span>
+      <template v-slot:page-prepend="{page, pageSize}">
+        <span class="stress">每天提现截止时间: 22:00{{page}}--{{pageSize}}</span>
       </template>
     </search-table>
   </div>
@@ -69,12 +74,15 @@ export default {
       this.loading = true
       setTimeout(() => {
         this.tableData = data
-        this.total = 2
+        this.total = 200
         this.loading = false
         done()
       }, 2000)
     },
     download (search) {
+      console.log(search)
+    },
+    test (search) {
       console.log(search)
     }
   },

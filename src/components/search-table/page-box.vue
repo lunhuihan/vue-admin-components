@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import defaultConfig from './pageConfig'
 export default {
   name: 'PageBox',
   props: {
@@ -22,26 +23,12 @@ export default {
   data () {
     return {
       current: 1,
-      defaultConfig: {
-        pageSize: 10,
-        pageSizeOpts: [10, 20, 30, 40],
-        placement: 'bottom',
-        simple: false,
-        showTotal: true,
-        showElevator: true,
-        showSizer: true,
-        className: '',
-        styles: {},
-        transfer: false,
-        prevText: '',
-        nextText: ''
-      },
       windowPageConfig: window.$CONFIG.searchTable.pageConfig
     }
   },
   computed: {
     currentPageConfig () {
-      let pageConfig = { ...this.defaultConfig, ...this.windowPageConfig, ...this.pageConfig }
+      let pageConfig = { ...defaultConfig, ...this.windowPageConfig, ...this.pageConfig }
       let { pageSize, pageSizeOpts } = pageConfig
       if (!pageSizeOpts.includes(pageSize)) {
         pageConfig.pageSize = pageSizeOpts[0]
@@ -61,7 +48,8 @@ export default {
     onPageSizeChange (pageSize) {
       this.currentPageConfig.pageSize = pageSize
       let config = this.currentPageConfig
-      this.current === 1 && this.$emit('on-page-size-change')
+      this.$emit('page-size-change', pageSize)
+      this.current === 1 && this.$emit('on-page-size-change', pageSize)
       this.$emit('on-event', config.onPageSizeChange, pageSize, config)
     },
     changePage (page) {
