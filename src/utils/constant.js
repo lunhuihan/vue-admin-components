@@ -32,5 +32,6 @@ export const defaultOpts = {
   sidebarHorizontalSubWidth: 120,
   navHeight: 60,
   activeBgColor: '#2d8cf0',
+  subActiveColor: '#2d8cf0',
   bgColor: '#354053'
 }

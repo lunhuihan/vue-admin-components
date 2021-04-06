@@ -9,8 +9,6 @@
         <p class="custom">自定义组件</p>
       </template>
       <template v-slot:action-append="{search}">
-        <!-- <Button type="primary" @click="changePageSize">切换每页条数</Button> -->
-        <!-- <Button type="primary" @click="reset">手动重置</Button> -->
       </template>
     </search-table>
     <Button type="primary" @click="reset">手动重置</Button>
@@ -51,9 +49,6 @@ export default {
       console.log('key3:', key3)
       console.log('key4:', key4)
       console.log('key5:', key5)
-    },
-    changePageSize() {
-      this.$refs['search-table'].changePageSize(15)
     },
     reset() {
       this.$refs['search-table'].reset()

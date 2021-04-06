@@ -1,6 +1,6 @@
 <template>
   <div class="v-component v-search-table">
-    <search-box v-if="currentSearchConfig.fields && currentSearchConfig.fields.length" ref="search-box" :fields="currentSearchConfig.fields" :options="currentSearchConfig.options"
+    <search-box v-if="hasSearch" ref="search-box" :fields="currentSearchConfig.fields" :options="currentSearchConfig.options"
       @on-search="dealSearch" @on-reset="dealReset" @on-event="dealEvent">
       <template v-slot:search-prepend="{ search }">
         <slot name="search-prepend" :search="search" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
@@ -22,34 +22,34 @@
     <table-box ref="table-box" :columns="currentTableConfig.columns" :data="tableData"
       :options="currentTableConfig.options" :loading="loading" @on-event="dealEvent">
       <template v-slot:table-prepend="slotProps">
-        <slot name="table-prepend" :search="slotSearch()" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
+        <slot name="table-prepend" :search="getSearchValue()" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
       <template v-for="slot in tableSlotList" v-slot:[slot]="slotProps">
         <slot :name="slot" :row="slotProps.row" :index="slotProps.index" :column="slotProps.column"
-          :search="slotSearch()" :page="pageSlot" :pageSize="pageSizeSlot">
+          :search="getSearchValue()" :page="pageSlot" :pageSize="pageSizeSlot">
         </slot>
       </template>
       <template v-slot:header>
-        <slot name="header" :search="slotSearch()" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
+        <slot name="header" :search="getSearchValue()" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
       <template v-slot:footer>
-        <slot name="footer" :search="slotSearch()" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
+        <slot name="footer" :search="getSearchValue()" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
       <template v-slot:table-append="slotProps">
-        <slot name="table-append" :search="slotSearch()" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
+        <slot name="table-append" :search="getSearchValue()" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
     </table-box>
-    <page-box ref="page-box" v-if="typeof total === 'number'" :page-config="pageConfig" :total="total" @on-page-change="dealPageChange"
-      @on-page-size-change="dealPageSizeChange" @page-size-change="pageSizeChange" @on-event="dealEvent">
+    <page-box ref="page-box" v-if="hasPage" :page-config="pageConfig" :total="total" @on-page-change="dealPageChange"
+      @on-page-size-change="dealPageSizeChange" @on-event="dealEvent">
       <template v-slot:page-prepend="slotProps">
-        <slot name="page-prepend" :search="slotSearch()" :page="page" :pageSize="pageSize"></slot>
+        <slot name="page-prepend" :search="getSearchValue()" :page="page" :pageSize="pageSize"></slot>
       </template>
     </page-box>
   </div>
 </template>
 
 <script>
-import { typeOf } from '../../utils/assist'
+import { typeOf, deepCopy } from '../../utils/assist'
 import searchBox from './search-box'
 import tableBox from './table-box'
 import pageBox from './page-box'
@@ -109,11 +109,16 @@ export default {
   data () {
     return {
       page: 1,
-      pageSize: 10,
-      windowPageConfig: window.$CONFIG.searchTable.pageConfig
+      pageSize: 10
     }
   },
   computed: {
+    hasSearch () {
+      return this.currentSearchConfig.fields && this.currentSearchConfig.fields.length
+    },
+    hasPage () {
+      return typeof this.total === 'number'
+    },
     fieldSlotList () {
       let result = []
       let fields = this.searchConfig.fields || []
@@ -124,14 +129,6 @@ export default {
         })
       })
       return result
-    },
-    currentPageConfig () {
-      let pageConfig = { ...defaultPageConfig, ...this.windowPageConfig, ...this.pageConfig }
-      let { pageSize, pageSizeOpts } = pageConfig
-      if (!pageSizeOpts.includes(pageSize)) {
-        pageConfig.pageSize = pageSizeOpts[0]
-      }
-      return pageConfig
     },
     currentTableConfig () {
       let { columns = [], ...options } = this.tableConfig
@@ -192,36 +189,34 @@ export default {
       return typeof this.total === 'number' ? this.pageSize : ''
     }
   },
-  watch: {
-    currentPageConfig (val) {
-      this.pageSize = val.pageSize || 10
-    }
-  },
   created () {
-    this.pageSize = this.currentPageConfig.pageSize
   },
   mounted () {
     let vm = this.findVm()
-    vm.$refs['_search-box'] = this.$refs['search-box']
+    vm.$refs['_search-box'] = this.hasSearch ? this.$refs['search-box'] : ''
     vm.$refs['_table-box'] = this.$refs['table-box']
-    vm.$refs['_page-box'] = this.$refs['page-box']
+    vm.$refs['_page-box'] = this.hasPage ? this.$refs['page-box'] : ''
+    if (this.hasPage) {
+      this.pageSize = this.$refs['page-box'].currentPageConfig.pageSize
+    }
   },
   methods: {
-    slotSearch () {
-      return this.$refs['search-box'] && this.$refs['search-box'].search || {}
-    },
-    dealSearch (search, done, page = 1, eventType = 'search') { // 搜索
+    dealSearch (search = {}, done = () => {}, page = 1, eventType = 'search') { // 搜索
       let pageBox = this.$refs['page-box']
       pageBox && pageBox.changePage(page)
       if (pageBox) {
+        this.page = page
+        this.pageSize = pageBox.currentPageConfig.pageSize
         this.$emit('on-search', search, page, pageBox.currentPageConfig.pageSize, done, eventType)
       } else {
         this.$emit('on-search', search, 1, 0, done, eventType)
       }
     },
-    dealReset (search, page = 1) {
+    dealReset (search = {}, page = 1) {
       let pageBox = this.$refs['page-box']
       if (pageBox) {
+        this.page = page
+        this.pageSize = pageBox.currentPageConfig.pageSize
         this.$emit('on-reset', search, page, pageBox.currentPageConfig.pageSize)
       } else {
         this.$emit('on-reset', search, 1, 0)
@@ -232,9 +227,9 @@ export default {
       let pageBox = this.$refs['page-box']
       let params = []
       if (pageBox) {
-        params = rest.concat(this.$refs['search-box'] && this.$refs['search-box'].search || {}, pageBox.current, pageBox.currentPageConfig.pageSize)
+        params = rest.concat(this.getSearchValue(), pageBox.current, pageBox.currentPageConfig.pageSize)
       } else {
-        params = rest.concat(this.$refs['search-box'] && this.$refs['search-box'].search || {}, 1, 0)
+        params = rest.concat(this.getSearchValue(), 1, 0)
       }
       if (typeOf(fnName) === 'function') {
         fnName.bind(target)(...params)
@@ -248,25 +243,32 @@ export default {
     },
     dealPageChange (page) {
       this.page = page
-      this.dealSearch(this.$refs['search-box'] && this.$refs['search-box'].search || {}, () => { }, page, 'pageChange')
+      this.dealSearch(this.getSearchValue(), () => { }, page, 'pageChange')
     },
-    dealPageSizeChange () {
-      this.dealSearch(this.$refs['search-box'] && this.$refs['search-box'].search || {}, () => { }, 1, 'pageSizeChange')
-    },
-    pageSizeChange (pageSize) {
+    dealPageSizeChange (pageSize) {
       this.pageSize = pageSize
+      this.dealSearch(this.getSearchValue(), () => { }, 1, 'pageSizeChange')
     },
     search () {
-      this.$refs['search-box'] && this.$refs['search-box'].onSearch()
+      if (this.hasSearch) {
+        this.$refs['search-box'].onSearch()
+      } else {
+        this.dealSearch()
+      }
     },
     reset () {
-      this.$refs['search-box'] && this.$refs['search-box'].onReset()
+      if (this.hasSearch) {
+        this.$refs['search-box'].onReset()
+      } else {
+        this.dealSearch()
+        this.dealReset()
+      }
     },
-    changePage (page = 1) {
-      this.$refs['page-box'] && this.$refs['page-box'].changePage(page)
-    },
-    changePageSize (pageSize) {
-      this.$refs['page-box'] && this.$refs['page-box'].changePageSize(pageSize)
+    getSearchValue () {
+      if (this.hasSearch) {
+        return deepCopy(this.$refs['search-box'].search)
+      }
+      return {}
     }
   },
   components: {

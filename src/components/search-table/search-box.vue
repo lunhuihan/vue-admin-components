@@ -564,6 +564,12 @@ export default {
       labelWidth = labelWidth ? Number(labelWidth) : Number(this.options.labelWidth)
       return this.isSlot(slot) ? `${(labelWidth + fieldWidth)}px` : 'auto'
     },
+    dealSelectedItems () {
+      const selectList = this.fields.filter(item => item.name && item.component === 'Select')
+      selectList.forEach((item) => {
+        this.$refs[item.name][0].clearSingleSelect()
+      })
+    },
     onSearch () {
       this.searchBtnLoading = true
       this.$emit('on-search', this.search, () => {
@@ -573,6 +579,7 @@ export default {
     onReset () {
       this.resetBtnLoading = true
       this.search = deepCopy(this.originSearch)
+      this.dealSelectedItems()
       this.$emit('on-reset', this.search)
       this.$emit('on-search', this.search, () => {
         this.resetBtnLoading = false

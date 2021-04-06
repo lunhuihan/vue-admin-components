@@ -41,23 +41,19 @@ export default {
   methods: {
     onChange (page) {
       this.current = page
-      let config = this.currentPageConfig
       this.$emit('on-page-change', page)
+      let config = this.currentPageConfig
       this.$emit('on-event', config.onChange, page, config)
     },
     onPageSizeChange (pageSize) {
       this.currentPageConfig.pageSize = pageSize
+      this.$emit('on-page-size-change', pageSize)
       let config = this.currentPageConfig
-      this.$emit('page-size-change', pageSize)
-      this.current === 1 && this.$emit('on-page-size-change', pageSize)
       this.$emit('on-event', config.onPageSizeChange, pageSize, config)
     },
     changePage (page) {
       this.current = page
       this.$refs['page'].currentPage = page
-    },
-    changePageSize (pageSize) {
-      this.$refs['page'].currentPageSize = pageSize ? pageSize : this.currentPageConfig.pageSize
     }
   }
 }

@@ -97,10 +97,13 @@ export default {
       }, 3000)
     },
     show (index, row, search) {
-      this.$Modal.info({
+      console.log('index:', index)
+      console.log('row:', row)
+      console.log('search:', search)
+      /* this.$Modal.info({
         title: 'User Info',
         content: `Name：${this.tableConfig.data[index].name}<br>Age：${this.tableConfig.data[index].age}<br>Address：${this.tableConfig.data[index].address}`
-      })
+      }) */
     },
     remove (index) {
       this.tableConfig.data.splice(index, 1)

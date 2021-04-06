@@ -1,14 +1,14 @@
 <template>
   <div class="">
-    <search-table :search-config="searchConfig" :table-config="tableConfig" :table-data="tableData" :page-config="pageConfig" :total="total"
-      :loading="loading" @on-search="getData">
+    <search-table ref="search-table" :search-config="searchConfig" :table-config="tableConfig" :table-data="tableData" :page-config="pageConfig" :total="total"
+      :loading="loading" @on-search="getData" @on-reset="reset">
       <template v-slot:search-append="{ search, page, pageSize }">
         <div class="download-tip">
-          您可以在这里下载查询明细结果（下载结果为excel文档.xls）{{page}}--{{pageSize}}<Button type="primary" @click="download(search)">下载</Button>
+          您可以在这里下载查询明细结果（下载结果为excel文档.xls）{{search}}{{page}}--{{pageSize}}<Button type="primary" @click="download(search)">下载</Button>
         </div>
       </template>
-       <template v-slot:user="{search, page, pageSize}">
-        搜索项自定义：{{page}}--{{pageSize}}
+      <template v-slot:user="{search, field, label, value, page, pageSize}">
+         page: {{page}} pageSize: {{pageSize}} field: {{field}} label:{{label}} value:{{value}}
       </template>
       <template v-slot:transTime="{row}">
         {{row.transTime | date }}
@@ -28,13 +28,13 @@
         {{page}}--{{pageSize}}
         <Alert show-icon class="table-tooltip">已选择<span class="stress">{{selectNum}}</span>项<span
             class="stress delete-btn">删除</span></Alert>
-        <Button type="success" size="small" @click="test(search)">详细信息</Button>
+        <Button type="success" size="small" @click="$refs['search-table'].search()">手动搜索</Button>
       </template>
       <template v-slot:table-append="{search, page, pageSize}">
         {{page}}--{{pageSize}}
         <Alert show-icon class="table-tooltip">已选择<span class="stress">{{selectNum}}</span>项<span
             class="stress delete-btn">删除</span></Alert>
-        <Button type="success" size="small" @click="test(search)">详细信息</Button>
+        <Button type="success" size="small" @click="$refs['search-table'].reset()">手动重置</Button>
       </template>
       <template v-slot:page-prepend="{page, pageSize}">
         <span class="stress">每天提现截止时间: 22:00{{page}}--{{pageSize}}</span>
@@ -69,8 +69,13 @@ export default {
   created () {
     this.getData()
   },
+  mounted () {
+  },
   methods: {
     getData (search = {}, page = 1, pageSize = 10, done = () => { }) {
+      console.log('search:', search)
+      console.log('page:', page)
+      console.log('pageSize:', pageSize)
       this.loading = true
       setTimeout(() => {
         this.tableData = data
@@ -84,6 +89,17 @@ export default {
     },
     test (search) {
       console.log(search)
+    },
+    reset (search, page = 1, pageSize = 10) {
+      console.log('重置search：', search)
+      console.log('重置page：', page)
+      console.log('重置pageSize：', pageSize)
+    },
+    pageSizeChange (val) {
+      console.log('pageSizeChange自定义事件:', val)
+    },
+    pageChange (val) {
+      console.log('pageChange自定义事件:', val)
     }
   },
   filters: {

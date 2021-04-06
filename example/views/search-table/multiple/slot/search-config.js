@@ -77,6 +77,7 @@ export default {
     },
     {
       name: 'user',
+      label: '自定义label',
       slot: 'user'
     }
   ]

@@ -111,7 +111,7 @@ export default {
     dealReturnEvent (fnName, ...rest) {
       if (!fnName) return
       let target = this.findVm()
-      let search = this.$parent.$refs['search-box'] && this.$parent.$refs['search-box'].search || {}
+      let search = this.$parent.getSearchValue()
       let params = rest.concat(search)
       if (typeOf(fnName) === 'function') {
         return fnName.bind(target)(...params)

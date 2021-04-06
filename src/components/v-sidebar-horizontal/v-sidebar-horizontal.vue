@@ -10,7 +10,7 @@
       </li>
     </ul>
     <ul class="sidebar-sub" :class="{'fold': sidebarSubFold}" v-if="hasSidebarSub">
-      <li class="parent-title" v-if="showFirstMenu">{{menuList[activeSidebarNavIndex].title}}</li>
+      <li class="parent-title" v-if="showFirstMenuTitle">{{menuList[activeSidebarNavIndex].title}}</li>
       <li class="sidebar-sub-item" v-for="(subMenu, index) in menuList[activeSidebarNavIndex].children"
         :key="`sub-${index}`">
         <template v-if="!subMenu.children || !subMenu.children.length">
@@ -71,7 +71,11 @@ export default {
       type: String,
       default: defaultOpts.activeBgColor
     },
-    showFirstMenu: {
+    subActiveColor: {
+      type: String,
+      default: defaultOpts.subActiveColor
+    },
+    showFirstMenuTitle: {
       type: Boolean,
       default: true
     }
@@ -138,11 +142,10 @@ export default {
   created () {
   },
   mounted () {
-    this.addWidthStyle()
-    this.addActiveBgStyle()
+    this.addStyle()
   },
   methods: {
-    addWidthStyle () {
+    addStyle () {
       let width = parseFloat(this.width)
       let subWidth = parseFloat(this.subWidth)
 
@@ -181,19 +184,29 @@ export default {
           left: 0px !important;
         }
       `
-      document.body.appendChild(style)
-    },
-    addActiveBgStyle () {
-      if (this.activeBgColor === defaultOpts.activeBgColor) return
-      let style = document.createElement('style')
-      style.innerHTML = `
-        .v-sidebar-horizontal .sidebar-nav .sidebar-nav-link.active{
-          background: ${this.activeBgColor} !important;
-        }
-        .v-sidebar-horizontal .sidebar-nav .sidebar-nav-link:hover{
-          border-left: ${this.activeBgColor} 3px solid !important;
-        }
-      `
+      if (this.activeBgColor !== defaultOpts.activeBgColor) {
+        style.innerHTML += `
+          .v-sidebar-horizontal .sidebar-nav .sidebar-nav-link.active{
+            background: ${this.activeBgColor} !important;
+          }
+          .v-sidebar-horizontal .sidebar-nav .sidebar-nav-link:hover{
+            border-left: ${this.activeBgColor} 3px solid !important;
+          }
+        `
+      }
+      if (this.subActiveColor !== defaultOpts.subActiveColor) {
+        style.innerHTML += `
+          .v-sidebar-horizontal .sidebar-sub .sidebar-link.active{
+            color: ${this.subActiveColor} !important;
+          }
+          .v-sidebar-horizontal .sidebar-sub .sidebar-link.active::before{
+            background: ${this.subActiveColor} !important;
+          }
+          .v-sidebar-horizontal .sidebar-sub .sidebar-link:hover{
+            color: ${this.subActiveColor} !important;
+          }
+        `
+      }
       document.body.appendChild(style)
     },
     selectMenu (menu) {
