@@ -68,6 +68,11 @@ export default new Router({
               component: resolve => { require(['../views/search-table/field/cascader/index.vue'], resolve ) }
             },
             {
+              path: 'autocomplete',
+              name: 'search-table-field-autocomplete',
+              component: resolve => { require(['../views/search-table/field/auto-complete/index.vue'], resolve ) }
+            },
+            {
               path: 'custom',
               name: 'search-table-field-custom',
               component: resolve => { require(['../views/search-table/field/custom/index.vue'], resolve ) }
@@ -136,6 +141,21 @@ export default new Router({
               path: 'fold',
               name: 'search-table-multiple-fold',
               component: resolve => { require(['../views/search-table/multiple/fold/index.vue'], resolve ) }
+            }
+          ]
+        },
+        {
+          path: '/v-form/whole',
+          name: 'v-form-whole',
+          redirect: {
+            name: 'v-form-basic'
+          },
+          component: resolve => { require(['../views/v-form/whole/index.vue'], resolve) },
+          children: [
+            {
+              path: 'basic',
+              name: 'v-form-basic',
+              component: resolve => { require(['../views/v-form/whole/basic.vue'], resolve) }
             }
           ]
         },

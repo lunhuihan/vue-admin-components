@@ -1,5 +1,8 @@
 import { typeOf } from '../utils/assist'
 export default {
+  data () {
+    return {}
+  },
   methods: {
     checkForm (formRef = '', callback) {
       this.$refs[formRef] && this.$refs[formRef].validate((valid) => {

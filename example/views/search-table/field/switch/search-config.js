@@ -13,7 +13,7 @@ export default {
       name: 'switch2',
       component: 'Switch',
       label: '大小',
-      size: 'default'
+      size: 'large'
     },
     {
       name: 'switch3',
@@ -32,7 +32,7 @@ export default {
       name: 'switch5',
       component: 'Switch',
       value: 1,
-      label: '设置选中和没选中的值',
+      label: '选中1没选中0',
       labelWidth: 200,
       trueValue: 1,
       falseValue: 0

@@ -1,12 +1,5 @@
 <template>
   <search-table :search-config="searchConfig" :table-config="tableConfig" :table-data="tableData" :page-config="pageConfig" @on-search="getData">
-    <template v-slot:datslot="{search, field }">
-      <span @click="field.open = !field.open">
-        <Icon type="ios-calendar-outline"></Icon>
-        <template v-if="search.dateSlot === ''">选择日期</template>
-        <template v-else>{{ search.dateSlot }}</template>
-      </span>
-    </template>
   </search-table>
 </template>
 
@@ -34,6 +27,14 @@ export default {
       setTimeout(() => {
         done()
       }, 3000)
+    },
+    onChange (a, b) {
+      console.log('a:', a)
+      console.log('b:', typeof a)
+      console.log('b:', b)
+    },
+    clickDate (data) {
+      console.log('data:', data)
     }
   },
   components: {

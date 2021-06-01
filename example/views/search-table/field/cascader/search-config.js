@@ -56,7 +56,7 @@ export default {
             }
           ]
         }
-      ]
+      ],
     },
     {
       name: 'cascader1',
@@ -113,6 +113,9 @@ export default {
           ]
         }
       ]
+    },
+    {
+      slot: 'test'
     },
     {
       name: 'cascader2',
@@ -299,8 +302,11 @@ export default {
       label: '选择即改变',
       labelWidth: 100,
       changeOnSelect: true,
-      onChange (val) {
-        console.log('onChange:', val)
+      onChange (val, selectData, field, search) {
+        console.log('onChange val:', val)
+        console.log('onChange selectData:', selectData)
+        console.log('onChange field:', field)
+        console.log('onChange search:', search)
       },
       data: [
         {
@@ -352,6 +358,69 @@ export default {
           ]
         }
       ]
+    },
+    {
+      name: 'custom',
+      component: 'Cascader',
+      label: '自定义选择',
+      labelWidth: 100,
+      data: [
+        {
+          value: 'beijing',
+          label: '北京',
+          children: [
+            {
+              value: 'gugong',
+              label: '故宫'
+            },
+            {
+              value: 'tiantan',
+              label: '天坛'
+            },
+            {
+              value: 'wangfujing',
+              label: '王府井'
+            }
+          ]
+        },
+        {
+          value: 'jiangsu',
+          label: '江苏',
+          children: [
+            {
+              value: 'nanjing',
+              label: '南京',
+              children: [
+                {
+                  value: 'fuzimiao',
+                  label: '夫子庙'
+                }
+              ]
+            },
+            {
+              value: 'suzhou',
+              label: '苏州',
+              children: [
+                {
+                  value: 'zhuozhengyuan',
+                  label: '拙政园'
+                },
+                {
+                  value: 'shizilin',
+                  label: '狮子林'
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      selectSlot: 'selectSlot',
+      onChange (val, selectData, field, search) {
+        console.log('onChange val:', val)
+        console.log('onChange selectData:', selectData)
+        console.log('onChange field:', field)
+        console.log('onChange search:', search)
+      },
     },
     {
       name: 'cascader6',
@@ -612,7 +681,7 @@ export default {
           ]
         }
       ],
-      onChange (value, selectedData, field, search) { 
+      onChange (value, selectedData, field, search) {
         console.log('value:', value)
         console.log('selectedData:', selectedData)
         console.log('field:', field)

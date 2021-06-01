@@ -4,6 +4,7 @@
     <template v-slot:custom>
       <InputNumber :max="10" :min="1" v-model="value"></InputNumber>
     </template>
+    <InputNumber :max="10" :min="1" v-model="value"></InputNumber>
   </search-table>
 </template>
 

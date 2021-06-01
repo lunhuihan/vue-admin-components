@@ -5,6 +5,10 @@ export const componentNames = [
   'ConfirmInput',
   'VerifycodeBtn',
   'SearchTable',
+  'SearchBox',
+  'TableBox',
+  'VForm',
+  'TableBox',
   'Card',
   'Layout',
   'Header',
@@ -16,6 +20,8 @@ export const componentNames = [
   'iContent',
   'Form',
   'iForm',
+  'FormItem',
+  'IForm',
   'Collapse',
   'Modal',
   'Row',
@@ -31,7 +37,14 @@ export const defaultOpts = {
   sidebarHorizontalWidth: 150,
   sidebarHorizontalSubWidth: 120,
   navHeight: 60,
+  sysSpace: 15,
   activeBgColor: '#2d8cf0',
   subActiveColor: '#2d8cf0',
   bgColor: '#354053'
 }
+
+export const labelPositionRange = ['left', 'right']
+
+export const DateValueType = ['number', 'date', 'string']
+
+export const sizeRange = ['small', 'default', 'large']

@@ -1,5 +1,11 @@
 <template>
   <search-table :search-config="searchConfig" :table-config="tableConfig" :table-data="tableData" :page-config="pageConfig" @on-search="getData">
+    <template v-slot:test="{search}">
+      {{search}}
+    </template>
+    <template v-slot:selectSlot="{search}">
+      <a>选择</a>
+    </template>
   </search-table>
 </template>
 

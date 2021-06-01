@@ -1,4 +1,3 @@
-import filter from './utils/filter'
 import { typeOf } from './utils/assist'
 
 import VNav from './components/v-nav'
@@ -8,6 +7,7 @@ import VContent from './components/v-content'
 import ConfirmInput from './components/confirm-input'
 import VerifycodeBtn from './components/verifycode-btn'
 import SearchTable from './components/search-table'
+import VForm from './components/v-form'
 
 const components = {
   VNav,
@@ -16,7 +16,8 @@ const components = {
   VContent,
   ConfirmInput,
   VerifycodeBtn,
-  SearchTable
+  SearchTable,
+  VForm
 }
 
 const defaultConfig = {
@@ -31,10 +32,6 @@ const install = function(Vue, opts = {}) {
   if (install.installed) return
   Object.entries(components).forEach(([key, value]) => {
     Vue.component(key, value)
-  })
-
-  Object.entries(filter).forEach(([key, value]) => {
-    Vue.filter(`$${key}`, value)
   })
 
   if (typeOf(opts) !== 'object') return

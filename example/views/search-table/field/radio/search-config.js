@@ -1,14 +1,15 @@
 export default {
-  labelWidth: 70,
-  fieldWidth: 200,
+  // labelWidth: 200,
+  // fieldWidth: 200,
   fold: true,
+  labelColon: true,
   fields: [
     {
       name: 'favor',
       component: 'RadioGroup',
-      value: 1,
+      // value: 0,
       label: '兴趣爱好',
-      width: 220,
+      // width: 220,
       data: [
         {
           label: '羽毛球',
@@ -31,7 +32,6 @@ export default {
       label: 'button样式',
       type: 'button',
       width: 150,
-      labelWidth: 80,
       data: [
         {
           label: '武汉',
@@ -41,7 +41,29 @@ export default {
           label: '北京',
           value: 1
         }
-      ]
+      ],
+    },
+    {
+      name: 'radioSlot',
+      component: 'RadioGroup',
+      value: 0,
+      label: '自定义radio中的内容',
+      width: 150,
+      data: [
+        {
+          label: '紧急',
+          value: 0
+        },
+        {
+          label: '急',
+          value: 1
+        },
+        {
+          label: '一般',
+          value: 2
+        }
+      ],
+      radioSlot: 'radioSlot'
     },
     {
       name: 'hasIcon',
@@ -68,6 +90,26 @@ export default {
       ]
     },
     {
+      name: 'buttonStyle',
+      component: 'RadioGroup',
+      buttonStyle: 'solid',
+      label: '实色填底按钮样式',
+      data: [
+        {
+          label: '管理台',
+          value: 'pc'
+        },
+        {
+          label: 'h5',
+          value: 'mobile'
+        },
+        {
+          label: '小程序',
+          value: 'miniprogram'
+        }
+      ]
+    },
+    {
       name: 'disabled',
       component: 'RadioGroup',
       value: 1,
@@ -79,6 +121,27 @@ export default {
           label: '羽毛球',
           value: 0,
           disabled: true
+        },
+        {
+          label: '篮球',
+          value: 1
+        },
+        {
+          label: '足球',
+          value: 2
+        }
+      ]
+    },
+    {
+      name: 'border',
+      component: 'RadioGroup',
+      value: 1,
+      label: 'border',
+      border: true,
+      data: [
+        {
+          label: '羽毛球',
+          value: 0
         },
         {
           label: '篮球',

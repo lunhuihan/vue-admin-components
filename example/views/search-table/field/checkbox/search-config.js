@@ -1,34 +1,46 @@
 export default {
-  labelWidth: 70,
   fieldWidth: 200,
   fold: true,
+  size: 'small',
   fields: [
     {
       name: 'checkbox',
       component: 'Checkbox',
       value: '',
       label: '勾选项',
-      width: 50,
-      trueValue: 1,
-      falseValue: 0,
+      width: 120,
+      icon: 'logo-twitter',
       disabled: false,
       onChange (checked, field, search) {
         console.log('checked:', checked)
         console.log('field:', field)
         console.log('search:', search)
-      } 
+      }
+    },
+    {
+      name: 'indeterminate',
+      component: 'Checkbox',
+      value: '',
+      label: 'indeterminate',
+      width: 130,
+      indeterminate: true,
+      onChange (checked, field, search) {
+        console.log('checked:', checked)
+        console.log('field:', field)
+        console.log('search:', search)
+      }
     },
     {
       name: 'course',
       component: 'CheckboxGroup',
-      label: '勾选组',
-      labelWidth: 100,
+      label: 'CheckboxGroup',
+      labelWidth: 120,
       value: ['xg', 'xj'],
       data: [
         {
           value: 'xg',
           label: '西瓜',
-          disabled: true 
+          disabled: true
         },
         {
           value: 'xj',
@@ -41,7 +53,7 @@ export default {
       ]
     },
     {
-      name: 'favor',
+      name: 'event',
       component: 'CheckboxGroup',
       label: '事件处理',
       labelWidth: 100,

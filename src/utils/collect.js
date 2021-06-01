@@ -19,7 +19,6 @@ export default {
     if (typeOf(collect) !== 'array' || typeOf(keyName) !== 'string') return
     if (valName && typeOf(valName) !== 'string') return
     collect = collect.filter(item => typeOf(item) === 'object')
-
     let obj = {}
     collect.forEach((item) => {
       if (typeOf(item[keyName]) === 'string' || typeOf(item[keyName]) === 'number') {
@@ -53,7 +52,7 @@ export default {
   },
   remove (collect = [], keyName = '', val) {
     if (typeOf(collect) !== 'array' || typeOf(keyName) !== 'string') return false
-    for (let [index, item] of collect.entries()) { 
+    for (let [index, item] of collect.entries()) {
       if (item[keyName] === val) {
         collect.splice(index, 1)
         break

@@ -92,6 +92,22 @@ const menuList = [
     ]
   },
   {
+    title: 'v-form',
+    icon: 'ios-apps',
+    children: [
+      {
+        title: '整体',
+        routeName: 'v-form-whole',
+        includedPages: [
+          {
+            title: '基本',
+            routeName: 'v-form-basic'
+          }
+        ]
+      }
+    ]
+  },
+  {
     title: 'confirm-input',
     icon: 'logo-buffer',
     routeName: 'confirm-input'

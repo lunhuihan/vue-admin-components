@@ -1,0 +1,129 @@
+@charset "utf-8";
+.v-form {
+  .ivu-form-item {
+    display: inline-flex;
+    &.label-top{
+      flex-direction: column;
+      .ivu-form-item-label{
+        text-align: left;
+      }
+    }
+    &.label-left{
+      .ivu-form-item-label{
+        text-align: left;
+      }
+    }
+    .ivu-form-item-content {
+      flex: 1;
+      margin-left: 0 !important;
+      .ivu-cascader,.ivu-radio-wrapper,.ivu-radio-group,.ivu-checkbox-group,.ivu-checkbox-group-item {
+        height: 100%;
+        display: inline-flex;
+        align-items: center;
+        line-height: 1;
+      }
+      .ivu-radio{
+        display: inline-flex;
+      }
+      .ivu-checkbox-group{
+        height: 34px;
+      }
+      .ivu-checkbox{
+        display: inline-flex;
+        align-items: center;
+        margin-right: 5px;
+      }
+    }
+  }
+  .v-form-actions {
+    display: flex;
+    &.inline{
+      display: inline-flex;
+    }
+    &.align-center {
+      justify-content: center;
+    }
+    &.align-right {
+      justify-content: flex-end;
+    }
+    .ivu-btn {
+      min-width: 85px;
+      & + .ivu-btn {
+        margin-left: 15px;
+      }
+      .ivu-icon {
+        line-height: 1;
+      }
+      .ivu-icon + span {
+        margin-left: 0;
+      }
+    }
+  }
+  &-large {
+    .ivu-form-item-label {
+      font-size: 16px !important;
+      padding-top: 13px !important;
+    }
+    .ivu-select-selected-value, .ivu-checkbox-group {
+      height: 40px !important;
+      // line-height: 40px !important;
+    }
+  }
+  &-readonly{
+    // 输入框、autocomplete
+    .ivu-input,.ivu-auto-complete{
+      border: 1px solid white;
+      &:hover,&:focus{
+        box-shadow: none;
+        border: 1px solid white;
+      }
+    }
+    // 下拉
+    .ivu-input[disabled],.ivu-select-disabled .ivu-select-selection, .ivu-checkbox-disabled+span {
+      background-color: white;
+      cursor: default;
+      color: $field-text-color;
+      border: 1px solid white;
+      padding-left: 0;
+    }
+    .ivu-select-selected-value{
+      padding-left: 0 !important;
+    }
+    // 联极选择
+    .ivu-cascader-disabled,.ivu-select-disabled{
+      &:hover{
+        .ivu-icon-ios-arrow-down{
+          display: none;
+        }
+      }
+      .ivu-icon-ios-arrow-down{
+        display: none;
+      }
+    }
+    // 图标
+    .ivu-input-wrapper-disabled{
+      .ivu-input-suffix{
+        display: none;
+      }
+    }
+    // 单选
+    .ivu-radio-group{
+      .ivu-radio-wrapper:not(.ivu-radio-wrapper-checked){
+        display: none;
+      }
+      .ivu-radio{
+        display: none !important;
+      }
+    }
+    // 多选
+    .ivu-checkbox-group{
+      line-height: 1.2;
+      .ivu-checkbox-wrapper:not(.ivu-checkbox-wrapper-checked){
+        display: none;
+      }
+      .ivu-checkbox{
+        display: none !important;
+      }
+    }
+  }
+}

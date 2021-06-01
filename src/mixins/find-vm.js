@@ -9,6 +9,14 @@ export default {
 				parent = parent.$parent
 			}
 			return parent
-		}
+		},
+    findComp (name) {
+      if (!name) return
+      let parent = this.$parent
+      while (parent && !name.includes(parent.$options.name)) {
+				parent = parent.$parent
+			}
+			return parent
+    }
 	}
 }

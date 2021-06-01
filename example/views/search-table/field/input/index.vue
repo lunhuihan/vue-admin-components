@@ -1,7 +1,14 @@
 <template>
-<div>
-    <search-table ref="search-table" :search-config="searchConfig" :table-config="tableConfig" :table-data="tableData" :page-config="pageConfig" @on-search="getData" @on-reset="onReset" :total="100">
+  <div>
+    <search-table ref="search-table" :search-config="searchConfig"
+      :table-config="tableConfig" :table-data="tableData"
+      :page-config="pageConfig" @on-search="getData" @on-reset="onReset"
+      :total="100">
       <Select v-model="select" slot="inputPrependSlot" style="width: 80px">
+        <Option value="http">http://</Option>
+        <Option value="https">https://</Option>
+      </Select>
+      <Select v-model="select" slot="inputAppendSlot" style="width: 80px">
         <Option value="http">http://</Option>
         <Option value="https">https://</Option>
       </Select>
@@ -31,7 +38,8 @@ export default {
       select: 'http',
     }
   },
-  created() {},
+  created() {
+  },
   methods: {
     getData(search, page, pageSize, done, eventType) {
       console.log('search:', search)
@@ -55,6 +63,11 @@ export default {
     },
     search() {
       this.$refs['search-table'].search()
+    },
+    test(field, search) {
+      console.log('this:', this.select)
+      console.log('field:', field)
+      console.log('search:', search)
     },
   },
   components: {},

@@ -1,5 +1,5 @@
 export default {
-  // labelWidth: 70,
+  // labelWidth: 150,
   // fieldWidth: 200,
   fold: true,
   // hiddenSearchBtn: true,
@@ -9,19 +9,26 @@ export default {
     {
       name: 'basic',
       component: 'InputNumber',
-      label: '基本'
+      label: '基本',
+      width: 100
     },
     {
-      name: 'max',
+      name: 'max10',
       component: 'InputNumber',
-      label: 'max',
+      label: 'max10',
       max: 10
     },
     {
-      name: 'min',
+      name: 'min0',
       component: 'InputNumber',
-      label: 'min',
-      min: 2
+      label: 'min0',
+      min: 0
+    },
+    {
+      name: 'step10',
+      component: 'InputNumber',
+      label: 'step10',
+      step: 10
     },
     {
       name: 'disabled',
@@ -37,10 +44,24 @@ export default {
       value: 2
     },
     {
+      name: 'editable',
+      component: 'InputNumber',
+      label: 'editable',
+      editable: false,
+      value: 2
+    },
+    {
+      name: 'controlsOutside',
+      component: 'InputNumber',
+      label: 'controlsOutside',
+      controlsOutside: true,
+      value: 2
+    },
+    {
       name: 'formatter',
       component: 'InputNumber',
       label: 'formatter',
-      value: 30000,
+      value: 30,
       formatter: value => (value + '%'),
       parser: value => value.replace('%', '')
     },
@@ -48,7 +69,7 @@ export default {
       name: 'onChange',
       component: 'InputNumber',
       label: '事件onChange',
-      onChange (value, field, search) { 
+      onChange (value, field, search) {
         console.log(value)
         console.log(field)
         console.log(search)
@@ -58,7 +79,7 @@ export default {
       name: 'onFocus',
       component: 'InputNumber',
       label: '事件onFocus',
-      onFocus (event, field, search) { 
+      onFocus (event, field, search) {
         console.log(event)
         console.log(field)
         console.log(search)
@@ -68,7 +89,7 @@ export default {
       name: 'onBlur',
       component: 'InputNumber',
       label: '事件onBlur',
-      onBlur (field, search) { 
+      onBlur (field, search) {
         console.log(field)
         console.log(search)
       }

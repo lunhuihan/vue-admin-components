@@ -1,19 +1,55 @@
 export default {
-  // labelWidth: 70,
   // fieldWidth: 200,
   fold: true,
   // hiddenSearchBtn: true,
   // hiddenResetBtn: true,
   // hiddenActionIcon: true,
+  labelWidth: 100,
+  // size: 'large',
   fields: [
     {
       name: 'name',
       component: 'Input',
       label: '姓名',
-      labelWidth: 40,
       placeholder: '请输入姓名',
-      size: 'default',
-      clearable: false
+      maxlength: 10,
+      value: 'han',
+    },
+    {
+      label: '等级',
+      component: 'Select',
+      name: 'grade',
+      value: '1',
+      data: [
+        {
+          label: '初级',
+          value: '1',
+        },
+        {
+          label: '中级',
+          value: '2',
+        },
+        {
+          label: '高级',
+          value: '3',
+        },
+      ]
+    },
+    {
+      name: 'InputB',
+      component: 'Input',
+      label: '不显示边框',
+      labelWidth: 100,
+      placeholder: '不显示边框',
+      border: false,
+    },
+    {
+      name: 'InputL',
+      component: 'Input',
+      label: '显示输入统计',
+      labelWidth: 100,
+      maxlength: 30,
+      showWordLimit: true,
     },
     {
       name: 'tel',
@@ -22,20 +58,37 @@ export default {
       labelWidth: 60,
       placeholder: '清空属性',
       clearable: true,
-      maxlength: 11
+      maxlength: 11,
     },
     {
       name: 'tel1',
       component: 'Input',
       label: '数字类型',
-      labelWidth: 70,
+      labelWidth: 80,
       placeholder: '清空属性',
       clearable: true,
       number: true,
       maxlength: 11,
-      onBlur (field, search) { 
-        console.log('search:', search)
-      }
+      onBlur: 'test',
+    },
+    {
+      name: 'password',
+      component: 'Input',
+      label: '密码框',
+      type: 'password',
+      password: true,
+    },
+    {
+      name: 'focus',
+      component: 'Input',
+      label: '聚焦并全选',
+      labelWidth: 90,
+      suffix: 'ios-clock-outline',
+      onClick(field, search) {
+        this.$refs['_focus'].focus({
+          cursor: 'all',
+        })
+      },
     },
     {
       name: 'icon',
@@ -43,12 +96,12 @@ export default {
       label: '带icon',
       labelWidth: 60,
       placeholder: '',
-      clearable: true,
+      // clearable: true,
       icon: 'ios-clock-outline',
       onClick(field, search) {
         console.log('field:', field)
         console.log('search:', search)
-      }
+      },
     },
     {
       name: 'prefix',
@@ -60,7 +113,7 @@ export default {
       onClick(field, search) {
         console.log('field:', field)
         console.log('search:', search)
-      }
+      },
     },
     {
       name: 'search',
@@ -70,12 +123,11 @@ export default {
       placeholder: '',
       suffix: 'ios-search',
       search: true,
-      clearable: true,
       onSearch(value, field, search) {
         console.log('value:', value)
         console.log('field:', field)
         console.log('search:', search)
-      }
+      },
     },
     {
       name: 'search2',
@@ -83,35 +135,35 @@ export default {
       label: '搜索框2',
       labelWidth: 80,
       placeholder: '',
-      suffix: 'ios-search',
       search: true,
-      enterButton: true,
-      clearable: true,
+      enterButton: '搜索',
       onSearch(value, field, search) {
         console.log('value:', value)
         console.log('field:', field)
         console.log('search:', search)
-      }
+      },
     },
     {
       name: 'address',
       component: 'Input',
       label: '文本域',
       type: 'textarea',
-      rows: 2
+      rows: 4,
+      maxlength: 100,
+      showWordLimit: true,
     },
     {
       label: '自定义组件',
       labelWidth: 120,
       width: 120,
-      slot: 'custom'
+      slot: 'custom',
     },
     {
       name: 'auto',
       component: 'Input',
       label: '文本域自适应高度',
       labelWidth: 130,
-      type: 'textarea'
+      type: 'textarea',
     },
     {
       name: 'inputPrependSlot',
@@ -119,7 +171,25 @@ export default {
       label: '复合输入框',
       labelWidth: 120,
       prependSlot: 'inputPrependSlot',
-      appendSlot: 'inputAppendSlot'
-    }
-  ]
+      appendSlot: 'inputAppendSlot',
+    },
+    {
+      name: 'prefix1',
+      component: 'Input',
+      label: '前置图标',
+      prefix: 'ios-contact',
+    },
+    {
+      name: 'suffix2',
+      component: 'Input',
+      label: '后置图标',
+      suffix: 'ios-contact',
+    },
+    {
+      name: 'chinese',
+      component: 'Input',
+      label: '输入金额时显示中文',
+      numberToChinese: true,
+    },
+  ],
 }

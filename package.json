@@ -24,9 +24,10 @@
   },
   "dependencies": {
     "babel-preset-env": "^1.7.0",
+    "deepmerge": "^4.2.2",
     "gulp-sass": "^4.0.2",
     "node-sass": "^4.11.0",
-    "view-design": "^4.1.2"
+    "view-design": "^4.5.0"
   },
   "devDependencies": {
     "autoprefixer-loader": "^2.0.0",

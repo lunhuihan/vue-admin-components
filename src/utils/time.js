@@ -13,7 +13,7 @@ export default class Time {
    * @param {String|Number|Date} timeVal
    * @param {String} format
    */
-  format (timeVal, format = 'Y-m-d H:i:s') {
+   format (timeVal, format = 'Y-m-d H:i:s') {
     if (!timeVal) return ''
     const timeObject = this.getTimeObject(timeVal)
     format = format.toLowerCase()
@@ -27,7 +27,7 @@ export default class Time {
   }
   /**
    * 传入时间值，返回时间date类型
-   * @param {String|Number|Date} timeVal 
+   * @param {String|Number|Date} timeVal
    */
   parse (timeVal) {
     const timeType = this[$checkTimeType](timeVal)
@@ -41,9 +41,9 @@ export default class Time {
   }
   /**
    * 传入时间值，返回时间戳
-   * @param {String|Number|Date} timeVal 
+   * @param {String|Number|Date} timeVal
    */
-  getTimestamp (timeVal) {
+   getTimestamp (timeVal) {
     const timeType = this[$checkTimeType](timeVal)
     let timestamp = 0
     switch (timeType) {
@@ -63,7 +63,7 @@ export default class Time {
    * 传入时间值，返回以year、month、date、hours、minutes、seconds为键的对象
    * @param {String|Number|Date} timeVal
    */
-  getTimeObject (timeVal) {
+   getTimeObject (timeVal) {
     const timeType = this[$checkTimeType](timeVal)
     let timeObject = {
       year: '',
@@ -75,8 +75,8 @@ export default class Time {
     }
     if (timeType === 'string') {
       timeObject.year = timeVal.substring(0, 4)
-      timeObject.month = timeVal.substring(4, 6)
-      timeObject.date = timeVal.substring(6, 8)
+      timeObject.month = timeVal.substring(4, 6) || '01'
+      timeObject.date = timeVal.substring(6, 8) || '01'
       if (timeVal.length === 14) {
         timeObject.hours = timeVal.substring(8, 10)
         timeObject.minutes = timeVal.substring(10, 12)
@@ -98,11 +98,11 @@ export default class Time {
   }
   /**
    * 传入时间值，返回对应单位的时间差
-   * @param {String|Number|Date} startTimeVal 
-   * @param {String|Number|Date} endTimeVal 
+   * @param {String|Number|Date} startTimeVal
+   * @param {String|Number|Date} endTimeVal
    * @param {String} unit
    */
-  getTimeDiff (startTimeVal, endTimeVal, unit = 'ms') {
+   getTimeDiff (startTimeVal, endTimeVal, unit = 'ms') {
     const unitLow = this[$checkUnitRange](unit)
     const start = this.parse(startTimeVal < endTimeVal ? startTimeVal : endTimeVal)
     const end = this.parse(startTimeVal < endTimeVal ? endTimeVal : startTimeVal)

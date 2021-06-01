@@ -44,24 +44,12 @@ export function deepCopy(data) {
   return o
 }
 
-export function getPageQueryObject(
-  fullPath = window.decodeURIComponent(window.location.href)
-) {
-  if (typeOf(fullPath) !== 'string') return {}
-  let result = {}
-  fullPath
-    .split('?')
-    .filter(item => item.includes('='))
-    .map(item =>
-      item.substring(0, item.includes('#') ? item.indexOf('#') : item.length)
-    )
-    .join('&')
-    .split('&')
-    .forEach(item => {
-      let arr = item.split('=')
-      if (arr[0]) {
-        result[`${arr[0]}`] = arr[1]
-      }
-    })
-  return result
+export function adaptNumberUnit (value, defaultValue = '', canPercent = false, unit = 'px') {
+  if (!value || isNaN(parseFloat(value))) {
+    return defaultValue
+  }
+  if (typeof value === 'string' && value.endsWith('%')) {
+    return canPercent ? value : defaultValue
+  }
+  return `${parseFloat(value)}${unit}`
 }

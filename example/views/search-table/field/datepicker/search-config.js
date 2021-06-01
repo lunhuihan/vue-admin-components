@@ -1,6 +1,6 @@
 export default {
-  labelWidth: '70',
-  fieldWidth: '200',
+  labelWidth: '100',
+  // fieldWidth: '200',
   fold: true,
   fields: [
     {
@@ -9,13 +9,22 @@ export default {
       type: 'date',
       label: '日期',
       labelWidth: 50,
-      value: '20190816'
+      value: '2021/05/24',
+      returnDateType: 'string',
+      onChange (formDate, date, field, search) {
+        console.log('formDate:', formDate)
+        console.log('date:', date)
+        console.log('field:', field)
+        console.log('search:', search)
+      }
     },
     {
       name: 'daterange',
       component: 'DatePicker',
       type: 'daterange',
       label: '日期范围',
+      returnDateType: 'string',
+      value: [],
       options: {
         shortcuts: [
           {
@@ -43,6 +52,8 @@ export default {
       type: 'date',
       label: '多选',
       labelWidth: 50,
+      value: [],
+      returnDateType: 'number',
       multiple: true
     },
     {
@@ -58,7 +69,7 @@ export default {
       component: 'DatePicker',
       type: 'date',
       label: '起始日期',
-      startDate: '19910901'
+      startDate: 1630281600000
     },
     {
       name: 'format',
@@ -71,19 +82,22 @@ export default {
       name: 'datetime',
       component: 'DatePicker',
       type: 'datetime',
-      label: 'datetime'
+      label: 'datetime',
+      returnDateType: 'string'
     },
     {
       name: 'year',
       component: 'DatePicker',
       type: 'year',
-      label: '年'
+      label: '年',
+      returnDateType: 'string'
     },
     {
       name: 'month',
       component: 'DatePicker',
       type: 'month',
-      label: '月'
+      label: '月',
+      returnDateType: 'number'
     },
     {
       name: 'options',
@@ -135,20 +149,6 @@ export default {
       separator: '/'
     },
     {
-      name: 'dateSlot',
-      component: 'DatePicker',
-      type: 'date',
-      label: '自定义slot',
-      labelWidth: 110,
-      slot: 'datslot',
-      open: false,
-      confirm: true,
-      onClear (field, search) {
-        field.open = false
-        alert(`触发onClaer事件,返回值---field:${field}   search:${search}`)
-      }
-    },
-    {
       name: 'event',
       component: 'DatePicker',
       type: 'date',
@@ -158,13 +158,13 @@ export default {
         search.date = '20180801'
         alert(`触发onChange事件,返回值---formatDate:${formatDate}   date:${date} field:${field} search:${search}`)
       },
-      onOpenChange (open) { 
+      onOpenChange (open) {
         console.log('open:', open)
       },
-      onOk () { 
+      onOk () {
         console.log('点击确认按钮')
       },
-      onClear () { 
+      onClear () {
         console.log('清除日期')
       }
     }

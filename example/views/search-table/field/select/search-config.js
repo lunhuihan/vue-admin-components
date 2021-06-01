@@ -8,38 +8,39 @@ export default {
       component: 'Select',
       width: 120,
       value: 'beijing',
+      label: '基本',
       data: [
         {
           label: '北京',
-          value: 'beijing'
+          value: 'beijing',
         },
         {
           label: '上海',
-          value: 'shanghai'
-        }
+          value: 'shanghai',
+        },
       ],
       onChange(val, field, search) {
         console.log('val:', val)
         console.log('field:', field)
         console.log('search:', search)
-      }
+      },
     },
     {
       name: 'select2',
       component: 'Select',
       label: '清空',
       width: 100,
-      // clearable: true,
+      clearable: true,
       data: [
         {
           label: '北京',
-          value: 'beijing'
+          value: 'beijing',
         },
         {
           label: '上海',
-          value: 'shanghai'
-        }
-      ]
+          value: 'shanghai',
+        },
+      ],
     },
     {
       name: 'select3',
@@ -50,13 +51,13 @@ export default {
       data: [
         {
           label: '北京',
-          value: 'beijing'
+          value: 'beijing',
         },
         {
           label: '上海',
-          value: 'shanghai'
-        }
-      ]
+          value: 'shanghai',
+        },
+      ],
     },
     {
       name: 'select4',
@@ -68,21 +69,22 @@ export default {
         {
           label: '北京',
           value: 'beijing',
-          disabled: true
+          disabled: true,
         },
         {
           label: '上海',
-          value: 'shanghai'
-        }
-      ]
+          value: 'shanghai',
+        },
+      ],
     },
     {
-      name: 'select5',
+      name: 'select40',
       component: 'Select',
-      label: '多选',
+      label: 'filterByLabel',
       width: 100,
       labelWidth: 100,
-      multiple: true,
+      filterByLabel: true,
+      filterable: true,
       data: [
         {
           label: '北京',
@@ -90,16 +92,44 @@ export default {
         },
         {
           label: '上海',
-          value: 'shanghai'
-        }
-      ]
+          value: 'shanghai',
+        },
+      ],
+    },
+    {
+      name: 'select5',
+      component: 'Select',
+      label: '多选',
+      width: 200,
+      labelWidth: 100,
+      multiple: true,
+      data: [
+        {
+          label: '北京',
+          value: 'beijing',
+        },
+        {
+          label: '上海',
+          value: 'shanghai',
+        },
+      ],
     },
     {
       name: 'select6',
       component: 'Select',
       label: 'prefix图标',
       labelWidth: 80,
-      prefix: 'ios-home'
+      prefix: 'ios-home',
+      data: [
+        {
+          label: '北京',
+          value: 'beijing',
+        },
+        {
+          label: '上海',
+          value: 'shanghai',
+        },
+      ],
     },
     {
       name: 'select7',
@@ -114,21 +144,21 @@ export default {
       data: [
         {
           label: '武汉',
-          value: 'wuhan'
+          value: 'wuhan',
         },
         {
           label: '北京',
-          value: 'beijing'
+          value: 'beijing',
         },
         {
           label: '上海',
-          value: 'shanghai'
+          value: 'shanghai',
         },
         {
           label: '重庆',
-          value: 'chongqin'
-        }
-      ]
+          value: 'chongqin',
+        },
+      ],
     },
     {
       name: 'select8',
@@ -138,24 +168,60 @@ export default {
       filterable: true,
       // clearable: true,
       multiple: false,
+      onQueryChange (query, field, search) {
+        console.log('query:', query)
+        console.log('field:', field)
+        console.log('search:', search)
+      },
       data: [
         {
           label: '武汉',
-          value: 'wuhan'
+          value: 'wuhan',
         },
         {
           label: '北京',
-          value: 'beijing'
+          value: 'beijing',
         },
         {
           label: '上海',
-          value: 'shanghai'
+          value: 'shanghai',
         },
         {
           label: '重庆',
-          value: 'chongqin'
-        }
-      ]
+          value: 'chongqin',
+        },
+      ],
+    },
+    {
+      name: 'select20',
+      component: 'Select',
+      label: '是否可以创建新条目',
+      labelWidth: 140,
+      allowCreate: true,
+      data: [
+        {
+          label: '武汉',
+          value: 'wuhan',
+        },
+        {
+          label: '北京',
+          value: 'beijing',
+        },
+        {
+          label: '上海',
+          value: 'shanghai',
+        },
+        {
+          label: '重庆',
+          value: 'chongqin',
+        },
+      ],
+      onCreate(query, field, search) {
+        field.data.push({
+          label: query,
+          value: query,
+        })
+      },
     },
     {
       name: 'select9',
@@ -165,36 +231,93 @@ export default {
       labelWidth: 90,
       remote: true,
       loading: false,
-      data: [
-        {
-          label: '武汉',
-          value: 'wuhan'
-        },
-        {
-          label: '北京',
-          value: 'beijing'
-        },
-        {
-          label: '上海',
-          value: 'shanghai'
-        },
-        {
-          label: '重庆',
-          value: 'chongqin'
-        }
-      ],
-      remoteMethod (query, field, search) {
-        field.loading = true
-        setTimeout(() => {
-          this.$set(field, 'data', [
-            {
-              label: `武汉-${query}`,
-              value: 'wuhan'
-            }
-          ])
+      data: [],
+      remoteMethod(query, field, search) {
+        if (query !== '') {
+          field.loading = true
+          setTimeout(() => {
+            this.$set(
+              field,
+              'data',
+              this.list.filter((item) => item.label.includes(query))
+            )
+            field.loading = false
+          }, 2000)
+        } else {
+          this.$set(field, 'data', [])
           field.loading = false
-        }, 2000)
-      }
+        }
+      },
+    },
+    {
+      name: 'select21',
+      component: 'Select',
+      label: '远程搜索默认值',
+      placeholder: '请搜索',
+      labelWidth: 120,
+      remote: true,
+      loading: false,
+      value: 'beijing',
+      defaultLabel: '北京',
+      data: [],
+      onChange (value, field, search) {
+        console.log('value:', value)
+        console.log('field:', field)
+        console.log('search:', search)
+      },
+      remoteMethod(query, field, search) {
+        if (query !== '') {
+          field.loading = true
+          setTimeout(() => {
+            this.$set(
+              field,
+              'data',
+              this.list.filter((item) => item.label.includes(query))
+            )
+            field.loading = false
+          }, 2000)
+        } else {
+          this.$set(field, 'data', [])
+          field.loading = false
+        }
+      },
+    },
+    {
+      name: 'select22',
+      component: 'Select',
+      label: '远程搜索默认值-多选',
+      placeholder: '请搜索',
+      labelWidth: 130,
+      remote: true,
+      multiple: true,
+      loading: false,
+      value: ['beijing', 'shanghai'],
+      defaultLabel: ['北京', '上海'],
+      data: [],
+      onChange (value, field, search) {
+        console.log('value:', value)
+        console.log('field:', field)
+        console.log('search:', search)
+      },
+      onSetDefaultOptions (options, field) {
+        this.$set(field, 'data', options)
+      },
+      remoteMethod(query, field, search) {
+        if (query !== '') {
+          field.loading = true
+          setTimeout(() => {
+            this.$set(
+              field,
+              'data',
+              this.list.filter((item) => item.label.includes(query))
+            )
+            field.loading = false
+          }, 2000)
+        } else {
+          this.$set(field, 'data', [])
+          field.loading = false
+        }
+      },
     },
     {
       name: 'select10',
@@ -202,24 +325,30 @@ export default {
       label: '自定义options',
       labelWidth: 100,
       optionSlot: 'selectOptionSlot',
+      filterable: true,
       data: [
         {
           label: '武汉',
-          value: 'wuhan'
+          value: 'wuhan',
         },
         {
           label: '北京',
-          value: 'beijing'
+          value: 'beijing',
         },
         {
           label: '上海',
-          value: 'shanghai'
+          value: 'shanghai',
         },
         {
           label: '重庆',
-          value: 'chongqin'
-        }
-      ]
+          value: 'chongqin',
+        },
+      ],
+      onChange(val, field, search) {
+        console.log('val:', val)
+        console.log('field:', field)
+        console.log('search:', search)
+      },
     },
     {
       name: 'select11',
@@ -230,36 +359,51 @@ export default {
       remote: true,
       loading: false,
       optionSlot: 'selectOptionSlot',
-      data: [
-        {
-          label: '武汉',
-          value: 'wuhan'
-        },
-        {
-          label: '北京',
-          value: 'beijing'
-        },
-        {
-          label: '上海',
-          value: 'shanghai'
-        },
-        {
-          label: '重庆',
-          value: 'chongqin'
-        }
-      ],
-      remoteMethod (query, field, search) {
+      data: [],
+      remoteMethod(query, field, search) {
         field.loading = true
         setTimeout(() => {
           this.$set(field, 'data', [
             {
               label: `武汉-${query}`,
-              value: 'wuhan'
-            }
+              value: 'wuhan',
+            },
           ])
           field.loading = false
         }, 1000)
+      },
+    },
+    {
+      name: 'select23',
+      component: 'Select',
+      label: 'onSelect事件',
+      labelWidth: 100,
+      data: [
+        {
+          label: '武汉',
+          value: 'wuhan',
+        },
+        {
+          label: '北京',
+          value: 'beijing',
+        },
+        {
+          label: '上海',
+          value: 'shanghai',
+        },
+        {
+          label: '重庆',
+          value: 'chongqin',
+        },
+      ],
+      onSelect (item, field, search) {
+        console.log('item:', item)
+        console.log('field:', field)
+        console.log('search:', search)
       }
+    },
+    {
+      slot: 'select'
     }
-  ]
+  ],
 }

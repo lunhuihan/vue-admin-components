@@ -7,20 +7,29 @@
       align-items: flex-start;
       flex-wrap: wrap;
     }
-    .ivu-form-item{
+    .ivu-form-item {
       display: inline-flex;
       margin-bottom: $space-system;
-      &.ivu-form-item-slot{
-        .ivu-form-item-content{
+      &.ivu-form-item-slot {
+        .ivu-form-item-content {
           font-size: $font-m-size !important;
         }
       }
       .ivu-form-item-label {
         padding: 9px 12px 9px 0;
       }
-      .ivu-form-item-content{
+      .ivu-form-item-content {
         margin-left: 0 !important;
         font-size: 0 !important;
+      }
+      .field-html,
+      .ivu-cascader {
+        font-size: 14px !important;
+      }
+      .ivu-cascader {
+        height: 100%;
+        display: inline-flex;
+        align-items: center;
       }
     }
     .ivu-input-with-search {
@@ -31,8 +40,8 @@
         }
       }
     }
-    .ivu-input-wrapper{
-      .ivu-input-with-suffix ~ .ivu-input-icon-clear{
+    .ivu-input-wrapper {
+      .ivu-input-with-suffix ~ .ivu-input-icon-clear {
         right: 30px;
         color: red;
       }
@@ -42,37 +51,37 @@
       display: inline-flex;
       align-items: center;
     }
-    .ivu-radio-group{
+    .ivu-radio-group {
       font-size: 0 !important;
     }
     .ivu-radio-default {
       font-size: $font-default;
     }
-    .action-wrap{
+    .action-wrap {
       display: inline-flex;
       flex: 1;
       justify-content: flex-end;
       margin-bottom: 24px;
-      .ivu-btn{
+      .ivu-btn {
         margin-right: 10px;
       }
-      .fold-bar{
+      .fold-bar {
         width: 55px;
         display: inline-flex;
         align-items: center;
         font-size: $font-default;
         color: $theme-color;
         cursor: pointer;
-        .ivu-icon{
+        .ivu-icon {
           margin-left: 5px;
         }
       }
     }
-    .action-line-feed-wrap{
+    .action-line-feed-wrap {
       margin-bottom: $space-system;
       text-align: center;
       font-size: 0;
-      .ivu-btn{
+      .ivu-btn {
         margin-right: 10px;
       }
     }
@@ -80,10 +89,10 @@
   .ivu-table-wrapper {
     border-radius: 4px;
     overflow: hidden;
-    td.draggable-col{
+    td.draggable-col {
       cursor: pointer;
     }
-    .ivu-table-cell{
+    .ivu-table-cell {
       padding-left: 10px;
       padding-right: 10px;
     }
@@ -104,7 +113,7 @@
       }
     }
   }
-  .ivu-date-picker{
+  .ivu-date-picker {
     font-size: $font-size;
   }
 }

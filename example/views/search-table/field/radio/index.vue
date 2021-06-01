@@ -1,5 +1,10 @@
 <template>
   <search-table :search-config="searchConfig" :table-config="tableConfig" :table-data="tableData" :page-config="pageConfig" @on-search="getData">
+    <template v-slot:radioSlot="{ search, label, value }">
+      <Tag color="red" v-if="value === 0">{{label}}</Tag>
+      <Tag color="orange" v-if="value === 1">{{label}}</Tag>
+      <Tag color="green" v-if="value === 2">{{label}}</Tag>
+    </template>
   </search-table>
 </template>
 

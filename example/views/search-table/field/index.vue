@@ -50,6 +50,10 @@ export default {
           routeName: 'search-table-field-cascader'
         },
         {
+          title: 'AutoComplete',
+          routeName: 'search-table-field-autocomplete'
+        },
+        {
           title: 'button-append',
           routeName: 'search-table-field-button-append'
         },
