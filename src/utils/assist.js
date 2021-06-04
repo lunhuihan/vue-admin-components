@@ -53,3 +53,11 @@ export function adaptNumberUnit (value, defaultValue = '', canPercent = false, u
   }
   return `${parseFloat(value)}${unit}`
 }
+
+export function checkKeyHazyExist (obj, partKey) {
+  if (typeOf(obj) !== 'object' || !partKey) return false
+  for (let key of Object.keys(obj)) {
+    if (key.split('-')[1] === partKey) return key
+  }
+  return false
+}

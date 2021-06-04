@@ -1,7 +1,10 @@
 @charset "utf-8";
 .v-form {
   .ivu-form-item {
-    display: inline-flex;
+    display: flex;
+    &.inline{
+      display: inline-flex;
+    }
     &.label-top{
       flex-direction: column;
       .ivu-form-item-label{

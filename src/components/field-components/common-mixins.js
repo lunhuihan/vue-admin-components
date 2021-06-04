@@ -14,14 +14,13 @@ export default {
     this.parentOptions = fieldParentComp.options
   },
   methods: {
-    calFieldWidth ({ width }, defaultValue = '') {
+    calFieldStyle ({ component, width, long, style= {}, name }, defaultValue = '') {
       const w = width || this.parentOptions.fieldWidth
-      return this.calWidth(w, defaultValue)
-    },
-    calWidth(width, defaultValue = '') {
-      return {
-        width: adaptNumberUnit(width, defaultValue, true)
+      let caledW = '100%'
+      if (component !== 'Button' || !long) {
+        caledW = adaptNumberUnit(w, defaultValue, true)
       }
+      return Object.assign({}, { width: caledW, ...style })
     },
     calFieldSize ({ size }) {
       const returnSize = size || this.parentOptions.size
@@ -109,7 +108,7 @@ export default {
     dealReturnEvent (fnName, ...rest) {
       if (!fnName) return
       let target = this.findVm()
-      let params = rest.concat(this.formValue)
+      let params = rest.concat(this.returnFormValue)
       if (typeOf(fnName) === 'function') {
         return fnName.bind(target)(...params)
       }

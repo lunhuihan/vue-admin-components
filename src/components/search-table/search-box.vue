@@ -137,6 +137,15 @@
               </slot>
             </template>
           </v-cascader>
+
+          <!-- Button -->
+          <v-button v-if="item.component === 'Button'" :item="item"
+            @deal-event="dealEvent">
+            <template v-slot:default v-if="item.contentSlot">
+              <slot :name="item.contentSlot" :search="returnFormValue" :field="item"></slot>
+            </template>
+          </v-button>
+
         </template>
         <!-- 自定义组件 -->
         <template v-else>
@@ -220,6 +229,7 @@ import VSwitch from '../field-components/v-switch'
 import VAutoComplete from '../field-components/v-auto-complete'
 import VHtml from '../field-components/v-html'
 import VCascader from '../field-components/v-cascader'
+import VButton from '../field-components/v-button'
 import collect from '../../utils/collect'
 
 const time = new Time()
@@ -235,6 +245,8 @@ const componentTypeRange = [
   'Switch',
   'Cascader',
   'AutoComplete',
+  'Html',
+  'Button',
 ]
 
 export default {
@@ -256,6 +268,7 @@ export default {
             slot = '',
             dropdownSlot,
             text,
+            style
           }) => {
             if (typeOf(slot) === 'string' && slot.trim()) return true
             if (component === 'Html') return true
@@ -266,8 +279,8 @@ export default {
                 )}以外的值！`
               )
             }
-            if (!name || nameList.includes(name)) {
-              throw new Error('请为每一个搜索项设置唯一的name属性！')
+            if ((!name || nameList.includes(name)) && component !== 'Button') {
+              throw new Error('请为每一个表单项设置唯一的name属性！')
             }
             if (!labelPositionRange.includes(labelPosition)) {
               throw new RangeError(
@@ -326,7 +339,6 @@ export default {
                 )
               }
             }
-
             nameList.push(name)
           }
         )
@@ -406,8 +418,8 @@ export default {
         this.dealFieldFold()
         window.addEventListener('resize', this._dealFieldFold)
       }, 100)
-      this.addRef()
     }
+    this.addRef()
   },
   methods: {
     initSearchVal() {

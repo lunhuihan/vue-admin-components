@@ -8,14 +8,15 @@
     :show-message="currentOptions.showMessage"
     :disabled="currentOptions.disabled" @on-validate="onValidate">
     <template v-if="!currentOptions.inline">
-      <Row v-for="(row, index) in gridFields" :key="`row-${index}`"
+      <Row v-for="(row, rowIndex) in gridFields" :key="`row-${rowIndex}`"
         :gutter="currentOptions.colSpace">
-        <Col v-for="(item, colIndex) in row" :key="`col-${colIndex}`"
-          :flex="(item.colSpan || 1)/currentOptions.columns"
-          :style="_calColStyle(item)">
-        <FormItem :prop="item.name" :label="item.label"
+        <Col v-for="(col, colIndex) in row" :key="`col-${colIndex}`"
+          :flex="colStyleInfo[rowIndex][colIndex].flex"
+          :style="colStyleInfo[rowIndex][colIndex].style">
+        <FormItem v-for="(item, itemIndex) in col"
+          :key="`form-item-${itemIndex}`" :prop="item.name" :label="item.label"
           :label-width="parseFloat(item.labelWidth) || parseFloat(currentOptions.labelWidth)"
-          :class="`label-${currentOptions.labelPosition}`">
+          :class="[`label-${currentOptions.labelPosition}`, { 'inline': colStyleInfo[rowIndex][colIndex].multiple }]">
           <!-- 系统内置组件 -->
           <template v-if="!_isSlot(item.slot)">
             <!-- Html -->
@@ -158,6 +159,25 @@
                 </slot>
               </template>
             </v-cascader>
+
+            <!-- Upload -->
+            <v-upload :ref="item.name" v-if="item.component === 'Upload'"
+              :form-value="formValue" :item="item" @deal-event="_dealEvent">
+              <template v-slot:default v-if="item.contentSlot">
+                <slot :name="item.contentSlot" :formValue="returnFormValue"
+                  :field="item">
+                </slot>
+              </template>
+            </v-upload>
+
+            <!-- Button -->
+            <v-button v-if="item.component === 'Button'" :item="item"
+              @deal-event="_dealEvent">
+              <template v-slot:default v-if="item.contentSlot">
+                <slot :name="item.contentSlot" :formValue="returnFormValue" :field="item"></slot>
+              </template>
+            </v-button>
+
           </template>
           <!-- 自定义组件 -->
           <template v-else>
@@ -168,7 +188,8 @@
       </Row>
     </template>
     <template v-else>
-      <FormItem v-for="(item, index) in fields" :key="index" :prop="item.name" :label="item.label"
+      <FormItem v-for="(item, index) in fields" :key="index" :prop="item.name"
+        :label="item.label"
         :label-width="parseFloat(item.labelWidth) || parseFloat(currentOptions.labelWidth)"
         :class="`label-${currentOptions.labelPosition}`">
         <!-- 系统内置组件 -->
@@ -311,6 +332,24 @@
               </slot>
             </template>
           </v-cascader>
+
+          <!-- Upload -->
+          <v-upload :ref="item.name" v-if="item.component === 'Upload'"
+            :form-value="formValue" :item="item" @deal-event="_dealEvent">
+            <template v-slot:default v-if="item.contentSlot">
+              <slot :name="item.contentSlot" :formValue="returnFormValue"
+                :field="item">
+              </slot>
+            </template>
+          </v-upload>
+
+          <!-- Button -->
+          <v-button v-if="item.component === 'Button'" :item="item"
+            @deal-event="_dealEvent">
+            <template v-slot:default v-if="item.contentSlot">
+              <slot :name="item.contentSlot" :formValue="returnFormValue" :field="item"></slot>
+            </template>
+          </v-button>
         </template>
         <!-- 自定义组件 -->
         <template v-else>
@@ -318,7 +357,8 @@
         </template>
       </FormItem>
     </template>
-    <div class="v-form-actions" :class="[`align-${currentOptions.actionAlign}`, { 'inline': currentOptions.inline}]"
+    <div class="v-form-actions"
+      :class="[`align-${currentOptions.actionAlign}`, { 'inline': currentOptions.inline}]"
       :style="{paddingLeft: `${actionPL}px`}"
       v-if="(submitBtnOpts || resetBtnOpts) && !currentOptions.readonly">
       <Button v-if="submitBtnOpts" :class="submitBtnOpts.className"
@@ -341,8 +381,12 @@
 </template>
 
 <script>
-4088
-import { typeOf, deepCopy, adaptNumberUnit } from '../../utils/assist'
+import {
+  typeOf,
+  deepCopy,
+  adaptNumberUnit,
+  checkKeyHazyExist,
+} from '../../utils/assist'
 import { DateValueType } from '../../utils/constant'
 import collect from '../../utils/collect'
 import grid from './grid'
@@ -358,6 +402,8 @@ import VSwitch from '../field-components/v-switch'
 import VAutoComplete from '../field-components/v-auto-complete'
 import VHtml from '../field-components/v-html'
 import VCascader from '../field-components/v-cascader'
+import VUpload from '../field-components/v-upload'
+import VButton from '../field-components/v-button'
 import Time from '../../utils/time'
 import getReturnFormValue from '../../mixins/getReturnFormValue'
 import findVm from '../../mixins/find-vm'
@@ -416,6 +462,15 @@ const defaultOptions = {
   },
 }
 
+function getMax(colSpanList = []) {
+  let max = 0
+  colSpanList.forEach((span) => {
+    if (span > max) {
+      max = span
+    }
+  })
+  return max
+}
 export default {
   name: 'VForm',
   mixins: [getReturnFormValue, findVm, cancelFocus],
@@ -486,6 +541,8 @@ export default {
             rules,
             slot = '',
             returnDateType,
+            action,
+            contentSlot,
           }) => {
             if (typeOf(slot) === 'string' && slot.trim()) return true
             if (component === 'Html') return true
@@ -497,7 +554,7 @@ export default {
                 )}以外的值！`
               )
             }
-            if (!name || nameList.includes(name)) {
+            if ((!name || nameList.includes(name)) && component !== 'Button') {
               throw new Error('请为每一个表单项设置唯一的name属性！')
             }
             if (component === 'DatePicker') {
@@ -510,10 +567,17 @@ export default {
               }
             }
 
+            if (
+              component === 'Upload' &&
+              (!action || typeOf(action) !== 'string' || !contentSlot)
+            ) {
+              throw new Error('请为Upload表单项设置action和contentSlot！')
+            }
+
             if (rules && !Array.isArray(rules)) {
               throw new Error(`表单项的rules必需为Array类型！`)
             }
-            nameList.push(name)
+            name && nameList.push(name)
           }
         )
         return true
@@ -558,9 +622,58 @@ export default {
     currentOptions() {
       return merge(defaultOptions, this.options)
     },
+    groupFields() {
+      let groupInfo = {}
+      let groupArr = []
+      this.fields.forEach((field, index) => {
+        let group = field.group
+        if (!group) {
+          groupInfo[`${index}`] = [field]
+          groupArr[index] = [field]
+        } else {
+          const existKey = checkKeyHazyExist(groupInfo, group)
+          if (existKey) {
+            const existKeyIndex = Number(existKey.split('-')[0])
+            groupInfo[existKey].push(field)
+            groupArr[existKeyIndex].push(field)
+          } else {
+            groupInfo[`${index}-${group}`] = [field]
+            groupArr[index] = [field]
+          }
+        }
+      })
+      const result = groupArr
+        .filter((item) => item)
+        .map((item) => {
+          if (item.length === 1) {
+            return item[0]
+          }
+          return item
+        })
+      return result
+    },
     gridFields() {
       // 生成网格布局的fields数据
-      return grid.create(this.fields, 'colSpan', this.currentOptions.columns)
+      return grid.create(this.groupFields, this.currentOptions.columns)
+    },
+    colStyleInfo() {
+      // 同一group中的表单域，公用colSpan，此colSpan为一组表单域中最大的那个colSpan
+      let _this = this
+      return this.gridFields.map((grid) => {
+        return grid.map((col) => {
+          let colSpanList = col.map((item) => {
+            return parseInt(item.colSpan) || 1
+          })
+          const multiple = colSpanList.length > 1
+          const flex = getMax(colSpanList) / _this.currentOptions.columns
+          const percent = `${flex * 100}%`
+          return {
+            flex,
+            style: { maxWidth: percent, minWidth: percent },
+            multiple
+          }
+        })
+      })
     },
     submitBtnOpts() {
       return this.currentOptions.submitBtn
@@ -618,12 +731,20 @@ export default {
   created() {
     this.refId = Math.random().toString().substr(-5)
   },
-  mounted() {},
+  mounted() {
+    this._addRef()
+  },
   methods: {
     _setFormValue() {
       let result = {}
       this.fields
-        .filter((item) => item.name && item.component !== 'Html' && !item.slot)
+        .filter(
+          (item) =>
+            item.name &&
+            item.component !== 'Html' &&
+            item.component !== 'Button' &&
+            !item.slot
+        )
         .forEach(
           ({
             name,
@@ -754,6 +875,14 @@ export default {
           }
         })
     },
+    _addRef() {
+      let vm = this.findVm()
+      for (let [key, ref] of Object.entries(this.$refs)) {
+        if (Array.isArray(ref)) {
+          vm.$refs[`_${key}`] = ref[0].$children[0]
+        }
+      }
+    },
     _dealNumber(item) {
       let seatchNumber = parseFloat(this.search[item.name])
       if (isNaN(seatchNumber)) {
@@ -818,10 +947,6 @@ export default {
           }
       }
     },
-    _calColStyle({ colSpan } = {}) {
-      const percent = `${((colSpan || 1) / this.currentOptions.columns) * 100}%`
-      return { maxWidth: percent, minWidth: percent }
-    },
     onValidate(prop, status, error) {
       this.$emit('on-validate', prop, status, error, this.returnFormValue)
     },
@@ -883,6 +1008,8 @@ export default {
     VAutoComplete,
     VHtml,
     VCascader,
+    VUpload,
+    VButton,
   },
 }
 </script>

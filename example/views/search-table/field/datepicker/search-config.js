@@ -139,6 +139,9 @@ export default {
       }
     },
     {
+      slot: 'system'
+    },
+    {
       name: 'other',
       component: 'DatePicker',
       type: 'daterange',

@@ -1,7 +1,7 @@
 <template>
   <RadioGroup v-model="formValue[item.name]"
     :type="item.type ? item.type : item.buttonStyle ? 'button' : undefined"
-    :style="calFieldWidth(item)" :class="calFieldClass(item)"
+    :style="calFieldStyle(item)" :class="calFieldClass(item)"
     :size="calFieldSize(item)" :button-style="item.buttonStyle"
     @on-change="(val) => { dealEvent(item.onChange, val, item) }">
     <Radio :label="radioItem.value" v-for="(radioItem, index) in dataSource"

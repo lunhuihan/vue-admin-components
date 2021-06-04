@@ -1,5 +1,5 @@
 <template>
-  <Checkbox v-model="formValue[item.name]" :style="calFieldWidth(item)"
+  <Checkbox v-model="formValue[item.name]" :style="calFieldStyle(item)"
     :class="calFieldClass(item)" :size="calFieldSize(item)"
     :indeterminate="item.indeterminate"
     :disabled="calFieldDisabled(item)" :true-value="item.trueValue"

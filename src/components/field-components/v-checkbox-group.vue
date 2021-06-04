@@ -1,6 +1,6 @@
 <template>
   <CheckboxGroup v-model="formValue[item.name]" :type="item.type"
-    :style="calFieldWidth(item)" :class="calFieldClass(item)"
+    :style="calFieldStyle(item)" :class="calFieldClass(item)"
     :size="calFieldSize(item)"
     @on-change="(val) => { dealEvent(item.onChange, val, item) }">
     <Checkbox v-for="(checkboxItem, index) in dataSource" :label="checkboxItem.value"

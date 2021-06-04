@@ -1,5 +1,9 @@
 <template>
   <search-table :search-config="searchConfig" :table-config="tableConfig" :table-data="tableData" :page-config="pageConfig" @on-search="getData">
+    <template v-slot:system>
+      <DatePicker v-model="year" type="year" placeholder="Select year" style="width: 200px"></DatePicker>
+      <DatePicker v-model="month" type="month" placeholder="Select month" style="width: 200px"></DatePicker>
+    </template>
   </search-table>
 </template>
 
@@ -15,7 +19,9 @@ export default {
       searchConfig,
       tableConfig,
       pageConfig,
-      tableData
+      tableData,
+      year: '',
+      month: ''
     }
   },
   created () { },

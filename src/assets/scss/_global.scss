@@ -178,8 +178,16 @@ input[type='number'] {
     }
   }
   .ivu-btn {
-    .ivu-icon{
+    .ivu-icon {
       line-height: 1;
     }
+  }
+}
+
+.search-box,.v-form{
+  .ivu-btn span {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
   }
 }

@@ -13,13 +13,11 @@ export default {
       label: '姓名',
       placeholder: '请输入姓名',
       maxlength: 10,
-      value: 'han',
     },
     {
       label: '等级',
       component: 'Select',
       name: 'grade',
-      value: '1',
       data: [
         {
           label: '初级',

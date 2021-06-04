@@ -1,6 +1,6 @@
 <template>
   <Cascader v-model="formValue[item.name]" :data="dataSource"
-    :style="calFieldWidth(item)" :class="calFieldClass(item)"
+    :style="calFieldStyle(item)" :class="calFieldClass(item)"
     :size="calFieldSize(item)" :placeholder="item.placeholder"
     :disabled="calFieldDisabled(item)" :change-on-select="item.changeOnSelect"
     :clearable="calClear(item)" :trigger="item.trigger"

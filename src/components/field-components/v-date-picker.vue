@@ -1,6 +1,6 @@
 <template>
   <DatePicker v-model="formValue[item.name]"
-    :style="calFieldWidth(item)" :class="calFieldClass(item)" :type="item.type"
+    :style="calFieldStyle(item)" :class="calFieldClass(item)" :type="item.type"
     :placeholder="item.placeholder" :size="calFieldSize(item)" :disabled="calFieldDisabled(item)"
     :clearable="calClear(item)" :readonly="item.readonly"
     :editable="item.editable" :transfer="item.transfer"

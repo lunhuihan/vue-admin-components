@@ -1,6 +1,6 @@
 <template>
   <i-switch v-model="formValue[item.name]" :size="calFieldSize(item)"
-    :disabled="calFieldDisabled(item)" :true-value="item.trueValue"
+    :disabled="calFieldStyle(item)" :true-value="item.trueValue"
     :false-value="item.falseValue" :loading="item.loading"
     @on-change="(val) => { dealEvent(item.onChange, val, item) }">
     <span slot="open" v-html="item.openText"></span>

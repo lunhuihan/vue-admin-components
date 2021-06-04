@@ -1,5 +1,5 @@
 <template>
-  <AutoComplete v-model.trim="formValue[item.name]" :style="calFieldWidth(item)"
+  <AutoComplete v-model.trim="formValue[item.name]" :style="calFieldStyle(item)"
     :class="calFieldClass(item)" :size="calFieldSize(item)"
     :clearable="calClear(item)" :disabled="calFieldDisabled(item)"
     :placeholder="item.placeholder" :icon="item.icon"

@@ -1,4 +1,4 @@
-import { deepCopy } from '../utils/assist'
+import { deepCopy, typeOf } from '../utils/assist'
 import formatTime from '../utils/formatTime'
 import collect from '../utils/collect'
 
@@ -15,12 +15,11 @@ export default {
       const originFormValue = this.originSearch || this.originFormValue
       const result = deepCopy(formValue)
       for (let [key, value] of Object.entries(formValue)) {
-        const { component, type = 'date', returnDateType, multiple } =
-          this.nameField[key]
+        const { component, type = 'date', returnDateType, multiple } = this.nameField[key]
         if (
           value &&
           component === 'DatePicker' &&
-          ((!Array.isArray(value) && typeof value !== 'date') || (value[0] && Array.isArray(value) && typeof value[0] !== 'date') || (returnDateType && returnDateType !== 'date'))
+          ((!Array.isArray(value) && typeOf(value) !== 'date') || (value[0] && Array.isArray(value) && typeOf(value[0]) !== 'date') || (returnDateType && returnDateType !== 'date'))
         ) {
           if (type.includes('range') || multiple) {
             // 时间范围
@@ -46,6 +45,6 @@ export default {
         }
       }
       return result
-    },
+    }
   },
 }

@@ -1,6 +1,6 @@
 <template>
   <InputNumber :max="typeof item.max === 'number' ? item.max : Infinity" :min="typeof item.min === 'number' ? item.min : -Infinity"
-    v-model.trim="formValue[item.name]" :style="calFieldWidth(item)"
+    v-model.trim="formValue[item.name]" :style="calFieldStyle(item)"
     :class="calFieldClass(item)" :step="item.step || 1"
     :disabled="calFieldDisabled(item)" :placeholder="item.placeholder"
     :readonly="item.readonly" :editable="item.editable"

@@ -1,5 +1,5 @@
 <template>
-  <div class="field-html" :style="calFieldWidth(item)"
+  <div class="field-html" :style="calFieldStyle(item)"
     :class="calFieldClass(item)" v-html="item.html"></div>
 </template>
 

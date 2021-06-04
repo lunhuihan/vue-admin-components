@@ -1,10 +1,17 @@
 <template>
   <v-form ref="form" :values="form" :options="options" :fields="fields"
     :data-source="dataSource">
-    <template v-slot:radioSlot="{ search, label, value }">
+    <template v-slot:radioSlot="{ formValue, label, value }">
       <Tag color="red" v-if="value === 0">{{label}}</Tag>
       <Tag color="orange" v-if="value === 1">{{label}}</Tag>
       <Tag color="green" v-if="value === 2">{{label}}</Tag>
+    </template>
+    <template v-slot:uploadSlot="{ formValue, field }">
+      <Button>上传文件</Button>
+    </template>
+    <template v-slot:btnSlot>
+      <Icon type="md-add" />
+      新增
     </template>
   </v-form>
 </template>
@@ -17,15 +24,16 @@ export default {
     return {
       options: {
         // inline: true,
-        // columns: 2,
+        columns: 2,
         hideRequiredMark: true,
         // showMessage: false,
         labelWidth: 110,
         colSpace: 10,
-        fieldWidth: 220,
+        // fieldWidth: '100%',
+        // fieldWidth: 220,
         // readonly: true,
         // labelColon: true,
-        // labelPosition: 'top',
+        // labelPosition: 'left',
         // actionAlign: 'right',
         // submitBtn: false
         // resetBtn: false
@@ -40,6 +48,8 @@ export default {
           label: '姓名',
           component: 'Input',
           name: 'name',
+          colSpan: 1,
+          group: 'a',
           rules: [
             {
               required: true,
@@ -48,9 +58,25 @@ export default {
           ],
         },
         {
+          component: 'Button',
+          // group: 'a',
+          // text: '提交',
+          contentSlot: 'btnSlot',
+          // labelWidth: 40,
+          label: '测试',
+          // width: 100,
+          /* style: {
+            marginLeft: '10px'
+          }, */
+          // long: true,
+          // type: 'primary',
+          onClick: 'test'
+        },
+        {
           label: '等级',
           component: 'Select',
           name: 'grade',
+          // group: 'A'
         },
         {
           label: '状态',
@@ -80,6 +106,7 @@ export default {
           label: '邮箱',
           component: 'AutoComplete',
           name: 'AutoComplete',
+          // group: 'C'
           // disabled: true,
         },
         {
@@ -88,8 +115,18 @@ export default {
           name: 'Cascader',
         },
         {
+          label: '上传组件',
+          component: 'Upload',
+          name: 'upload',
+          action: '//jsonplaceholder.typicode.com/posts/',
+          contentSlot: 'uploadSlot',
+          headers: {},
+          multiple: true
+        },
+        {
           label: '自定义组件',
-          slot: 'custom'
+          slot: 'custom',
+          // group: 'C'
         }
       ],
       form: {
@@ -200,7 +237,13 @@ export default {
   },
   created() {},
   mounted() {
+    // this.$refs['_name'].focus()
   },
-  methods: {},
+  methods: {
+    test (field, formValue) {
+      console.log('field:', field)
+      console.log('formValue:', formValue)
+    }
+  },
 }
 </script>

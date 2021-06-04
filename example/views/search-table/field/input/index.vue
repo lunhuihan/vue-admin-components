@@ -40,6 +40,9 @@ export default {
   },
   created() {
   },
+  mounted () {
+    this.$refs[`_name`].focus()
+  },
   methods: {
     getData(search, page, pageSize, done, eventType) {
       console.log('search:', search)

@@ -1,6 +1,6 @@
 <template>
   <Select v-model.trim="formValue[item.name]"
-    :style="calFieldWidth(item)" :class="calFieldClass(item)"
+    :style="calFieldStyle(item)" :class="calFieldClass(item)"
     :multiple="item.multiple" :size="calFieldSize(item)" :disabled="calFieldDisabled(item)"
     :number="item.number" :clearable="calClear(item)"
     :filterable="calFilter(item)" :placeholder="item.placeholder"
