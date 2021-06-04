@@ -9,14 +9,16 @@ export default {
       width: 120,
       value: 'beijing',
       label: '基本',
+      labelKey: 'desc',
+      valueKey: 'code',
       data: [
         {
-          label: '北京',
-          value: 'beijing',
+          desc: '北京',
+          code: 'beijing',
         },
         {
-          label: '上海',
-          value: 'shanghai',
+          desc: '上海',
+          code: 'shanghai',
         },
       ],
       onChange(val, field, search) {

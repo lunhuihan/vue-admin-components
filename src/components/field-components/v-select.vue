@@ -40,7 +40,6 @@ export default {
       },
     },
     item: Object,
-    dataSource: Array,
   },
   components: {},
   data() {

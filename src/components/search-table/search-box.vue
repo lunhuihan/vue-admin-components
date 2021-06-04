@@ -7,8 +7,9 @@
       :label-width="Number(options.labelWidth)"
       :label-position="options.labelPosition ? options.labelPosition : 'right'"
       :label-colon="options.labelColon">
-      <FormItem v-for="(item, index) in fields" :key="`field-${index}`"
-        :prop="item.name" :label="item.label" :label-width="item.labelWidth"
+      <FormItem v-for="(item, fieldIndex) in fields"
+        :key="`field-${fieldIndex}`" :prop="item.name" :label="item.label"
+        :label-width="item.labelWidth"
         :class="{'ivu-form-item-slot': isSlot(item.slot)}"
         :style="{width: !isSlot(item.slot) ? 'auto' : calFormItemWidth(item)}">
         <!-- 系统内置组件 -->
@@ -62,11 +63,12 @@
 
           <!-- Select -->
           <v-select :ref="item.name" v-if="item.component === 'Select'"
-            :form-value="search" :item="item" :data-source="item.data"
-            @deal-event="dealEvent" @select-query-change="selectQueryChange">
+            :form-value="search" :item="item" @deal-event="dealEvent"
+            @select-query-change="selectQueryChange">
             <template v-slot:options
-              v-if="typeOf(item.data) === 'array' && item.data.length">
-              <Option v-for="(optionItem, optionIndex) in item.data"
+              v-if="typeOf(dataSource[item.name]) === 'array' && dataSource[item.name].length">
+              <Option
+                v-for="(optionItem, optionIndex) in dataSource[item.name]"
                 :value="optionItem.value" :label="optionItem.label"
                 :key="optionIndex" :disabled="optionItem.disabled">
                 <template v-slot:default v-if="item.optionSlot">
@@ -81,14 +83,13 @@
 
           <!-- DatePicker -->
           <v-date-picker :ref="item.name" v-if="item.component === 'DatePicker'"
-            :form-value="search" :item="item" :data-source="item.data"
-            @deal-event="dealEvent">
+            :form-value="search" :item="item" @deal-event="dealEvent">
           </v-date-picker>
 
           <!-- RadioGroup -->
           <v-radio-group :ref="item.name" v-if="item.component === 'RadioGroup'"
-            :form-value="search" :item="item" :data-source="item.data"
-            @deal-event="dealEvent">
+            :form-value="search" :item="item"
+            :data-source="dataSource[item.name]" @deal-event="dealEvent">
             <template v-slot:default="slotProps" v-if="item.radioSlot">
               <slot :name="item.radioSlot" :search="returnFormValue"
                 :field="item" :label="slotProps.label" :value="slotProps.value">
@@ -104,15 +105,16 @@
           <!-- CheckboxGroup -->
           <v-checkbox-group :ref="item.name"
             v-if="item.component === 'CheckboxGroup'" :form-value="search"
-            :item="item" :data-source="item.data" @deal-event="dealEvent">
+            :item="item" :data-source="dataSource[item.name]"
+            @deal-event="dealEvent">
           </v-checkbox-group>
 
           <!-- Switch -->
           <v-switch :ref="item.name" v-if="item.component === 'Switch'"
-            :form-value="search" :item="item" :data-source="item.data"
-            @deal-event="dealEvent"></v-switch>
+            :form-value="search" :item="item" @deal-event="dealEvent">
+          </v-switch>
 
-          <!-- AutoComplete -->
+          <!-- AutoComplete 数据源使用item.data-->
           <v-auto-complete :ref="item.name"
             v-if="item.component === 'AutoComplete'" :form-value="search"
             :item="item" :data-source="item.data" @deal-event="dealEvent">
@@ -127,7 +129,7 @@
             </template>
           </v-auto-complete>
 
-          <!-- Cascader -->
+          <!-- Cascader 数据源使用item.data-->
           <v-cascader :ref="item.name" v-if="item.component === 'Cascader'"
             :form-value="search" :item="item" :data-source="item.data"
             @deal-event="dealEvent">
@@ -142,7 +144,8 @@
           <v-button v-if="item.component === 'Button'" :item="item"
             @deal-event="dealEvent">
             <template v-slot:default v-if="item.contentSlot">
-              <slot :name="item.contentSlot" :search="returnFormValue" :field="item"></slot>
+              <slot :name="item.contentSlot" :search="returnFormValue"
+                :field="item"></slot>
             </template>
           </v-button>
 
@@ -209,7 +212,7 @@
 </template>
 
 <script>
-import { typeOf, deepCopy } from '../../utils/assist'
+import { typeOf, deepCopy, checkIsDataCmp } from '../../utils/assist'
 import findVm from '../../mixins/find-vm'
 import getReturnFormValue from '../../mixins/getReturnFormValue'
 import cancelFocus from '../../mixins/cancel-focus'
@@ -268,7 +271,9 @@ export default {
             slot = '',
             dropdownSlot,
             text,
-            style
+            style,
+            labelKey,
+            valueKey,
           }) => {
             if (typeOf(slot) === 'string' && slot.trim()) return true
             if (component === 'Html') return true
@@ -289,24 +294,26 @@ export default {
                 )}以外的值！`
               )
             }
-            if (
-              component === 'Select' ||
-              component === 'RadioGroup' ||
-              component === 'CheckboxGroup' ||
-              component === 'Cascader'
-            ) {
+            if (checkIsDataCmp(component)) {
               if (typeOf(data) !== 'array') {
                 throw new TypeError(
                   `${component}组件的数据源data需设置为Array类型！`
                 )
               }
               data.forEach(({ label, value }) => {
+                if (typeOf(label) !== 'string' && !labelKey) {
+                  throw new TypeError(
+                    `${component}组件的数据源data的每一项需设置label属性或指定label的labelKey属性！`
+                  )
+                }
+
                 if (
-                  typeOf(label) !== 'string' ||
-                  (typeOf(value) !== 'string' && typeOf(value) !== 'number')
+                  typeOf(value) !== 'string' &&
+                  typeOf(value) !== 'number' &&
+                  !valueKey
                 ) {
                   throw new TypeError(
-                    `${component}组件的数据源data的每一项需设置label和value属性！`
+                    `${component}组件的数据源data的每一项需设置value属性或指定value的valueKey属性！`
                   )
                 }
               })
@@ -384,6 +391,7 @@ export default {
     return {
       search: {},
       originSearch: {},
+      dataSource: {},
       typeOf,
       timerBox: {},
       showFieldNum: 0,
@@ -393,11 +401,13 @@ export default {
       _dealFieldFold: null,
     }
   },
+  computed: {
+  },
   watch: {
     fields: {
       immediate: true,
       handler() {
-        this.search = this.initSearchVal()
+        this.initSearchAndDataSource()
       },
       deep: true,
     },
@@ -422,8 +432,8 @@ export default {
     this.addRef()
   },
   methods: {
-    initSearchVal() {
-      let result = {}
+    initSearchAndDataSource() {
+      let search = {}
       this.fields
         .filter((item) => item.name && item.component !== 'Html' && !item.slot)
         .forEach(
@@ -437,48 +447,52 @@ export default {
             remote,
             remoteMethod,
             slot,
+            data = [],
+            labelKey,
+            valueKey
           }) => {
+            // 搜索值
             if (typeOf(value) === 'undefined') {
               switch (component) {
                 case 'CheckboxGroup':
                 case 'Cascader':
-                  result[name] = []
+                  search[name] = []
                   this.originSearch[name] = []
                   break
                 case 'Switch':
                 case 'Checkbox':
-                  result[name] = falseValue
+                  search[name] = falseValue
                   this.originSearch[name] = falseValue
                   break
                 case 'Select':
                   if (multiple) {
-                    result[name] = []
+                    search[name] = []
                     this.originSearch[name] = []
                   } else {
-                    result[name] = ''
+                    search[name] = ''
                     this.originSearch[name] = ''
                   }
                   break
                 case 'InputNumber':
-                  result[name] = 1
+                  search[name] = 1
                   this.originSearch[name] = 1
                   break
                 case 'DatePicker':
                   if (type === 'daterange' || type === 'datetimerange') {
-                    result[name] = []
+                    search[name] = []
                     this.originSearch[name] = []
                   } else {
                     if (multiple) {
-                      result[name] = []
+                      search[name] = []
                       this.originSearch[name] = []
                     } else {
-                      result[name] = ''
+                      search[name] = ''
                       this.originSearch[name] = ''
                     }
                   }
                   break
                 default:
-                  result[name] = ''
+                  search[name] = ''
                   this.originSearch[name] = ''
               }
             } else {
@@ -507,7 +521,18 @@ export default {
                   }
                 }
               }
-              result[name] = v
+              search[name] = v
+            }
+
+            // 表单项数据源
+            if (checkIsDataCmp(component) && Array.isArray(data)) {
+              this.dataSource[name] = data.map((dataItem) => {
+                return {
+                  ...dataItem,
+                  label: labelKey ? dataItem[labelKey] : dataItem.label,
+                  value: valueKey ? dataItem[valueKey] : dataItem.value,
+                }
+              })
             }
 
             if (component === 'Select' && remote && remoteMethod) {
@@ -516,7 +541,7 @@ export default {
             }
           }
         )
-      return result
+      this.search = search
     },
     addRef() {
       let vm = this.findVm()

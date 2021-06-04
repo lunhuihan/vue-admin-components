@@ -36,19 +36,21 @@ export default {
       label: 'CheckboxGroup',
       labelWidth: 120,
       value: ['xg', 'xj'],
+      labelKey: 'desc',
+      valueKey: 'code',
       data: [
         {
-          value: 'xg',
-          label: '西瓜',
+          code: 'xg',
+          desc: '西瓜',
           disabled: true
         },
         {
-          value: 'xj',
-          label: '香蕉'
+          code: 'xj',
+          desc: '香蕉'
         },
         {
-          value: 'bl',
-          label: '菠萝'
+          code: 'bl',
+          desc: '菠萝'
         }
       ]
     },

@@ -14,7 +14,7 @@ export default {
     this.parentOptions = fieldParentComp.options
   },
   methods: {
-    calFieldStyle ({ component, width, long, style= {}, name }, defaultValue = '') {
+    calFieldStyle ({ component, width, long, style= {} }, defaultValue = '') {
       const w = width || this.parentOptions.fieldWidth
       let caledW = '100%'
       if (component !== 'Button' || !long) {

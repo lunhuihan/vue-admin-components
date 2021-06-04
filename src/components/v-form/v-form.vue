@@ -20,13 +20,11 @@
           <!-- 系统内置组件 -->
           <template v-if="!_isSlot(item.slot)">
             <!-- Html -->
-            <v-html v-if="item.component === 'Html'" :item="item"
-              :field-width="options.fieldWidth"></v-html>
+            <v-html v-if="item.component === 'Html'" :item="item"></v-html>
             <!-- Input -->
             <template v-if="item.component === 'Input'">
               <v-number-input :ref="item.name" v-if="item.number"
-                :form-value="formValue" :item="item"
-                :field-width="options.fieldWidth" @deal-event="_dealEvent"
+                :form-value="formValue" :item="item" @deal-event="_dealEvent"
                 @deal-number="_dealNumber">
                 <!-- 前置slot -->
                 <template v-slot:prepend
@@ -44,8 +42,8 @@
                 </template>
               </v-number-input>
               <v-input v-else :ref="item.name" :form-value="formValue"
-                :item="item" :field-width="options.fieldWidth"
-                @deal-event="_dealEvent" @deal-number="_dealNumber">
+                :item="item" @deal-event="_dealEvent"
+                @deal-number="_dealNumber">
                 <!-- 前置slot -->
                 <template v-slot:prepend
                   v-if="(!item.type || item.type === 'text') && item.prependSlot">
@@ -71,14 +69,12 @@
 
             <!-- Select -->
             <v-select :ref="item.name" v-if="item.component === 'Select'"
-              :form-value="formValue" :item="item"
-              :data-source="dataSource[item.name]"
-              :field-width="options.fieldWidth" @deal-event="_dealEvent"
+              :form-value="formValue" :item="item" @deal-event="_dealEvent"
               @select-query-change="_selectQueryChange">
               <template v-slot:options
-                v-if="typeOf(dataSource[item.name]) === 'array' && dataSource[item.name].length">
+                v-if="typeOf(formDataSource[item.name]) === 'array' && formDataSource[item.name].length">
                 <Option
-                  v-for="(optionItem, optionIndex) in dataSource[item.name]"
+                  v-for="(optionItem, optionIndex) in formDataSource[item.name]"
                   :value="optionItem.value" :label="optionItem.label"
                   :key="optionIndex" :disabled="optionItem.disabled">
                   <template v-slot:default v-if="item.optionSlot">
@@ -94,14 +90,13 @@
             <!-- DatePicker -->
             <v-date-picker :ref="item.name"
               v-if="item.component === 'DatePicker'" :form-value="formValue"
-              :item="item" :data-source="dataSource[item.name]"
-              :field-width="options.fieldWidth" @deal-event="_dealEvent">
+              :item="item" @deal-event="_dealEvent">
             </v-date-picker>
 
             <!-- RadioGroup -->
             <v-radio-group :ref="item.name"
               v-if="item.component === 'RadioGroup'" :form-value="formValue"
-              :item="item" :data-source="dataSource[item.name]"
+              :item="item" :data-source="formDataSource[item.name]"
               :field-width="options.fieldWidth" @deal-event="_dealEvent">
               <template v-slot:default="slotProps" v-if="item.radioSlot">
                 <slot :name="item.radioSlot" :formValue="returnFormValue"
@@ -113,29 +108,26 @@
 
             <!-- Checkbox -->
             <v-checkbox :ref="item.name" v-if="item.component === 'Checkbox'"
-              :form-value="formValue" :item="item"
-              :field-width="options.fieldWidth" @deal-event="_dealEvent">
+              :form-value="formValue" :item="item" @deal-event="_dealEvent">
             </v-checkbox>
 
             <!-- CheckboxGroup -->
             <v-checkbox-group :ref="item.name"
               v-if="item.component === 'CheckboxGroup'" :form-value="formValue"
-              :item="item" :data-source="dataSource[item.name]"
-              :field-width="options.fieldWidth" @deal-event="_dealEvent">
+              :item="item" :data-source="formDataSource[item.name]"
+              @deal-event="_dealEvent">
             </v-checkbox-group>
 
             <!-- Switch -->
             <v-switch :ref="item.name" v-if="item.component === 'Switch'"
-              :form-value="formValue" :item="item"
-              :data-source="dataSource[item.name]"
-              :field-width="options.fieldWidth" @deal-event="_dealEvent">
+              :form-value="formValue" :item="item" @deal-event="_dealEvent">
             </v-switch>
 
             <!-- AutoComplete -->
             <v-auto-complete :ref="item.name"
               v-if="item.component === 'AutoComplete'" :form-value="formValue"
               :item="item" :data-source="dataSource[item.name]"
-              :field-width="options.fieldWidth" @deal-event="_dealEvent">
+              @deal-event="_dealEvent">
               <template v-slot:default v-if="item.dropdownSlot">
                 <slot :name="item.dropdownSlot" :formValue="returnFormValue"
                   :field="item">
@@ -151,8 +143,7 @@
             <!-- Cascader -->
             <v-cascader :ref="item.name" v-if="item.component === 'Cascader'"
               :form-value="formValue" :item="item"
-              :data-source="dataSource[item.name]"
-              :field-width="options.fieldWidth" @deal-event="_dealEvent">
+              :data-source="dataSource[item.name]" @deal-event="_dealEvent">
               <template v-slot:default v-if="item.selectSlot">
                 <slot :name="item.selectSlot" :formValue="returnFormValue"
                   :field="item">
@@ -174,7 +165,8 @@
             <v-button v-if="item.component === 'Button'" :item="item"
               @deal-event="_dealEvent">
               <template v-slot:default v-if="item.contentSlot">
-                <slot :name="item.contentSlot" :formValue="returnFormValue" :field="item"></slot>
+                <slot :name="item.contentSlot" :formValue="returnFormValue"
+                  :field="item"></slot>
               </template>
             </v-button>
 
@@ -195,13 +187,11 @@
         <!-- 系统内置组件 -->
         <template v-if="!_isSlot(item.slot)">
           <!-- Html -->
-          <v-html v-if="item.component === 'Html'" :item="item"
-            :field-width="options.fieldWidth"></v-html>
+          <v-html v-if="item.component === 'Html'" :item="item"></v-html>
           <!-- Input -->
           <template v-if="item.component === 'Input'">
             <v-number-input :ref="item.name" v-if="item.number"
-              :form-value="formValue" :item="item"
-              :field-width="options.fieldWidth" @deal-event="_dealEvent"
+              :form-value="formValue" :item="item" @deal-event="_dealEvent"
               @deal-number="_dealNumber">
               <!-- 前置slot -->
               <template v-slot:prepend
@@ -219,8 +209,7 @@
               </template>
             </v-number-input>
             <v-input v-else :ref="item.name" :form-value="formValue"
-              :item="item" :field-width="options.fieldWidth"
-              @deal-event="_dealEvent" @deal-number="_dealNumber">
+              :item="item" @deal-event="_dealEvent" @deal-number="_dealNumber">
               <!-- 前置slot -->
               <template v-slot:prepend
                 v-if="(!item.type || item.type === 'text') && item.prependSlot">
@@ -241,18 +230,15 @@
           <!-- InputNumber -->
           <v-input-number :ref="item.name"
             v-if="item.component === 'InputNumber'" :form-value="formValue"
-            :item="item" :field-width="options.fieldWidth"
-            @deal-event="_dealEvent"></v-input-number>
+            :item="item" @deal-event="_dealEvent"></v-input-number>
 
           <!-- Select -->
           <v-select :ref="item.name" v-if="item.component === 'Select'"
-            :form-value="formValue" :item="item"
-            :data-source="dataSource[item.name]"
-            :field-width="options.fieldWidth" @deal-event="_dealEvent"
+            :form-value="formValue" :item="item" @deal-event="_dealEvent"
             @select-query-change="_selectQueryChange">
             <template v-slot:options
-              v-if="typeOf(dataSource[item.name]) === 'array' && dataSource[item.name].length">
-              <Option v-for="(optionItem, optionIndex) in dataSource[item.name]"
+              v-if="typeOf(formDataSource[item.name]) === 'array' && formDataSource[item.name].length">
+              <Option v-for="(optionItem, optionIndex) in formDataSource[item.name]"
                 :value="optionItem.value" :label="optionItem.label"
                 :key="optionIndex" :disabled="optionItem.disabled">
                 <template v-slot:default v-if="item.optionSlot">
@@ -267,16 +253,13 @@
 
           <!-- DatePicker -->
           <v-date-picker :ref="item.name" v-if="item.component === 'DatePicker'"
-            :form-value="formValue" :item="item"
-            :data-source="dataSource[item.name]"
-            :field-width="options.fieldWidth" @deal-event="_dealEvent">
+            :form-value="formValue" :item="item" @deal-event="_dealEvent">
           </v-date-picker>
 
           <!-- RadioGroup -->
           <v-radio-group :ref="item.name" v-if="item.component === 'RadioGroup'"
             :form-value="formValue" :item="item"
-            :data-source="dataSource[item.name]"
-            :field-width="options.fieldWidth" @deal-event="_dealEvent">
+            :data-source="formDataSource[item.name]" @deal-event="_dealEvent">
             <template v-slot:default="slotProps" v-if="item.radioSlot">
               <slot :name="item.radioSlot" :formValue="returnFormValue"
                 :field="item" :label="slotProps.label" :value="slotProps.value">
@@ -286,29 +269,26 @@
 
           <!-- Checkbox -->
           <v-checkbox :ref="item.name" v-if="item.component === 'Checkbox'"
-            :form-value="formValue" :item="item"
-            :field-width="options.fieldWidth" @deal-event="_dealEvent">
+            :form-value="formValue" :item="item" @deal-event="_dealEvent">
           </v-checkbox>
 
           <!-- CheckboxGroup -->
           <v-checkbox-group :ref="item.name"
             v-if="item.component === 'CheckboxGroup'" :form-value="formValue"
-            :item="item" :data-source="dataSource[item.name]"
-            :field-width="options.fieldWidth" @deal-event="_dealEvent">
+            :item="item" :data-source="formDataSource[item.name]"
+            @deal-event="_dealEvent">
           </v-checkbox-group>
 
           <!-- Switch -->
           <v-switch :ref="item.name" v-if="item.component === 'Switch'"
-            :form-value="formValue" :item="item"
-            :data-source="dataSource[item.name]"
-            :field-width="options.fieldWidth" @deal-event="_dealEvent">
+            :form-value="formValue" :item="item" @deal-event="_dealEvent">
           </v-switch>
 
           <!-- AutoComplete -->
           <v-auto-complete :ref="item.name"
             v-if="item.component === 'AutoComplete'" :form-value="formValue"
             :item="item" :data-source="dataSource[item.name]"
-            :field-width="options.fieldWidth" @deal-event="_dealEvent">
+            @deal-event="_dealEvent">
             <template v-slot:default v-if="item.dropdownSlot">
               <slot :name="item.dropdownSlot" :formValue="returnFormValue"
                 :field="item">
@@ -324,8 +304,7 @@
           <!-- Cascader -->
           <v-cascader :ref="item.name" v-if="item.component === 'Cascader'"
             :form-value="formValue" :item="item"
-            :data-source="dataSource[item.name]"
-            :field-width="options.fieldWidth" @deal-event="_dealEvent">
+            :data-source="dataSource[item.name]" @deal-event="_dealEvent">
             <template v-slot:default v-if="item.selectSlot">
               <slot :name="item.selectSlot" :formValue="returnFormValue"
                 :field="item">
@@ -347,7 +326,8 @@
           <v-button v-if="item.component === 'Button'" :item="item"
             @deal-event="_dealEvent">
             <template v-slot:default v-if="item.contentSlot">
-              <slot :name="item.contentSlot" :formValue="returnFormValue" :field="item"></slot>
+              <slot :name="item.contentSlot" :formValue="returnFormValue"
+                :field="item"></slot>
             </template>
           </v-button>
         </template>
@@ -386,6 +366,7 @@ import {
   deepCopy,
   adaptNumberUnit,
   checkKeyHazyExist,
+  checkIsDataCmp,
 } from '../../utils/assist'
 import { DateValueType } from '../../utils/constant'
 import collect from '../../utils/collect'
@@ -610,6 +591,7 @@ export default {
       originFormValue: {},
       formValue: {},
       formRule: {},
+      formDataSource: {},
       adaptNumberUnit,
       submitBtnLoading: false,
       resetBtnLoading: false,
@@ -670,7 +652,7 @@ export default {
           return {
             flex,
             style: { maxWidth: percent, minWidth: percent },
-            multiple
+            multiple,
           }
         })
       })
@@ -723,7 +705,13 @@ export default {
       immediate: true,
       handler() {
         this._setFormRule()
-        this._checkDataSource()
+      },
+      deep: true,
+    },
+    dataSource: {
+      immediate: true,
+      handler() {
+        this._setDataSource()
       },
       deep: true,
     },
@@ -839,41 +827,47 @@ export default {
         }
       })
     },
-    _checkDataSource() {
-      this.fields
-        .filter((item) => item.name && item.component !== 'Html' && !item.slot)
-        .forEach(({ name, component, dropdownSlot }) => {
-          if (
-            component === 'Select' ||
-            component === 'RadioGroup' ||
-            component === 'CheckboxGroup' ||
-            component === 'Cascader'
-          ) {
-            let data = this.dataSource[name]
-            if (typeOf(data) !== 'array') {
-              throw new TypeError(`${component}组件的数据源需设置为Array类型！`)
-            }
-            data.forEach(({ label, value }) => {
-              if (
-                typeOf(label) !== 'string' ||
-                (typeOf(value) !== 'string' && typeOf(value) !== 'number')
-              ) {
-                throw new TypeError(
-                  `${component}组件的数据源的每一项需设置label和value属性！`
+    _setDataSource() {
+      for (let [name, field] of Object.entries(this.nameField)) {
+        let { component, dropdownSlot, labelKey, valueKey } = field
+        let data = this.dataSource[name]
+        if (checkIsDataCmp(component)) {
+          if (typeOf(data) !== 'array') {
+            this.formDataSource[name] = []
+          } else {
+            // 表单项数据源
+            this.formDataSource[name] = data.map((dataItem) => {
+              let label = dataItem.label
+              let value = dataItem.value
+              if (!label && !labelKey) {
+                throw new Error(
+                  `${component}表单项对应dataSource数据源中的数据的每一项需设置label属性或指定label的labelKey属性！`
                 )
               }
+
+              if (!value && typeOf(value) !== 'number' && !valueKey) {
+                throw new Error(
+                  `${component}表单项对应dataSource数据源中的数据的每一项需设置value属性或指定value的valueKey属性！`
+                )
+              }
+              return {
+                ...dataItem,
+                label: labelKey ? dataItem[labelKey] : label,
+                value: valueKey ? dataItem[valueKey] : value,
+              }
             })
-            if (
-              component === 'AutoComplete' &&
-              typeOf(data) !== 'array' &&
-              !dropdownSlot
-            ) {
-              throw new Error(
-                `请为${component}组件设置数据源或自定义下拉数据源dropdownSlot！`
-              )
-            }
           }
-        })
+        }
+        if (
+          component === 'AutoComplete' &&
+          typeOf(data) !== 'array' &&
+          !dropdownSlot
+        ) {
+          throw new Error(
+            `请为${component}组件设置数据源或自定义下拉数据源dropdownSlot！`
+          )
+        }
+      }
     },
     _addRef() {
       let vm = this.findVm()

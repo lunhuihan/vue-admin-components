@@ -76,6 +76,8 @@ export default {
           label: '等级',
           component: 'Select',
           name: 'grade',
+          labelKey: 'desc',
+          valueKey: 'code'
           // group: 'A'
         },
         {
@@ -83,6 +85,8 @@ export default {
           component: 'RadioGroup',
           name: 'RadioGroup',
           radioSlot: 'radioSlot',
+          labelKey: 'desc',
+          valueKey: 'code'
         },
         {
           label: '日期',
@@ -101,6 +105,7 @@ export default {
           label: '兴趣爱好',
           component: 'CheckboxGroup',
           name: 'CheckboxGroup',
+          labelKey: 'desc'
         },
         {
           label: '邮箱',
@@ -132,7 +137,7 @@ export default {
       form: {
         name: '轮回韩',
         grade: '2',
-        RadioGroup: 0,
+        RadioGroup: 1,
         DatePicker: '20200510',
         CheckboxGroup: [1],
         AutoComplete: '821877109@qq.com',
@@ -142,43 +147,44 @@ export default {
       dataSource: {
         grade: [
           {
-            label: '初级',
-            value: '1',
+            desc: '初级',
+            code: '1',
           },
           {
-            label: '中级',
-            value: '2',
+            desc: '中级',
+            code: '2',
           },
           {
-            label: '高级',
-            value: '3',
+            desc: '高级',
+            code: '3',
           },
         ],
         RadioGroup: [
           {
-            label: '紧急',
-            value: 0,
+            desc: '紧急',
+            code: 0,
           },
           {
-            label: '急',
-            value: 1,
+            desc: '急',
+            code: 1,
           },
           {
-            label: '一般',
-            value: 2,
+            desc: '一般',
+            code: 2,
           },
         ],
+        AutoComplete: [],
         CheckboxGroup: [
           {
-            label: '爬山',
+            desc: '爬山',
             value: 0,
           },
           {
-            label: '唱歌',
+            desc: '唱歌',
             value: 1,
           },
           {
-            label: '跑步',
+            desc: '跑步',
             value: 2,
           },
         ],

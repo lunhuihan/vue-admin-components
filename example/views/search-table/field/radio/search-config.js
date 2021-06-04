@@ -7,21 +7,23 @@ export default {
     {
       name: 'favor',
       component: 'RadioGroup',
-      // value: 0,
+      value: 0,
       label: '兴趣爱好',
       // width: 220,
+      labelKey: 'desc',
+      valueKey: 'code',
       data: [
         {
-          label: '羽毛球',
-          value: 0
+          desc: '羽毛球',
+          code: 0
         },
         {
-          label: '篮球',
-          value: 1
+          desc: '篮球',
+          code: 1
         },
         {
-          label: '足球',
-          value: 2
+          desc: '足球',
+          code: 2
         }
       ]
     },

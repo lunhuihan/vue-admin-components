@@ -61,3 +61,12 @@ export function checkKeyHazyExist (obj, partKey) {
   }
   return false
 }
+
+export function checkIsDataCmp(component) {
+  return (
+    component === 'Select' ||
+    component === 'RadioGroup' ||
+    component === 'CheckboxGroup' ||
+    component === 'Cascader'
+  )
+}
