@@ -631,7 +631,6 @@ export default {
     },
     onReset() {
       this.resetBtnLoading = true
-      this.search = deepCopy(this.originSearch)
       this.$refs['form'].resetFields()
       setTimeout(() => {
         this._cancelFocus('.search-box')

@@ -97,7 +97,7 @@
             <v-radio-group :ref="item.name"
               v-if="item.component === 'RadioGroup'" :form-value="formValue"
               :item="item" :data-source="formDataSource[item.name]"
-              :field-width="options.fieldWidth" @deal-event="_dealEvent">
+              @deal-event="_dealEvent">
               <template v-slot:default="slotProps" v-if="item.radioSlot">
                 <slot :name="item.radioSlot" :formValue="returnFormValue"
                   :field="item" :label="slotProps.label"
@@ -117,7 +117,6 @@
               :item="item" :data-source="formDataSource[item.name]"
               @deal-event="_dealEvent">
             </v-checkbox-group>
-
             <!-- Switch -->
             <v-switch :ref="item.name" v-if="item.component === 'Switch'"
               :form-value="formValue" :item="item" @deal-event="_dealEvent">
@@ -238,7 +237,8 @@
             @select-query-change="_selectQueryChange">
             <template v-slot:options
               v-if="typeOf(formDataSource[item.name]) === 'array' && formDataSource[item.name].length">
-              <Option v-for="(optionItem, optionIndex) in formDataSource[item.name]"
+              <Option
+                v-for="(optionItem, optionIndex) in formDataSource[item.name]"
                 :value="optionItem.value" :label="optionItem.label"
                 :key="optionIndex" :disabled="optionItem.disabled">
                 <template v-slot:default v-if="item.optionSlot">
@@ -565,13 +565,6 @@ export default {
       },
       required: true,
     },
-    values: {
-      // 表单域值（key对应fields中每一项field的name值）
-      type: Object,
-      default() {
-        return {}
-      },
-    },
     dataSource: {
       // 表单每一项的数据源配置
       type: Object,
@@ -589,6 +582,7 @@ export default {
   data() {
     return {
       originFormValue: {},
+      unformattedFormValue: {},
       formValue: {},
       formRule: {},
       formDataSource: {},
@@ -664,6 +658,7 @@ export default {
       return this.currentOptions.resetBtn
     },
     actionPL() {
+      if (this.currentOptions.inline) return 0
       let { labelWidth, actionAlign, labelPosition } = this.currentOptions
       let lastField = this.fields[this.fields.length - 1]
       if (actionAlign === 'left') {
@@ -694,13 +689,6 @@ export default {
     },
   },
   watch: {
-    values: {
-      immediate: true,
-      handler() {
-        this._setFormValue()
-      },
-      deep: true,
-    },
     fields: {
       immediate: true,
       handler() {
@@ -714,16 +702,17 @@ export default {
         this._setDataSource()
       },
       deep: true,
-    },
+    }
   },
   created() {
     this.refId = Math.random().toString().substr(-5)
+    this._setFormValue({})
   },
   mounted() {
     this._addRef()
   },
   methods: {
-    _setFormValue() {
+    _setFormValue(formValue) {
       let result = {}
       this.fields
         .filter(
@@ -743,7 +732,7 @@ export default {
             remote,
             remoteMethod,
           }) => {
-            let fieldVal = this.values[name]
+            let fieldVal = formValue[name]
             if (typeOf(fieldVal) === 'undefined') {
               switch (component) {
                 case 'CheckboxGroup':
@@ -788,32 +777,11 @@ export default {
                   this.originFormValue[name] = ''
               }
             } else {
-              let v = fieldVal
-              this.originFormValue[name] = deepCopy(v)
-              if (component === 'DatePicker') {
-                if (type === 'daterange' || type === 'datetimerange') {
-                  v = fieldVal.map((item) => {
-                    return item ? time.parse(item) : ''
-                  })
-                } else {
-                  if (multiple) {
-                    if (Array.isArray(fieldVal)) {
-                      v = fieldVal.map((item) => {
-                        if (item) {
-                          return time.parse(item)
-                        } else {
-                          return item
-                        }
-                      })
-                    } else {
-                      v = fieldVal.split(',').map((item) => time.parse(item))
-                    }
-                  } else {
-                    v = fieldVal ? time.parse(fieldVal) : ''
-                  }
-                }
-              }
-              result[name] = v
+              this.originFormValue[name] = deepCopy(fieldVal)
+              result[name] = this._setFieldValue(
+                { component, type, multiple },
+                fieldVal
+              )
             }
           }
         )
@@ -833,10 +801,10 @@ export default {
         let data = this.dataSource[name]
         if (checkIsDataCmp(component)) {
           if (typeOf(data) !== 'array') {
-            this.formDataSource[name] = []
+            this.$set(this.formDataSource, [name], [])
           } else {
             // 表单项数据源
-            this.formDataSource[name] = data.map((dataItem) => {
+            let transData = data.map((dataItem) => {
               let label = dataItem.label
               let value = dataItem.value
               if (!label && !labelKey) {
@@ -856,6 +824,7 @@ export default {
                 value: valueKey ? dataItem[valueKey] : value,
               }
             })
+            this.$set(this.formDataSource, [name], transData)
           }
         }
         if (
@@ -890,7 +859,8 @@ export default {
     _dealEvent(fnName, ...rest) {
       if (!fnName) return
       let target = this.findVm()
-      let params = rest.concat(this.getFormValue())
+      let formValue = this.getFormValue()
+      let params = rest.concat(formValue)
       if (typeOf(fnName) === 'function') {
         fnName.bind(target)(...params)
       }
@@ -958,13 +928,59 @@ export default {
     onReset() {
       // 重置表单
       this.resetBtnLoading = true
-      this.$refs[`form-${this.refId}`].resetFields()
+      this.resetFields()
       setTimeout(() => {
         this._cancelFocus('.v-form')
       }, 100)
       this.$emit('on-reset', this.returnFormValue, () => {
         this.resetBtnLoading = false
       })
+    },
+    _setFieldValue({ component, type, multiple }, fieldVal) {
+      let v = fieldVal
+      if (component === 'DatePicker') {
+        if (type === 'daterange' || type === 'datetimerange') {
+          if (!Array.isArray(fieldVal)) {
+            fieldVal = fieldVal.split(',')
+          }
+          v = fieldVal.map((item) => {
+            return item ? time.parse(item) : ''
+          })
+        } else {
+          if (multiple) {
+            if (Array.isArray(fieldVal)) {
+              v = fieldVal.map((item) => {
+                if (item) {
+                  return time.parse(item)
+                } else {
+                  return item
+                }
+              })
+            } else {
+              v = fieldVal.split(',').map((item) => time.parse(item))
+            }
+          } else {
+            v = fieldVal ? time.parse(fieldVal) : ''
+          }
+        }
+      }
+      return v
+    },
+    setFormValue(...rest) {
+      if (rest.length === 1) {
+        if (typeOf(rest[0]) !== 'object') return
+        this.unformattedFormValue = deepCopy(rest[0])
+        this._setFormValue(rest[0])
+      }
+      if (rest.length === 2) {
+        let [key, value] = rest
+        if (typeOf(key) !== 'string' || typeOf(value) === 'undefined') return
+        const field = this.nameField[key]
+        if (!field) return
+
+        this.$set(this.unformattedFormValue, key, value)
+        this.$set(this.formValue, key, this._setFieldValue(field, value))
+      }
     },
     getFormValue() {
       // 供外部使用
@@ -973,6 +989,9 @@ export default {
     resetFields() {
       // 供外部使用
       this.$refs[`form-${this.refId}`].resetFields()
+      this.$nextTick(() => {
+        this._setFormValue(this.originFormValue)
+      })
     },
     validate(callback) {
       // 供外部使用

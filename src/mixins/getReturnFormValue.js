@@ -2,6 +2,14 @@ import { deepCopy, typeOf } from '../utils/assist'
 import formatTime from '../utils/formatTime'
 import collect from '../utils/collect'
 
+function dateNeedTrans(key, value, returnDateType, originFormValue) {
+  if (Array.isArray(value)) {
+    return value[0] && (typeOf(originFormValue[key][0]) !== 'date' || (returnDateType && returnDateType !== 'date'))
+  } else {
+    return (typeOf(originFormValue[key]) !== 'date' || (returnDateType && returnDateType !== 'date'))
+  }
+}
+
 export default {
   data() {
     return {}
@@ -12,18 +20,16 @@ export default {
     },
     returnFormValue() {
       const formValue = this.search || this.formValue
-      const originFormValue = this.originSearch || this.originFormValue
+      const originFormValue = this.originSearch || this.unformattedFormValue
       const result = deepCopy(formValue)
       for (let [key, value] of Object.entries(formValue)) {
         const { component, type = 'date', returnDateType, multiple } = this.nameField[key]
-        if (
-          value &&
-          component === 'DatePicker' &&
-          ((!Array.isArray(value) && typeOf(value) !== 'date') || (value[0] && Array.isArray(value) && typeOf(value[0]) !== 'date') || (returnDateType && returnDateType !== 'date'))
-        ) {
+        if (component !== 'DatePicker' || !value) continue
+        value = typeOf(value) === 'string' ? replaceAll(/[\.\-\/]/g, '') : value
+        if (dateNeedTrans(key, value, returnDateType, originFormValue)) {
           if (type.includes('range') || multiple) {
             // 时间范围
-            const formatType = returnDateType || typeof originFormValue[key][0]
+            const formatType = returnDateType || typeOf(originFormValue[key][0])
             const oValue = Array.isArray(value)
               ? originFormValue[key]
               : originFormValue[key].split(',')
@@ -34,7 +40,7 @@ export default {
                 return formatTime.transTime(item, formatType, format)
               })
           } else {
-            const formatType = returnDateType || typeof originFormValue[key]
+            const formatType = returnDateType || typeOf(originFormValue[key])
             const format = formatTime.getFormatStr(originFormValue[key], type)
             result[key] = formatTime.transTime(
               value,

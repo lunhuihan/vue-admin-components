@@ -1,6 +1,8 @@
 <template>
-  <v-form ref="form" :values="form" :options="options" :fields="fields"
-    :data-source="dataSource">
+  <v-form ref="form" :options="options" :fields="fields"
+    :data-source="dataSource" @on-submit="submit">
+    <template v-slot:select>
+    </template>
     <template v-slot:radioSlot="{ formValue, label, value }">
       <Tag color="red" v-if="value === 0">{{label}}</Tag>
       <Tag color="orange" v-if="value === 1">{{label}}</Tag>
@@ -25,7 +27,7 @@ export default {
       options: {
         // inline: true,
         columns: 2,
-        hideRequiredMark: true,
+        // hideRequiredMark: true,
         // showMessage: false,
         labelWidth: 110,
         colSpace: 10,
@@ -33,7 +35,8 @@ export default {
         // fieldWidth: 220,
         // readonly: true,
         // labelColon: true,
-        // labelPosition: 'left',
+        labelPosition: 'right',
+        // fieldWidth: '100%',
         // actionAlign: 'right',
         // submitBtn: false
         // resetBtn: false
@@ -70,15 +73,7 @@ export default {
           }, */
           // long: true,
           // type: 'primary',
-          onClick: 'test'
-        },
-        {
-          label: '等级',
-          component: 'Select',
-          name: 'grade',
-          labelKey: 'desc',
-          valueKey: 'code'
-          // group: 'A'
+          onClick: 'test',
         },
         {
           label: '状态',
@@ -86,26 +81,32 @@ export default {
           name: 'RadioGroup',
           radioSlot: 'radioSlot',
           labelKey: 'desc',
-          valueKey: 'code'
+          valueKey: 'code',
         },
         {
           label: '日期',
           component: 'DatePicker',
           name: 'DatePicker',
-          returnDateType: 'number',
+          // returnDateType: 'number',
         },
         {
           label: '日期范围',
           component: 'DatePicker',
           type: 'daterange',
           name: 'daterange',
-          returnDateType: 'number',
+          width: 280
+          // returnDateType: 'number',
         },
         {
           label: '兴趣爱好',
           component: 'CheckboxGroup',
           name: 'CheckboxGroup',
-          labelKey: 'desc'
+          // labelKey: 'desc'
+        },
+        {
+          label: '常见兴趣爱好',
+          component: 'CheckboxGroup',
+          name: 'CheckboxGroup2',
         },
         {
           label: '邮箱',
@@ -115,50 +116,62 @@ export default {
           // disabled: true,
         },
         {
+          label: '下拉框',
+          component: 'Select',
+          name: 'grade',
+          rules: [
+            {
+              required: true,
+              message: '请选择',
+            },
+          ],
+          onChange: 'change'
+          // width: 100
+        },
+        {
           label: '地址',
           component: 'Cascader',
           name: 'Cascader',
         },
-        {
+        /* {
           label: '上传组件',
           component: 'Upload',
           name: 'upload',
           action: '//jsonplaceholder.typicode.com/posts/',
           contentSlot: 'uploadSlot',
           headers: {},
-          multiple: true
-        },
-        {
-          label: '自定义组件',
-          slot: 'custom',
-          // group: 'C'
-        }
+          multiple: true,
+        } */
       ],
-      form: {
-        name: '轮回韩',
-        grade: '2',
-        RadioGroup: 1,
-        DatePicker: '20200510',
-        CheckboxGroup: [1],
-        AutoComplete: '821877109@qq.com',
-        Cascader: ['jiangsu', 'suzhou', 'zhuozhengyuan'],
-        // daterange: ['2020-04-30', '2020-07-20']
-      },
       dataSource: {
         grade: [
           {
-            desc: '初级',
-            code: '1',
+            label:
+              '自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件',
+            value:
+              '自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件',
           },
           {
-            desc: '中级',
-            code: '2',
+            label:
+              '自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件',
+            value:
+              '2',
           },
-          {
-            desc: '高级',
-            code: '3',
-          },
-        ],
+          ],
+          CheckboxGroup2: [
+            {
+              label: '唱歌',
+              value: 0
+            },
+            {
+              label: '跳舞',
+              value: 1
+            },
+            {
+              label: '跑步',
+              value: 2
+            }
+          ],
         RadioGroup: [
           {
             desc: '紧急',
@@ -174,20 +187,7 @@ export default {
           },
         ],
         AutoComplete: [],
-        CheckboxGroup: [
-          {
-            desc: '爬山',
-            value: 0,
-          },
-          {
-            desc: '唱歌',
-            value: 1,
-          },
-          {
-            desc: '跑步',
-            value: 2,
-          },
-        ],
+        CheckboxGroup: [],
         Cascader: [
           {
             value: 'beijing',
@@ -239,16 +239,47 @@ export default {
           },
         ],
       },
+      formRules: {
+        name: [
+          {
+            required: true, message: '请输入姓名'
+          }
+        ],
+        grade: [
+          {
+            required: true, message: '请选择等级'
+          }
+        ]
+      }
     }
   },
-  created() {},
+  created() {
+  },
   mounted() {
-    // this.$refs['_name'].focus()
+    this.$refs['form'].setFormValue({
+      name: '轮回韩',
+      RadioGroup: 1,
+      grade: '2',
+      DatePicker: '2021/06/01',
+      Cascader: ['beijing', 'gugong'],
+      daterange: [1623134641294, 1624164851294]
+    })
+    /* this.$refs['form'].setFormValue('DatePicker', '2021-09-08')
+    this.$refs['form'].setFormValue('daterange', '20210908, 20210909') */
   },
   methods: {
-    test (field, formValue) {
+    test(field, formValue) {
       console.log('field:', field)
       console.log('formValue:', formValue)
+    },
+    submit(formValue, done) {
+      console.log('formValue:', formValue)
+      setTimeout(() => {
+        done()
+      }, 1000)
+    },
+    change (val) {
+      this.$refs['form'].setFormValue('name', val)
     }
   },
 }

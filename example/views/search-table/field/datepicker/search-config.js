@@ -9,7 +9,7 @@ export default {
       type: 'date',
       label: '日期',
       labelWidth: 50,
-      value: '2021/05/24',
+      value: '2021/05/02',
       returnDateType: 'string',
       onChange (formDate, date, field, search) {
         console.log('formDate:', formDate)

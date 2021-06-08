@@ -1,7 +1,8 @@
 @charset "utf-8";
 .v-form {
+  $field-height: 32px !important;
+  $field-large-height: 38px !important;
   .ivu-form-item {
-    display: flex;
     &.inline{
       display: inline-flex;
     }
@@ -9,6 +10,8 @@
       flex-direction: column;
       .ivu-form-item-label{
         text-align: left;
+        display: inline-flex;
+        float: none;
       }
     }
     &.label-left{
@@ -16,8 +19,12 @@
         text-align: left;
       }
     }
+    .ivu-form-item-label{
+      padding: 9px 12px 9px 0;
+      flex-shrink: 0;
+    }
     .ivu-form-item-content {
-      flex: 1;
+      display: flex;
       margin-left: 0 !important;
       .ivu-cascader,.ivu-radio-wrapper,.ivu-radio-group,.ivu-checkbox-group,.ivu-checkbox-group-item {
         height: 100%;
@@ -28,13 +35,33 @@
       .ivu-radio{
         display: inline-flex;
       }
-      .ivu-checkbox-group{
-        height: 34px;
+      .ivu-radio-group{
+        height: $field-height;
+        &-large{
+          height: $field-large-height;
+        }
       }
       .ivu-checkbox{
         display: inline-flex;
         align-items: center;
         margin-right: 5px;
+        &-large{
+          padding-top: 1px;
+        }
+      }
+      .ivu-checkbox-group{
+        height: $field-height;
+      }
+      .ivu-checkbox-large{
+        height: $field-large-height;
+      }
+      .ivu-input-large{
+        height: $field-large-height;
+      }
+      .ivu-btn{
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
       }
     }
   }
@@ -62,14 +89,20 @@
       }
     }
   }
+  .ivu-btn-large{
+    height: $field-large-height;
+  }
+  .ivu-select-large.ivu-select-single .ivu-select-selection {
+    height: $field-large-height;
+  }
   &-large {
     .ivu-form-item-label {
       font-size: 16px !important;
-      padding-top: 13px !important;
+      padding: 12px 12px 11px 0 !important;
     }
-    .ivu-select-selected-value, .ivu-checkbox-group {
-      height: 40px !important;
-      // line-height: 40px !important;
+    .ivu-date-picker{
+      position: relative;
+      top: 1px;
     }
   }
   &-readonly{
@@ -127,6 +160,11 @@
       .ivu-checkbox{
         display: none !important;
       }
+    }
+  }
+  &.ivu-form-inline{
+    .ivu-form-item-content{
+      display: inline-block;
     }
   }
 }
