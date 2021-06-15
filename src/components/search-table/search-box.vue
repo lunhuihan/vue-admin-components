@@ -1,7 +1,7 @@
 <template>
   <div ref="search-box" class="search-box" :class="options.className">
     <!-- prepend插槽 -->
-    <slot name="search-prepend" :search="returnFormValue"></slot>
+    <slot name="search-prepend" :search="search"></slot>
     <!-- 表单域 -->
     <Form ref="form" class="search-box-form" inline :model="search"
       :label-width="Number(options.labelWidth)"
@@ -17,64 +17,40 @@
           <!-- Html -->
           <v-html v-if="item.component === 'Html'" :item="item"></v-html>
           <!-- Input -->
-          <template v-if="item.component === 'Input'">
-            <v-number-input :ref="item.name" v-if="item.number"
-              :form-value="search" :item="item" @deal-event="dealEvent"
-              @deal-number="dealNumber">
-              <!-- 前置slot -->
-              <template v-slot:prepend
-                v-if="(!item.type || item.type === 'text') && item.prependSlot">
-                <slot :name="item.prependSlot" :search="returnFormValue"
-                  :field="item">
-                </slot>
-              </template>
-              <!-- 后置slot -->
-              <template v-slot:append
-                v-if="(!item.type || item.type === 'text') && item.appendSlot">
-                <slot :name="item.appendSlot" :search="returnFormValue"
-                  :field="item">
-                </slot>
-              </template>
-            </v-number-input>
-            <v-input v-else :ref="item.name" :form-value="search" :item="item"
-              @deal-event="dealEvent" @deal-number="dealNumber">
-              <!-- 前置slot -->
-              <template v-slot:prepend
-                v-if="(!item.type || item.type === 'text') && item.prependSlot">
-                <slot :name="item.prependSlot" :search="returnFormValue"
-                  :field="item">
-                </slot>
-              </template>
-              <!-- 后置slot -->
-              <template v-slot:append
-                v-if="(!item.type || item.type === 'text') && item.appendSlot">
-                <slot :name="item.appendSlot" :search="returnFormValue"
-                  :field="item">
-                </slot>
-              </template>
-            </v-input>
-          </template>
+          <v-input v-if="item.component === 'Input'" :ref="item.name"
+            v-model="search[item.name]" :item="item" @deal-event="dealEvent"
+            @deal-number="dealNumber">
+            <!-- 前置slot -->
+            <template v-slot:prepend
+              v-if="(!item.type || item.type === 'text') && item.prependSlot">
+              <slot :name="item.prependSlot" :search="search" :field="item">
+              </slot>
+            </template>
+            <!-- 后置slot -->
+            <template v-slot:append
+              v-if="(!item.type || item.type === 'text') && item.appendSlot">
+              <slot :name="item.appendSlot" :search="search" :field="item">
+              </slot>
+            </template>
+          </v-input>
 
           <!-- InputNumber -->
           <v-input-number :ref="item.name"
-            v-if="item.component === 'InputNumber'" :form-value="search"
+            v-if="item.component === 'InputNumber'" v-model="search[item.name]"
             :item="item" @deal-event="dealEvent">
           </v-input-number>
 
           <!-- Select -->
           <v-select :ref="item.name" v-if="item.component === 'Select'"
-            :form-value="search" :item="item" @deal-event="dealEvent"
-            @select-query-change="selectQueryChange">
+            v-model="search[item.name]" :item="item" @deal-event="dealEvent">
             <template v-slot:options
               v-if="typeOf(dataSource[item.name]) === 'array' && dataSource[item.name].length">
-              <Option
-                v-for="(optionItem, optionIndex) in dataSource[item.name]"
+              <Option v-for="(optionItem, optionIndex) in dataSource[item.name]"
                 :value="optionItem.value" :label="optionItem.label"
                 :key="optionIndex" :disabled="optionItem.disabled">
                 <template v-slot:default v-if="item.optionSlot">
-                  <slot :name="item.optionSlot" :search="returnFormValue"
-                    :field="item" :label="optionItem.label"
-                    :value="optionItem.value">
+                  <slot :name="item.optionSlot" :search="search" :field="item"
+                    :label="optionItem.label" :value="optionItem.value">
                   </slot>
                 </template>
               </Option>
@@ -83,44 +59,43 @@
 
           <!-- DatePicker -->
           <v-date-picker :ref="item.name" v-if="item.component === 'DatePicker'"
-            :form-value="search" :item="item" @deal-event="dealEvent">
+            v-model="search[item.name]" :item="item" @deal-event="dealEvent">
           </v-date-picker>
 
           <!-- RadioGroup -->
           <v-radio-group :ref="item.name" v-if="item.component === 'RadioGroup'"
-            :form-value="search" :item="item"
+            v-model="search[item.name]" :item="item"
             :data-source="dataSource[item.name]" @deal-event="dealEvent">
             <template v-slot:default="slotProps" v-if="item.radioSlot">
-              <slot :name="item.radioSlot" :search="returnFormValue"
-                :field="item" :label="slotProps.label" :value="slotProps.value">
+              <slot :name="item.radioSlot" :search="search" :field="item"
+                :label="slotProps.label" :value="slotProps.value">
               </slot>
             </template>
           </v-radio-group>
 
           <!-- Checkbox -->
           <v-checkbox :ref="item.name" v-if="item.component === 'Checkbox'"
-            :form-value="search" :item="item" @deal-event="dealEvent">
+            v-model="search[item.name]" :item="item" @deal-event="dealEvent">
           </v-checkbox>
 
           <!-- CheckboxGroup -->
           <v-checkbox-group :ref="item.name"
-            v-if="item.component === 'CheckboxGroup'" :form-value="search"
-            :item="item" :data-source="dataSource[item.name]"
-            @deal-event="dealEvent">
+            v-if="item.component === 'CheckboxGroup'"
+            v-model="search[item.name]" :item="item"
+            :data-source="dataSource[item.name]" @deal-event="dealEvent">
           </v-checkbox-group>
 
           <!-- Switch -->
           <v-switch :ref="item.name" v-if="item.component === 'Switch'"
-            :form-value="search" :item="item" @deal-event="dealEvent">
+            v-model="search[item.name]" :item="item" @deal-event="dealEvent">
           </v-switch>
 
           <!-- AutoComplete 数据源使用item.data-->
           <v-auto-complete :ref="item.name"
-            v-if="item.component === 'AutoComplete'" :form-value="search"
+            v-if="item.component === 'AutoComplete'" v-model="search[item.name]"
             :item="item" :data-source="item.data" @deal-event="dealEvent">
             <template v-slot:default v-if="item.dropdownSlot">
-              <slot :name="item.dropdownSlot" :search="returnFormValue"
-                :field="item">
+              <slot :name="item.dropdownSlot" :search="search" :field="item">
               </slot>
             </template>
             <template v-slot:default v-else-if="!item.filterMethod">
@@ -131,11 +106,10 @@
 
           <!-- Cascader 数据源使用item.data-->
           <v-cascader :ref="item.name" v-if="item.component === 'Cascader'"
-            :form-value="search" :item="item" :data-source="item.data"
+            v-model="search[item.name]" :item="item" :data-source="item.data"
             @deal-event="dealEvent">
             <template v-slot:default v-if="item.selectSlot">
-              <slot :name="item.selectSlot" :search="returnFormValue"
-                :field="item">
+              <slot :name="item.selectSlot" :search="search" :field="item">
               </slot>
             </template>
           </v-cascader>
@@ -144,22 +118,22 @@
           <v-button v-if="item.component === 'Button'" :item="item"
             @deal-event="dealEvent">
             <template v-slot:default v-if="item.contentSlot">
-              <slot :name="item.contentSlot" :search="returnFormValue"
-                :field="item"></slot>
+              <slot :name="item.contentSlot" :search="search" :field="item">
+              </slot>
             </template>
           </v-button>
 
         </template>
         <!-- 自定义组件 -->
         <template v-else>
-          <slot :name="item.slot" :search="returnFormValue"></slot>
+          <slot :name="item.slot" :search="search"></slot>
         </template>
       </FormItem>
       <template v-if="!options.fold">
         <!-- 默认使用有【搜索】和【重置】按钮 -->
         <!-- 操作按钮不换行 -->
         <template v-if="!options.actionLineFeed">
-          <slot name="action-prepend" :search="returnFormValue"></slot>
+          <slot name="action-prepend" :search="search"></slot>
           <FormItem v-if="!options.hiddenSearchBtn" :label-width="0">
             <Button type="primary"
               :icon="options.hiddenActionIcon ? '' : 'md-search'"
@@ -170,18 +144,18 @@
               :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
               :loading="resetBtnLoading" @click="onReset">重置</Button>
           </FormItem>
-          <slot name="action-append" :search="returnFormValue"></slot>
+          <slot name="action-append" :search="search"></slot>
         </template>
       </template>
       <div class="action-wrap" v-else>
-        <slot name="action-prepend" :search="returnFormValue"></slot>
+        <slot name="action-prepend" :search="search"></slot>
         <Button v-if="!options.hiddenSearchBtn" type="primary"
           :icon="options.hiddenActionIcon ? '' : 'md-search'"
           :loading="searchBtnLoading" @click="onSearch">搜索</Button>
         <Button v-if="!options.hiddenResetBtn" type="primary" ghost
           :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
           :loading="resetBtnLoading" @click="onReset">重置</Button>
-        <slot name="action-append" :search="returnFormValue"></slot>
+        <slot name="action-append" :search="search"></slot>
         <template
           v-if="!options.hiddenSearchBtn || !options.hiddenResetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append']">
           <span class="fold-bar" v-if="isFold" @click="toggleFold(false)">
@@ -197,30 +171,28 @@
     </Form>
     <div class="action-line-feed-wrap"
       v-if="!options.fold && options.actionLineFeed && (!options.hiddenSearchBtn || !options.hiddenResetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append'])">
-      <slot name="action-prepend" :search="returnFormValue"></slot>
+      <slot name="action-prepend" :search="search"></slot>
       <Button v-if="!options.hiddenSearchBtn" type="primary"
         :icon="options.hiddenActionIcon ? '' : 'md-search'"
         :loading="searchBtnLoading" @click="onSearch">搜索</Button>
       <Button v-if="!options.hiddenResetBtn" type="primary" ghost
         :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
         :loading="resetBtnLoading" @click="onReset">重置</Button>
-      <slot name="action-append" :search="returnFormValue"></slot>
+      <slot name="action-append" :search="search"></slot>
     </div>
     <!-- append插槽 -->
-    <slot name="search-append" :search="returnFormValue"></slot>
+    <slot name="search-append" :search="search"></slot>
   </div>
 </template>
 
 <script>
 import { typeOf, deepCopy, checkIsDataCmp } from '../../utils/assist'
 import findVm from '../../mixins/find-vm'
-import getReturnFormValue from '../../mixins/getReturnFormValue'
 import cancelFocus from '../../mixins/cancel-focus'
 import Time from '../../utils/time'
 import timeout from '../../utils/timeout'
 import eventBus from '../../utils/event'
 import { labelPositionRange, DateValueType } from '../../utils/constant'
-import VNumberInput from '../field-components/v-number-input'
 import VInput from '../field-components/v-input'
 import VInputNumber from '../field-components/v-input-number'
 import VSelect from '../field-components/v-select'
@@ -372,9 +344,8 @@ export default {
       },
     },
   },
-  mixins: [findVm, getReturnFormValue, cancelFocus],
+  mixins: [findVm, cancelFocus],
   components: {
-    VNumberInput,
     VInput,
     VInputNumber,
     VSelect,
@@ -391,23 +362,38 @@ export default {
     return {
       search: {},
       originSearch: {},
-      dataSource: {},
       typeOf,
-      timerBox: {},
       showFieldNum: 0,
       searchBtnLoading: false,
       resetBtnLoading: false,
       isFold: false,
       _dealFieldFold: null,
+      flag: false,
     }
   },
   computed: {
+    dataSource() {
+      let fields = this.fields.filter(({ component, data }) => checkIsDataCmp(component) && Array.isArray(data))
+      let result = {}
+      fields.forEach(({ name, data, labelKey, valueKey }) => {
+        result[name] = data.map((dataItem) => {
+          return {
+            ...dataItem,
+            label: labelKey ? dataItem[labelKey] : dataItem.label,
+            value: valueKey ? dataItem[valueKey] : dataItem.value,
+          }
+        })
+      })
+      return result
+    },
   },
   watch: {
     fields: {
       immediate: true,
       handler() {
-        this.initSearchAndDataSource()
+        if (this.flag) return
+        this.initSearch()
+        this.flag = true
       },
       deep: true,
     },
@@ -432,7 +418,7 @@ export default {
     this.addRef()
   },
   methods: {
-    initSearchAndDataSource() {
+    initSearch() {
       let search = {}
       this.fields
         .filter((item) => item.name && item.component !== 'Html' && !item.slot)
@@ -449,7 +435,7 @@ export default {
             slot,
             data = [],
             labelKey,
-            valueKey
+            valueKey,
           }) => {
             // 搜索值
             if (typeOf(value) === 'undefined') {
@@ -496,48 +482,8 @@ export default {
                   this.originSearch[name] = ''
               }
             } else {
-              let v = value
+              search[name] = value
               this.originSearch[name] = deepCopy(value)
-              if (component === 'DatePicker') {
-                if (type === 'daterange' || type === 'datetimerange') {
-                  v = value.map((item) => {
-                    return item ? time.parse(item) : ''
-                  })
-                } else {
-                  if (multiple) {
-                    if (Array.isArray(value)) {
-                      v = value.map((item) => {
-                        if (item) {
-                          return time.parse(item)
-                        } else {
-                          return item
-                        }
-                      })
-                    } else {
-                      v = value.split(',').map((item) => time.parse(item))
-                    }
-                  } else {
-                    v = value ? time.parse(value) : ''
-                  }
-                }
-              }
-              search[name] = v
-            }
-
-            // 表单项数据源
-            if (checkIsDataCmp(component) && Array.isArray(data)) {
-              this.dataSource[name] = data.map((dataItem) => {
-                return {
-                  ...dataItem,
-                  label: labelKey ? dataItem[labelKey] : dataItem.label,
-                  value: valueKey ? dataItem[valueKey] : dataItem.value,
-                }
-              })
-            }
-
-            if (component === 'Select' && remote && remoteMethod) {
-              // 远程搜索
-              this.timerBox[name] = null
             }
           }
         )
@@ -564,23 +510,6 @@ export default {
     dealEvent(fnName, ...rest) {
       if (!fnName) return
       this.$emit('on-event', fnName, ...rest)
-    },
-    selectQueryChange(fnName, query, field) {
-      let { multiple, name, remote, remoteMethod } = field
-
-      if (!query && !multiple) {
-        this.search[name] = ''
-      }
-      if (remote && remoteMethod) {
-        field.loading = true
-        if (this.timerBox[name]) {
-          window.clearTimeout(this.timerBox[name])
-        }
-        this.timerBox[name] = setTimeout(() => {
-          this.$emit('on-event', remoteMethod, query, field)
-        }, 300)
-      }
-      this.$emit('on-event', fnName, query, field)
     },
     toggleFold() {
       this.isFold = !this.isFold
@@ -625,7 +554,7 @@ export default {
     },
     onSearch() {
       this.searchBtnLoading = true
-      this.$emit('on-search', this.returnFormValue, () => {
+      this.$emit('on-search', this.search, () => {
         this.searchBtnLoading = false
       })
     },
@@ -634,11 +563,12 @@ export default {
       this.$refs['form'].resetFields()
       setTimeout(() => {
         this._cancelFocus('.search-box')
+        this.search = deepCopy(this.originSearch)
+        this.$emit('on-reset', this.search)
+        this.$emit('on-search', this.search, () => {
+          this.resetBtnLoading = false
+        })
       }, 100)
-      this.$emit('on-reset', this.returnFormValue)
-      this.$emit('on-search', this.returnFormValue, () => {
-        this.resetBtnLoading = false
-      })
     },
   },
 }

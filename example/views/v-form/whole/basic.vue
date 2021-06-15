@@ -1,194 +1,232 @@
 <template>
-  <v-form ref="form" :options="options" :fields="fields"
-    :data-source="dataSource" @on-submit="submit">
-    <template v-slot:select>
-    </template>
-    <template v-slot:radioSlot="{ formValue, label, value }">
-      <Tag color="red" v-if="value === 0">{{label}}</Tag>
-      <Tag color="orange" v-if="value === 1">{{label}}</Tag>
-      <Tag color="green" v-if="value === 2">{{label}}</Tag>
-    </template>
-    <template v-slot:uploadSlot="{ formValue, field }">
-      <Button>上传文件</Button>
-    </template>
-    <template v-slot:btnSlot>
-      <Icon type="md-add" />
-      新增
+  <v-form ref="form" :model.sync="form" :options="options" :fields="fields"
+    :data-source="dataSource" @on-reset="reset" @on-submit="submit">
+    <template v-slot:uploadSlot>
+      <Button>上传</Button>
     </template>
   </v-form>
 </template>
 
 <script>
+import { deepCopy } from '../../../utils/assist'
 export default {
   name: '',
   components: {},
   data() {
     return {
-      options: {
-        // inline: true,
-        columns: 2,
-        // hideRequiredMark: true,
-        // showMessage: false,
-        labelWidth: 110,
-        colSpace: 10,
-        // fieldWidth: '100%',
-        // fieldWidth: 220,
-        // readonly: true,
-        // labelColon: true,
-        labelPosition: 'right',
-        // fieldWidth: '100%',
-        // actionAlign: 'right',
-        // submitBtn: false
-        // resetBtn: false
-        // size: 'large',
-        submitBtn: {
-          // loading: true
-          // size: 'default'
-        },
+      visible: false,
+      form: {
+        day: [1623400158263, 1623700158263, 1623900158263],
+        startTime: '',
+        endTime: '',
+        // name: ' 轮回韩 ',
+        // age: '29330rr',
+        // birthday: ['2021/03/10', '2021/04/20'],
+        // inputNumber: 18,
+        // grade: 1,
+        // school: '20210901',
+        // sex: 0,
+        // work: true,
+        // favor: [0, 2],
+        // area: ['beijing', 'gugong'],
+        // email: '22202'
+        // switch: true
       },
       fields: [
         {
-          label: '姓名',
-          component: 'Input',
           name: 'name',
-          colSpan: 1,
-          group: 'a',
-          rules: [
-            {
-              required: true,
-              message: '请输入姓名',
-            },
-          ],
+          component: 'Input',
+          label: '姓名',
         },
         {
-          component: 'Button',
-          // group: 'a',
-          // text: '提交',
-          contentSlot: 'btnSlot',
-          // labelWidth: 40,
-          label: '测试',
-          // width: 100,
-          /* style: {
-            marginLeft: '10px'
-          }, */
-          // long: true,
-          // type: 'primary',
-          onClick: 'test',
+          name: 'age',
+          component: 'Input',
+          label: '年龄',
+          number: true,
         },
         {
-          label: '状态',
+          name: 'birthday',
+          component: 'DatePicker',
+          label: '出生日期',
+          type: 'daterange',
+          width: 240,
+          returnDateType: 'string',
+          returnDateSeparator: '.',
+        },
+        {
+          name: 'day',
+          component: 'DatePicker',
+          label: '多选日期',
+          type: 'date',
+          multiple: true,
+          returnDateType: 'string',
+          returnDateSeparator: '/',
+        },
+        {
+          name: 'startTime',
+          component: 'DatePicker',
+          label: '度假日期',
+          width: 120,
+          options: 'startTimeOptions',
+        },
+        {
+          component: 'Html',
+          html: '~',
+        },
+        {
+          name: 'endTime',
+          component: 'DatePicker',
+          width: 120,
+          options: 'endTimeOptions',
+        },
+        {
+          name: 'inputNumber',
+          component: 'InputNumber',
+          label: '数字输入框',
+          min: 1,
+          max: 20,
+          // size: 'large'
+        },
+        {
+          name: 'grade',
+          component: 'Select',
+          label: '等级',
+        },
+        {
+          name: 'school',
+          component: 'DatePicker',
+          label: '上学日期',
+          width: 240,
+          // type: 'datetime',
+          returnDateType: 'string',
+          returnDateSeparator: '/',
+        },
+        {
+          name: 'sex',
           component: 'RadioGroup',
-          name: 'RadioGroup',
-          radioSlot: 'radioSlot',
+          label: '性别',
           labelKey: 'desc',
           valueKey: 'code',
         },
         {
-          label: '日期',
-          component: 'DatePicker',
-          name: 'DatePicker',
-          // returnDateType: 'number',
+          name: 'work',
+          component: 'Checkbox',
+          label: '是否工作',
+          text: '是否工作',
+          // size: 'large'
+          // trueValue: 'y',
+          // falseValue: 'n'
         },
         {
-          label: '日期范围',
-          component: 'DatePicker',
-          type: 'daterange',
-          name: 'daterange',
-          width: 280
-          // returnDateType: 'number',
-        },
-        {
+          name: 'favor',
+          component: 'CheckboxGroup',
           label: '兴趣爱好',
-          component: 'CheckboxGroup',
-          name: 'CheckboxGroup',
-          // labelKey: 'desc'
         },
         {
-          label: '常见兴趣爱好',
-          component: 'CheckboxGroup',
-          name: 'CheckboxGroup2',
+          name: 'switch',
+          component: 'Switch',
+          label: '开关',
+          // trueValue: 1,
+          // falseValue: 0
+          // size: 'large'
         },
         {
-          label: '邮箱',
+          name: 'email',
           component: 'AutoComplete',
-          name: 'AutoComplete',
-          // group: 'C'
-          // disabled: true,
+          label: '邮箱',
+          onSearch(value, field) {
+            this.dataSource.email =
+              !value || value.indexOf('@') >= 0
+                ? []
+                : [value + '@qq.com', value + '@sina.com', value + '@163.com']
+          },
         },
         {
-          label: '下拉框',
-          component: 'Select',
-          name: 'grade',
-          rules: [
-            {
-              required: true,
-              message: '请选择',
-            },
-          ],
-          onChange: 'change'
-          // width: 100
-        },
-        {
-          label: '地址',
+          name: 'area',
           component: 'Cascader',
-          name: 'Cascader',
+          label: '地区',
+          renderFormat(labels, selectedData, field, formValue) {
+            console.log('field:', field)
+            console.log('formValue:', formValue)
+            const index = labels.length - 1
+            const data = selectedData[index] || false
+            if (data && data.code) {
+              return labels[index] + ' - ' + data.code
+            }
+            return labels[index]
+          },
         },
-        /* {
-          label: '上传组件',
+        {
+          name: 'img',
           component: 'Upload',
-          name: 'upload',
+          label: '上传图片',
           action: '//jsonplaceholder.typicode.com/posts/',
           contentSlot: 'uploadSlot',
-          headers: {},
-          multiple: true,
-        } */
+          onSuccess(res) {
+            console.log('res:', res)
+          },
+          onError(res) {
+            console.log('res:', res)
+          },
+        },
+        {
+          name: 'company',
+          label: '公司',
+          component: 'Select',
+          remoteMethod: 'queryCompany',
+          loading: false,
+          onQueryChange () {
+            console.log('------queryChange-----')
+          }
+        },
       ],
+      options: {
+        labelWidth: 100,
+        inline: true,
+        // size: 'large',
+        // readonly: true
+      },
       dataSource: {
         grade: [
           {
-            label:
-              '自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件',
-            value:
-              '自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件',
+            label: '初级',
+            value: 0,
           },
           {
-            label:
-              '自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件自定义组件',
-            value:
-              '2',
-          },
-          ],
-          CheckboxGroup2: [
-            {
-              label: '唱歌',
-              value: 0
-            },
-            {
-              label: '跳舞',
-              value: 1
-            },
-            {
-              label: '跑步',
-              value: 2
-            }
-          ],
-        RadioGroup: [
-          {
-            desc: '紧急',
-            code: 0,
+            label: '中级',
+            value: 1,
           },
           {
-            desc: '急',
-            code: 1,
-          },
-          {
-            desc: '一般',
-            code: 2,
+            label: '高级',
+            value: 2,
           },
         ],
-        AutoComplete: [],
-        CheckboxGroup: [],
-        Cascader: [
+        sex: [
+          {
+            code: 0,
+            desc: '男',
+          },
+          {
+            code: 1,
+            desc: '女',
+          },
+        ],
+        favor: [
+          {
+            label: '足球',
+            value: 0,
+          },
+          {
+            label: '篮球',
+            value: 1,
+          },
+          {
+            label: '棒球',
+            value: 2,
+          },
+        ],
+        email: [],
+        area: [
           {
             value: 'beijing',
             label: '北京',
@@ -238,49 +276,63 @@ export default {
             ],
           },
         ],
+        company: []
       },
-      formRules: {
-        name: [
-          {
-            required: true, message: '请输入姓名'
-          }
-        ],
-        grade: [
-          {
-            required: true, message: '请选择等级'
-          }
-        ]
-      }
     }
   },
-  created() {
-  },
-  mounted() {
-    this.$refs['form'].setFormValue({
-      name: '轮回韩',
-      RadioGroup: 1,
-      grade: '2',
-      DatePicker: '2021/06/01',
-      Cascader: ['beijing', 'gugong'],
-      daterange: [1623134641294, 1624164851294]
-    })
-    /* this.$refs['form'].setFormValue('DatePicker', '2021-09-08')
-    this.$refs['form'].setFormValue('daterange', '20210908, 20210909') */
-  },
-  methods: {
-    test(field, formValue) {
-      console.log('field:', field)
-      console.log('formValue:', formValue)
+  computed: {
+    startTimeOptions() {
+      let endTime = this.form.endTime
+
+      return {
+        disabledDate(date) {
+          return date && ((endTime && date > endTime) || date > new Date())
+        },
+      }
     },
-    submit(formValue, done) {
-      console.log('formValue:', formValue)
+    endTimeOptions() {
+      let startTime = this.form.startTime
+      return {
+        disabledDate(date) {
+          return date && ((startTime && date < startTime) || date > new Date())
+        },
+      }
+    },
+  },
+  created() {},
+  mounted() {},
+  methods: {
+    queryCompany(query, field) {
+      if (query !== '') {
+        field.loading = true
+        setTimeout(() => {
+          this.$set(this.dataSource, 'company', [
+            {
+              label: '北京1111',
+              value: 'beijing'
+            },
+            {
+              label: '上海111',
+              value: 'shanghai'
+            }
+          ])
+          field.loading = false
+        }, 2000)
+      } else {
+        this.$set(this.dataSource, 'company', [])
+        field.loading = false
+      }
+    },
+    reset(done) {
       setTimeout(() => {
         done()
       }, 1000)
     },
-    change (val) {
-      this.$refs['form'].setFormValue('name', val)
-    }
+    submit(done) {
+      setTimeout(() => {
+        done()
+      }, 1000)
+    },
   },
 }
 </script>

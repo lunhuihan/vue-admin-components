@@ -106,11 +106,10 @@ $sub-p-l: 22px !default;
       display: flex;
       right: 0;
       top: 50%;
-      transform: translateY(-50%);
+      margin-top: -13px;
       padding: 4px 0 4px 0;
       cursor: pointer;
       border-radius: 12px 0 0 12px;
-      background: $bg-color;
       box-shadow: 0px 0px 2px gainsboro;
       color: #888b92;
     }

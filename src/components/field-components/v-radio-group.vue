@@ -1,5 +1,5 @@
 <template>
-  <RadioGroup v-model="formValue[item.name]"
+  <RadioGroup v-model="currentValue"
     :type="item.type ? item.type : item.buttonStyle ? 'button' : undefined"
     :style="calFieldStyle(item)" :class="calFieldClass(item)"
     :size="calFieldSize(item)" :button-style="item.buttonStyle"
@@ -25,19 +25,22 @@ export default {
   name: 'VRadioGroup',
   mixins: [commonMixins],
   props: {
-    formValue: {
-      type: Object,
-      default() {
-        return {}
-      },
-    },
+    value: [Number, String],
     item: Object,
     dataSource: Array,
   },
   components: {},
   data() {
     return {
-      typeOf,
+      currentValue: this.value
+    }
+  },
+  watch: {
+    value (v) {
+      this.currentValue = v
+    },
+    currentValue (v) {
+      this.$emit('input', v)
     }
   },
   created() {},

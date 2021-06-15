@@ -10,12 +10,13 @@ export default {
       label: '日期',
       labelWidth: 50,
       value: '2021/05/02',
-      returnDateType: 'string',
-      onChange (formDate, date, field, search) {
-        console.log('formDate:', formDate)
+      // returnDateType: 'string',
+      onChange (date, field, search, page, pageSize) {
         console.log('date:', date)
         console.log('field:', field)
         console.log('search:', search)
+        console.log('page:', page)
+        console.log('pageSize:', pageSize)
       }
     },
     {

@@ -1,12 +1,12 @@
 <template>
-  <Checkbox v-model="formValue[item.name]" :style="calFieldStyle(item)"
+  <Checkbox v-model="currentValue" :style="calFieldStyle(item)"
     :class="calFieldClass(item)" :size="calFieldSize(item)"
     :indeterminate="item.indeterminate"
     :disabled="calFieldDisabled(item)" :true-value="item.trueValue"
     :false-value="item.falseValue"
     @on-change="(val) => { dealEvent(item.onChange, val, item) }">
     <Icon :type="item.icon" v-if="item.icon"></Icon>
-    <span>{{item.label}}</span>
+    <span>{{item.text}}</span>
   </Checkbox>
 </template>
 
@@ -17,18 +17,21 @@ export default {
   name: 'VCheckbox',
   mixins: [commonMixins],
   props: {
-    formValue: {
-      type: Object,
-      default() {
-        return {}
-      },
-    },
+    value: [String, Number, Boolean],
     item: Object,
   },
   components: {},
   data() {
     return {
-      typeOf,
+      currentValue: this.value
+    }
+  },
+  watch: {
+    value (v) {
+      this.currentValue = v
+    },
+    currentValue (v) {
+      this.$emit('input', v)
     }
   },
   created() {},

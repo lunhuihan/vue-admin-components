@@ -15,25 +15,6 @@ export default {
       maxlength: 10,
     },
     {
-      label: '等级',
-      component: 'Select',
-      name: 'grade',
-      data: [
-        {
-          label: '初级',
-          value: '1',
-        },
-        {
-          label: '中级',
-          value: '2',
-        },
-        {
-          label: '高级',
-          value: '3',
-        },
-      ]
-    },
-    {
       name: 'InputB',
       component: 'Input',
       label: '不显示边框',

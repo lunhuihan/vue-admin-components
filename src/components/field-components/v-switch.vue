@@ -1,11 +1,13 @@
 <template>
-  <i-switch v-model="formValue[item.name]" :size="calFieldSize(item)"
-    :disabled="calFieldStyle(item)" :true-value="item.trueValue"
-    :false-value="item.falseValue" :loading="item.loading"
-    @on-change="(val) => { dealEvent(item.onChange, val, item) }">
-    <span slot="open" v-html="item.openText"></span>
-    <span slot="close" v-html="item.closeText"></span>
-  </i-switch>
+  <div :class="['ivu-switch-wrap', `size-${calFieldSize(item)}`]">
+    <i-switch v-model="currentValue" :class="item.className"
+      :size="calFieldSize(item)" :disabled="calFieldDisabled(item)"
+      :true-value="item.trueValue" :false-value="item.falseValue"
+      :loading="item.loading" @on-change="(val) => { dealEvent(item.onChange, val, item) }">
+      <span slot="open" v-html="item.openText"></span>
+      <span slot="close" v-html="item.closeText"></span>
+    </i-switch>
+  </div>
 </template>
 
 <script>
@@ -15,19 +17,22 @@ export default {
   name: 'VSwitch',
   mixins: [commonMixins],
   props: {
-    formValue: {
-      type: Object,
-      default() {
-        return {}
-      },
-    },
+    value: [String, Number, Boolean],
     item: Object,
   },
   components: {},
   data() {
     return {
-      typeOf,
+      currentValue: this.value,
     }
+  },
+  watch: {
+    value(v) {
+      this.currentValue = v
+    },
+    currentValue(v) {
+      this.$emit('input', v)
+    },
   },
   created() {},
   mounted() {},

@@ -19,6 +19,12 @@
         text-align: left;
       }
     }
+    &.size-large{
+      .ivu-form-item-label {
+        font-size: 16px !important;
+        padding: 12px 12px 11px 0 !important;
+      }
+    }
     .ivu-form-item-label{
       padding: 9px 12px 9px 0;
       flex-shrink: 0;
@@ -41,6 +47,14 @@
           height: $field-large-height;
         }
       }
+      .ivu-input-number{
+        &-large{
+          height: $field-large-height;
+          .ivu-input-number-input-wrap{
+            height: $field-large-height;
+          }
+        }
+      }
       .ivu-checkbox{
         display: inline-flex;
         align-items: center;
@@ -51,6 +65,20 @@
       }
       .ivu-checkbox-group{
         height: $field-height;
+      }
+      .ivu-checkbox-wrapper{
+        display: inline-flex;
+        align-items: center;
+        height: $field-height;
+        &-large{
+          height: $field-large-height;
+        }
+      }
+      .ivu-switch-wrap{
+        &.size-large{
+          height: $field-large-height;
+         line-height: $field-large-height;
+        }
       }
       .ivu-checkbox-large{
         height: $field-large-height;
@@ -69,6 +97,9 @@
     display: flex;
     &.inline{
       display: inline-flex;
+      .ivu-btn + .ivu-btn{
+        margin-left: $space-normal;
+      }
     }
     &.align-center {
       justify-content: center;
@@ -79,13 +110,10 @@
     .ivu-btn {
       min-width: 85px;
       & + .ivu-btn {
-        margin-left: 15px;
+        margin-left: $space-system;
       }
       .ivu-icon {
         line-height: 1;
-      }
-      .ivu-icon + span {
-        margin-left: 0;
       }
     }
   }
@@ -104,10 +132,13 @@
       position: relative;
       top: 1px;
     }
+    .ivu-input-number-input-wrap{
+      height: $field-large-height;
+    }
   }
   &-readonly{
     // 输入框、autocomplete
-    .ivu-input,.ivu-auto-complete{
+    .ivu-input,.ivu-auto-complete,.ivu-input-number{
       border: 1px solid white;
       &:hover,&:focus{
         box-shadow: none;
@@ -115,12 +146,16 @@
       }
     }
     // 下拉
-    .ivu-input[disabled],.ivu-select-disabled .ivu-select-selection, .ivu-checkbox-disabled+span {
+    .ivu-input[disabled],.ivu-select-disabled,.ivu-input-number-input, .ivu-select-selection, .ivu-checkbox-disabled+span {
       background-color: white;
       cursor: default;
       color: $field-text-color;
       border: 1px solid white;
       padding-left: 0;
+      opacity: 1;
+    }
+    .ivu-select-placeholder{
+      display: none !important;
     }
     .ivu-select-selected-value{
       padding-left: 0 !important;
@@ -165,6 +200,9 @@
   &.ivu-form-inline{
     .ivu-form-item-content{
       display: inline-block;
+    }
+    .ivu-form-item{
+      margin-bottom: $space-system;
     }
   }
 }

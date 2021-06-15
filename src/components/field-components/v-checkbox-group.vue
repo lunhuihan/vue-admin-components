@@ -1,5 +1,5 @@
 <template>
-  <CheckboxGroup v-model="formValue[item.name]" :type="item.type"
+  <CheckboxGroup v-model="currentValue" :type="item.type"
     :style="calFieldStyle(item)" :class="calFieldClass(item)"
     :size="calFieldSize(item)"
     @on-change="(val) => { dealEvent(item.onChange, val, item) }">
@@ -18,19 +18,22 @@ export default {
   name: 'VCheckboxGroup',
   mixins: [commonMixins],
   props: {
-    formValue: {
-      type: Object,
-      default() {
-        return {}
-      },
-    },
+    value: [Array],
     item: Object,
     dataSource: Array,
   },
   components: {},
   data() {
     return {
-      typeOf,
+      currentValue: this.value
+    }
+  },
+  watch: {
+    value (v) {
+      this.currentValue = v
+    },
+    currentValue (v) {
+      this.$emit('input', v)
     }
   },
   created() {},

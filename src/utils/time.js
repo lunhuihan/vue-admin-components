@@ -32,8 +32,7 @@ export default class Time {
   parse (timeVal) {
     const timeType = this[$checkTimeType](timeVal)
     if (timeType === 'string') {
-      const timeStr = timeVal.replace(/[^0-9]/ig, '')
-      const timeObject = this.getTimeObject(timeStr)
+      const timeObject = this.getTimeObject(timeVal)
       return new Date(timeObject.year, timeObject.month - 1, timeObject.date, timeObject.hours, timeObject.minutes, timeObject.seconds)
     } else {
       return new Date(timeVal)
@@ -74,6 +73,7 @@ export default class Time {
       seconds: '00'
     }
     if (timeType === 'string') {
+      timeVal = timeVal.replace(/[\.\-\/]/ig, '')
       timeObject.year = timeVal.substring(0, 4)
       timeObject.month = timeVal.substring(4, 6) || '01'
       timeObject.date = timeVal.substring(6, 8) || '01'

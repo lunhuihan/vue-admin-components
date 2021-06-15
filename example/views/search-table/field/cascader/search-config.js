@@ -1,3 +1,4 @@
+// import { deepCopy } from '../../../../utils/assist'
 export default {
   labelWidth: 70,
   fieldWidth: 200,
@@ -429,6 +430,8 @@ export default {
       label: 'render-format格式化',
       labelWidth: 150,
       renderFormat(labels, selectedData, field, search) {
+        console.log('field:', field)
+        console.log('search:', search.cascader6)
         const index = labels.length - 1
         const data = selectedData[index] || false
         if (data && data.code) {

@@ -266,7 +266,7 @@ export default {
     },
     getSearchValue () {
       if (this.hasSearch) {
-        return deepCopy(this.$refs['search-box'].returnFormValue)
+        return deepCopy(this.$refs['search-box'].search)
       }
       return {}
     }

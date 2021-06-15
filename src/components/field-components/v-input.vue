@@ -1,7 +1,7 @@
 <template>
-  <Input v-model.trim="formValue[item.name]"
-    :style="calFieldStyle(item)" :class="calFieldClass(item)" :type="item.type"
-    :number="item.number" :placeholder="item.placeholder" :size="calFieldSize(item)"
+  <Input v-model.trim="currentValue" :style="calFieldStyle(item)"
+    :class="calFieldClass(item)" :type="item.type" :number="item.number"
+    :placeholder="item.placeholder" :size="calFieldSize(item)"
     :clearable="calClear(item)" :disabled="calFieldDisabled(item)"
     :readonly="calReadonly(item)" :maxlength="item.maxlength" :icon="item.icon"
     :search="item.search" :enter-button="item.enterButton"
@@ -13,7 +13,7 @@
     @on-click="() => { dealEvent(item.onClick, item) }"
     @on-change="(val) => { dealEvent(item.onChange, val, item) }"
     @on-focus="() => { dealEvent(item.onFocus, item) }"
-    @on-blur="() => { dealEvent(item.onBlur, item) }"
+    @on-blur="item.number ? dealNumber(item) : () => { dealEvent(item.onBlur, item) }"
     @on-keyup="(val) => { dealEvent(item.onKeyup, val, item) }"
     @on-keydown="(val) => { dealEvent(item.onKeydown, val, item) }"
     @on-keypress="(val) => { dealEvent(item.onKeypress, val, item) }"
@@ -46,23 +46,32 @@ export default {
   name: 'VInput',
   mixins: [commonMixins],
   props: {
-    formValue: {
-      type: Object,
-      default() {
-        return {}
-      },
-    },
+    value: [String, Number],
     item: Object,
   },
   components: {},
   data() {
     return {
-      typeOf,
+      currentValue: '',
+    }
+  },
+  watch: {
+    value: {
+      immediate: true,
+      handler(v) {
+        this.currentValue = typeOf(v) === 'string' ? v.trim() : v
+      },
+    },
+    currentValue: {
+      immediate: true,
+      handler(v) {
+        if (typeOf(v) === 'undefined') return
+        this.$emit('input', v)
+      },
     }
   },
   created() {},
   mounted() {},
-  methods: {
-  },
+  methods: {},
 }
 </script>

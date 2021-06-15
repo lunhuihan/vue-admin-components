@@ -25,18 +25,11 @@ export default {
   name: 'VUpload',
   mixins: [commonMixins],
   props: {
-    formValue: {
-      type: Object,
-      default() {
-        return {}
-      },
-    },
     item: Object,
   },
   components: {},
   data() {
     return {
-      typeOf,
     }
   },
   created() {},

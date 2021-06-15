@@ -54,8 +54,11 @@ export default {
         multiple,
         name,
         password,
-        type
+        type,
+        readonly
       } = this.item
+      const read = readonly || this.parentOptions.readonly
+      if (read) return false
       if (component === 'Input') {
         if (typeOf(clearable) === 'boolean') {
           return clearable
@@ -108,7 +111,9 @@ export default {
     dealReturnEvent (fnName, ...rest) {
       if (!fnName) return
       let target = this.findVm()
-      let params = rest.concat(this.returnFormValue)
+      const parent = this.findComp(['SearchBox', 'VForm'])
+      const formValue = parent.search || parent.model
+      let params = rest.concat(formValue)
       if (typeOf(fnName) === 'function') {
         return fnName.bind(target)(...params)
       }

@@ -1,5 +1,5 @@
 <template>
-  <AutoComplete v-model.trim="formValue[item.name]" :style="calFieldStyle(item)"
+  <AutoComplete v-model.trim="currentValue" :style="calFieldStyle(item)"
     :class="calFieldClass(item)" :size="calFieldSize(item)"
     :clearable="calClear(item)" :disabled="calFieldDisabled(item)"
     :placeholder="item.placeholder" :icon="item.icon"
@@ -24,20 +24,24 @@ export default {
   name: 'VAutoComplete',
   mixins: [commonMixins],
   props: {
-    formValue: {
-      type: Object,
-      default() {
-        return {}
-      },
-    },
+    value: [String, Number],
     item: Object,
     dataSource: Array,
   },
   components: {},
   data() {
     return {
+      currentValue: this.value,
       typeOf,
     }
+  },
+  watch: {
+    value(v) {
+      this.currentValue = v
+    },
+    currentValue(v) {
+      this.$emit('input', v)
+    },
   },
   created() {},
   mounted() {},

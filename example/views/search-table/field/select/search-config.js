@@ -3,7 +3,7 @@ export default {
   fieldWidth: 200,
   fold: true,
   fields: [
-    {
+   /* {
       name: 'select',
       component: 'Select',
       width: 120,
@@ -226,32 +226,6 @@ export default {
       },
     },
     {
-      name: 'select9',
-      component: 'Select',
-      label: '远程搜索',
-      placeholder: '请搜索',
-      labelWidth: 90,
-      remote: true,
-      loading: false,
-      data: [],
-      remoteMethod(query, field, search) {
-        if (query !== '') {
-          field.loading = true
-          setTimeout(() => {
-            this.$set(
-              field,
-              'data',
-              this.list.filter((item) => item.label.includes(query))
-            )
-            field.loading = false
-          }, 2000)
-        } else {
-          this.$set(field, 'data', [])
-          field.loading = false
-        }
-      },
-    },
-    {
       name: 'select21',
       component: 'Select',
       label: '远程搜索默认值',
@@ -406,6 +380,33 @@ export default {
     },
     {
       slot: 'select'
-    }
+    }, */
+    {
+      name: 'select9',
+      component: 'Select',
+      label: '远程搜索',
+      placeholder: '请搜索',
+      labelWidth: 90,
+      loading: false,
+      data: [],
+      value: '',
+      remoteMethod(query, field, search) {
+        console.log('remoteMethod:', query)
+        if (query !== '') {
+          field.loading = true
+          setTimeout(() => {
+            this.$set(
+              field,
+              'data',
+              this.list
+            )
+            field.loading = false
+          }, 2000)
+        } else {
+          this.$set(field, 'data', [])
+          field.loading = false
+        }
+      }
+    },
   ],
 }

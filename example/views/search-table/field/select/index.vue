@@ -33,23 +33,23 @@ export default {
       list: [
         {
           value: 'beijing',
-          label: '北京',
+          label: '北京1111',
         },
         {
           value: 'shanghai',
-          label: '上海',
+          label: '上海2222',
         },
         {
           value: 'shenzhen',
-          label: '深圳',
+          label: '深圳3333',
         },
         {
           value: 'hangzhou',
-          label: '杭州',
+          label: '杭州4444',
         },
         {
           value: 'guangzhou',
-          label: '广州',
+          label: '广州5555',
         },
       ],
       cityList: [

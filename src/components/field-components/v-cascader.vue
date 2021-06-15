@@ -1,5 +1,5 @@
 <template>
-  <Cascader v-model="formValue[item.name]" :data="dataSource"
+  <Cascader v-model="currentValue" :data="dataSource"
     :style="calFieldStyle(item)" :class="calFieldClass(item)"
     :size="calFieldSize(item)" :placeholder="item.placeholder"
     :disabled="calFieldDisabled(item)" :change-on-select="item.changeOnSelect"
@@ -22,20 +22,23 @@ export default {
   name: 'VCascader',
   mixins: [commonMixins],
   props: {
-    formValue: {
-      type: Object,
-      default() {
-        return {}
-      },
-    },
+    value: Array,
     item: Object,
     dataSource: Array,
   },
   components: {},
   data() {
     return {
-      typeOf,
+      currentValue: this.value
     }
+  },
+  watch: {
+    value(v) {
+      this.currentValue = v
+    },
+    currentValue(v) {
+      this.$emit('input', v)
+    },
   },
   created() {},
   mounted() {},
