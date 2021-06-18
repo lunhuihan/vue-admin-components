@@ -3,7 +3,7 @@ export default {
   fieldWidth: 200,
   fold: true,
   fields: [
-   /* {
+   {
       name: 'select',
       component: 'Select',
       width: 120,
@@ -21,10 +21,9 @@ export default {
           code: 'shanghai',
         },
       ],
-      onChange(val, field, search) {
+      onChange(val, field) {
         console.log('val:', val)
         console.log('field:', field)
-        console.log('search:', search)
       },
     },
     {
@@ -380,7 +379,7 @@ export default {
     },
     {
       slot: 'select'
-    }, */
+    },
     {
       name: 'select9',
       component: 'Select',

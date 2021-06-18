@@ -400,12 +400,10 @@ export default {
       type: Object,
       required: true,
     },
-    options: {
+    config: {
       // 表单整体配置
       type: Object,
-      default() {
-        return {}
-      },
+      required: true,
       validator({
         inline,
         columns = 1,
@@ -413,19 +411,28 @@ export default {
         actionAlign = 'left',
         submitBtn = {},
         resetBtn = {},
+        fields
       } = {}) {
+        // 必须项配置检测
+        if (typeOf(fields) !== 'array') {
+          throw new TypeError(
+            `请在config中配置表单项fields！`
+          )
+        }
+
+        // 检测表单整体配置
         if (inline && columns > 1) {
-          throw new Error('options中inline与columns不可同时设置！')
+          throw new Error('config中inline与columns不可同时设置！')
         }
         if (typeof columns !== 'number') {
-          throw new TypeError('options中columns的类型需为Number类型！')
+          throw new TypeError('config中columns的类型需为Number类型！')
         }
         if (typeof colSpace !== 'number') {
-          throw new TypeError('options中colSpace的类型需为Number类型！')
+          throw new TypeError('config中colSpace的类型需为Number类型！')
         }
         if (!actionAlignRange.includes(actionAlign)) {
           throw new RangeError(
-            `options中actionAlign属性不支持${actionAlignRange.join(
+            `config中actionAlign属性不支持${actionAlignRange.join(
               '、'
             )}以外的值！`
           )
@@ -436,7 +443,7 @@ export default {
           typeOf(submitBtn) !== 'object'
         ) {
           throw new TypeError(
-            `options中submitBtn的类型需为Object类型或者Boolean类型！`
+            `config中submitBtn的类型需为Object类型或者Boolean类型！`
           )
         }
 
@@ -446,19 +453,13 @@ export default {
           typeOf(resetBtn) !== 'object'
         ) {
           throw new TypeError(
-            `options中resetBtn的类型需为Object类型或者Boolean类型！`
+            `config中resetBtn的类型需为Object类型或者Boolean类型！`
           )
         }
 
-        return true
-      },
-    },
-    fields: {
-      // 表单项配置
-      type: Array,
-      validator(val) {
+        // 检测表单域配置
         let nameList = []
-        val.forEach(
+        fields.forEach(
           ({
             component = '',
             name = '',
@@ -507,7 +508,6 @@ export default {
         )
         return true
       },
-      required: true,
     },
     dataSource: {
       // 表单每一项的数据源配置
@@ -515,13 +515,7 @@ export default {
       default() {
         return {}
       },
-    },
-    rules: {
-      type: Object,
-      default() {
-        return {}
-      },
-    },
+    }
   },
   data() {
     return {
@@ -538,7 +532,11 @@ export default {
   },
   computed: {
     currentOptions() {
-      return merge(defaultOptions, this.options)
+      let { fields, ...rest } = this.config
+      return merge(defaultOptions, { ...rest })
+    },
+    fields () {
+      return this.config.fields || []
     },
     nameField() {
       return collect.createObj(this.fields, 'name')
@@ -642,9 +640,9 @@ export default {
         }
       },
     },
-    fields: {
+    'config.fields': {
       immediate: true,
-      handler() {
+      handler(val) {
         this._setFormRule()
       },
       deep: true,
@@ -832,7 +830,7 @@ export default {
       }
     },
     _calFormItemSize({ size }) {
-      const returnSize = size || this.options.size
+      const returnSize = size || this.config.size
       return sizeRange.includes(returnSize) ? returnSize : 'default'
     },
     onValidate(prop, status, error) {

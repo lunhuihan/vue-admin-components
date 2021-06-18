@@ -1,8 +1,8 @@
 <template>
   <div>
-    <search-table ref="search-table" :search-config="searchConfig"
+    <search-table ref="search-table" :model.sync="model" :search-config="searchConfig"
       :table-config="tableConfig" :table-data="tableData"
-      :page-config="pageConfig" @on-search="getData" @on-reset="onReset"
+      :page-config="pageConfig" @on-search="getData" @on-reset="onReset" @on-fold-toggle="foldToggle"
       :total="100">
       <Select v-model="select" slot="inputPrependSlot" style="width: 80px">
         <Option value="http">http://</Option>
@@ -31,6 +31,9 @@ import tableData from './data'
 export default {
   data() {
     return {
+      model: {
+        name: '轮回韩'
+      },
       searchConfig,
       tableConfig,
       tableData,
@@ -44,8 +47,7 @@ export default {
     this.$refs[`_name`].focus()
   },
   methods: {
-    getData(search, page, pageSize, done, eventType) {
-      console.log('search:', search)
+    getData(page, pageSize, done, eventType) {
       console.log('page:', page)
       console.log('pageSize:', pageSize)
       console.log('done:', done)
@@ -67,11 +69,9 @@ export default {
     search() {
       this.$refs['search-table'].search()
     },
-    test(field, search) {
-      console.log('this:', this.select)
-      console.log('field:', field)
-      console.log('search:', search)
-    },
+    foldToggle (fold) {
+      console.log('fold:', fold)
+    }
   },
   components: {},
 }

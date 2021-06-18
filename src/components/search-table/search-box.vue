@@ -1,12 +1,14 @@
 <template>
   <div ref="search-box" class="search-box" :class="options.className">
     <!-- prepend插槽 -->
-    <slot name="search-prepend" :search="search"></slot>
+    <slot name="search-prepend"></slot>
     <!-- 表单域 -->
     <Form ref="form" class="search-box-form" inline :model="search"
+      :rules="formRule"
       :label-width="Number(options.labelWidth)"
       :label-position="options.labelPosition ? options.labelPosition : 'right'"
-      :label-colon="options.labelColon">
+      :label-colon="options.labelColon" :hide-required-mark="options.hideRequiredMark"
+      :show-message="options.showMessage">
       <FormItem v-for="(item, fieldIndex) in fields"
         :key="`field-${fieldIndex}`" :prop="item.name" :label="item.label"
         :label-width="item.labelWidth"
@@ -23,13 +25,13 @@
             <!-- 前置slot -->
             <template v-slot:prepend
               v-if="(!item.type || item.type === 'text') && item.prependSlot">
-              <slot :name="item.prependSlot" :search="search" :field="item">
+              <slot :name="item.prependSlot" :field="item">
               </slot>
             </template>
             <!-- 后置slot -->
             <template v-slot:append
               v-if="(!item.type || item.type === 'text') && item.appendSlot">
-              <slot :name="item.appendSlot" :search="search" :field="item">
+              <slot :name="item.appendSlot" :field="item">
               </slot>
             </template>
           </v-input>
@@ -49,7 +51,7 @@
                 :value="optionItem.value" :label="optionItem.label"
                 :key="optionIndex" :disabled="optionItem.disabled">
                 <template v-slot:default v-if="item.optionSlot">
-                  <slot :name="item.optionSlot" :search="search" :field="item"
+                  <slot :name="item.optionSlot" :field="item"
                     :label="optionItem.label" :value="optionItem.value">
                   </slot>
                 </template>
@@ -67,7 +69,7 @@
             v-model="search[item.name]" :item="item"
             :data-source="dataSource[item.name]" @deal-event="dealEvent">
             <template v-slot:default="slotProps" v-if="item.radioSlot">
-              <slot :name="item.radioSlot" :search="search" :field="item"
+              <slot :name="item.radioSlot" :field="item"
                 :label="slotProps.label" :value="slotProps.value">
               </slot>
             </template>
@@ -95,7 +97,7 @@
             v-if="item.component === 'AutoComplete'" v-model="search[item.name]"
             :item="item" :data-source="item.data" @deal-event="dealEvent">
             <template v-slot:default v-if="item.dropdownSlot">
-              <slot :name="item.dropdownSlot" :search="search" :field="item">
+              <slot :name="item.dropdownSlot" :field="item">
               </slot>
             </template>
             <template v-slot:default v-else-if="!item.filterMethod">
@@ -109,7 +111,7 @@
             v-model="search[item.name]" :item="item" :data-source="item.data"
             @deal-event="dealEvent">
             <template v-slot:default v-if="item.selectSlot">
-              <slot :name="item.selectSlot" :search="search" :field="item">
+              <slot :name="item.selectSlot" :field="item">
               </slot>
             </template>
           </v-cascader>
@@ -118,7 +120,7 @@
           <v-button v-if="item.component === 'Button'" :item="item"
             @deal-event="dealEvent">
             <template v-slot:default v-if="item.contentSlot">
-              <slot :name="item.contentSlot" :search="search" :field="item">
+              <slot :name="item.contentSlot" :field="item">
               </slot>
             </template>
           </v-button>
@@ -126,14 +128,14 @@
         </template>
         <!-- 自定义组件 -->
         <template v-else>
-          <slot :name="item.slot" :search="search"></slot>
+          <slot :name="item.slot"></slot>
         </template>
       </FormItem>
       <template v-if="!options.fold">
         <!-- 默认使用有【搜索】和【重置】按钮 -->
         <!-- 操作按钮不换行 -->
         <template v-if="!options.actionLineFeed">
-          <slot name="action-prepend" :search="search"></slot>
+          <slot name="action-prepend"></slot>
           <FormItem v-if="!options.hiddenSearchBtn" :label-width="0">
             <Button type="primary"
               :icon="options.hiddenActionIcon ? '' : 'md-search'"
@@ -144,18 +146,18 @@
               :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
               :loading="resetBtnLoading" @click="onReset">重置</Button>
           </FormItem>
-          <slot name="action-append" :search="search"></slot>
+          <slot name="action-append"></slot>
         </template>
       </template>
       <div class="action-wrap" v-else>
-        <slot name="action-prepend" :search="search"></slot>
+        <slot name="action-prepend"></slot>
         <Button v-if="!options.hiddenSearchBtn" type="primary"
           :icon="options.hiddenActionIcon ? '' : 'md-search'"
           :loading="searchBtnLoading" @click="onSearch">搜索</Button>
         <Button v-if="!options.hiddenResetBtn" type="primary" ghost
           :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
           :loading="resetBtnLoading" @click="onReset">重置</Button>
-        <slot name="action-append" :search="search"></slot>
+        <slot name="action-append"></slot>
         <template
           v-if="!options.hiddenSearchBtn || !options.hiddenResetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append']">
           <span class="fold-bar" v-if="isFold" @click="toggleFold(false)">
@@ -171,17 +173,17 @@
     </Form>
     <div class="action-line-feed-wrap"
       v-if="!options.fold && options.actionLineFeed && (!options.hiddenSearchBtn || !options.hiddenResetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append'])">
-      <slot name="action-prepend" :search="search"></slot>
+      <slot name="action-prepend"></slot>
       <Button v-if="!options.hiddenSearchBtn" type="primary"
         :icon="options.hiddenActionIcon ? '' : 'md-search'"
         :loading="searchBtnLoading" @click="onSearch">搜索</Button>
       <Button v-if="!options.hiddenResetBtn" type="primary" ghost
         :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
         :loading="resetBtnLoading" @click="onReset">重置</Button>
-      <slot name="action-append" :search="search"></slot>
+      <slot name="action-append"></slot>
     </div>
     <!-- append插槽 -->
-    <slot name="search-append" :search="search"></slot>
+    <slot name="search-append"></slot>
   </div>
 </template>
 
@@ -227,6 +229,10 @@ const componentTypeRange = [
 export default {
   name: 'SearchBox',
   props: {
+    search: {
+      type: Object,
+      required: true,
+    },
     fields: {
       type: Array,
       validator(val) {
@@ -237,7 +243,6 @@ export default {
             name = '',
             labelPosition = 'right',
             data,
-            value,
             type,
             returnDateType,
             slot = '',
@@ -300,16 +305,6 @@ export default {
               )
             }
             if (component === 'DatePicker') {
-              const rangeTypes = ['daterange', 'datetimerange']
-              if (
-                rangeTypes.includes(type) &&
-                typeOf(value) !== 'undefined' &&
-                typeOf(value) !== 'array'
-              ) {
-                throw new TypeError(
-                  'DatePicker组件的type类型必须与value类型保持匹配！'
-                )
-              }
               if (returnDateType && !DateValueType.includes(returnDateType)) {
                 throw new RangeError(
                   `DatePicker组件的returnDateType(日期返回类型)属性不支持${DateValueType.join(
@@ -360,15 +355,14 @@ export default {
   },
   data() {
     return {
-      search: {},
-      originSearch: {},
+      originSearch: null,
+      formRule: {},
       typeOf,
       showFieldNum: 0,
       searchBtnLoading: false,
       resetBtnLoading: false,
       isFold: false,
-      _dealFieldFold: null,
-      flag: false,
+      _dealFieldFold: null
     }
   },
   computed: {
@@ -388,12 +382,18 @@ export default {
     },
   },
   watch: {
+    search: {
+      immediate: true,
+      handler(val) {
+        if (!this.originSearch) {
+          this._setOriginValue(val)
+        }
+      },
+    },
     fields: {
       immediate: true,
       handler() {
-        if (this.flag) return
-        this.initSearch()
-        this.flag = true
+        this._setFormRule()
       },
       deep: true,
     },
@@ -418,13 +418,18 @@ export default {
     this.addRef()
   },
   methods: {
-    initSearch() {
-      let search = {}
+    _setOriginValue(formValue) {
+      let result = {}
       this.fields
-        .filter((item) => item.name && item.component !== 'Html' && !item.slot)
+        .filter(
+          (item) =>
+            item.name &&
+            item.component !== 'Html' &&
+            item.component !== 'Button' &&
+            !item.slot
+        )
         .forEach(
           ({
-            value,
             name,
             component,
             type,
@@ -432,62 +437,56 @@ export default {
             multiple = false,
             remote,
             remoteMethod,
-            slot,
-            data = [],
-            labelKey,
-            valueKey,
           }) => {
-            // 搜索值
-            if (typeOf(value) === 'undefined') {
+            let fieldVal = formValue[name]
+            if (typeOf(fieldVal) === 'undefined') {
               switch (component) {
                 case 'CheckboxGroup':
                 case 'Cascader':
-                  search[name] = []
-                  this.originSearch[name] = []
+                  result[name] = []
                   break
                 case 'Switch':
                 case 'Checkbox':
-                  search[name] = falseValue
-                  this.originSearch[name] = falseValue
+                  result[name] = falseValue
                   break
                 case 'Select':
                   if (multiple) {
-                    search[name] = []
-                    this.originSearch[name] = []
+                    result[name] = []
                   } else {
-                    search[name] = ''
-                    this.originSearch[name] = ''
+                    result[name] = ''
                   }
                   break
                 case 'InputNumber':
-                  search[name] = 1
-                  this.originSearch[name] = 1
+                  result[name] = 1
                   break
                 case 'DatePicker':
                   if (type === 'daterange' || type === 'datetimerange') {
-                    search[name] = []
-                    this.originSearch[name] = []
+                    result[name] = []
                   } else {
                     if (multiple) {
-                      search[name] = []
-                      this.originSearch[name] = []
+                      result[name] = []
                     } else {
-                      search[name] = ''
-                      this.originSearch[name] = ''
+                      result[name] = ''
                     }
                   }
                   break
                 default:
-                  search[name] = ''
-                  this.originSearch[name] = ''
+                  result[name] = ''
               }
             } else {
-              search[name] = value
-              this.originSearch[name] = deepCopy(value)
+              result[name] = deepCopy(fieldVal)
             }
           }
         )
-      this.search = search
+      this.originSearch = result
+    },
+    _setFormRule() {
+      this.formRule = {}
+      this.fields.forEach(({ rules = [], name } = {}) => {
+        if (rules && rules.length) {
+          this.formRule[name] = rules
+        }
+      })
     },
     addRef() {
       let vm = this.findVm()
@@ -514,6 +513,7 @@ export default {
     toggleFold() {
       this.isFold = !this.isFold
       this.dealFieldFold()
+      this.$emit('on-fold-toggle', this.isFold)
     },
     dealFieldFold() {
       // 处理搜索栏的展开/收起
@@ -553,9 +553,13 @@ export default {
       return this.isSlot(slot) ? `${labelWidth + fieldWidth}px` : 'auto'
     },
     onSearch() {
-      this.searchBtnLoading = true
-      this.$emit('on-search', this.search, () => {
-        this.searchBtnLoading = false
+      this.$refs[`form`].validate((valid) => {
+        if (valid) {
+          this.searchBtnLoading = true
+          this.$emit('on-search', () => {
+            this.searchBtnLoading = false
+          })
+        }
       })
     },
     onReset() {
@@ -563,13 +567,13 @@ export default {
       this.$refs['form'].resetFields()
       setTimeout(() => {
         this._cancelFocus('.search-box')
-        this.search = deepCopy(this.originSearch)
-        this.$emit('on-reset', this.search)
-        this.$emit('on-search', this.search, () => {
+        this.$emit('update-search', deepCopy(this.originSearch))
+        this.$emit('on-reset')
+        this.$emit('on-search', () => {
           this.resetBtnLoading = false
         })
-      }, 100)
-    },
+      }, 50)
+    }
   },
 }
 </script>

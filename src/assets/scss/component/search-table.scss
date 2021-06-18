@@ -33,6 +33,9 @@
         align-items: center;
       }
     }
+    .ivu-form-item-error-tip{
+      font-size: 12px;
+    }
     .ivu-input-with-search {
       &.input-search-clear {
         .ivu-input-icon-clear {
@@ -62,7 +65,7 @@
       display: inline-flex;
       flex: 1;
       justify-content: flex-end;
-      margin-bottom: 24px;
+      margin-bottom: $space-system;
       .ivu-btn {
         margin-right: 10px;
       }

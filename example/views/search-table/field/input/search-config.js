@@ -5,6 +5,8 @@ export default {
   // hiddenResetBtn: true,
   // hiddenActionIcon: true,
   labelWidth: 100,
+  // labelColon: true,
+  hideRequiredMark: true,
   // size: 'large',
   fields: [
     {
@@ -13,6 +15,10 @@ export default {
       label: '姓名',
       placeholder: '请输入姓名',
       maxlength: 10,
+      rules: [{
+        required: true,
+        message: '请输入姓名'
+      }]
     },
     {
       name: 'InputB',
@@ -29,7 +35,7 @@ export default {
       labelWidth: 100,
       maxlength: 30,
       showWordLimit: true,
-    },
+    }/* ,
     {
       name: 'tel',
       component: 'Input',
@@ -102,8 +108,7 @@ export default {
       placeholder: '',
       suffix: 'ios-search',
       search: true,
-      onSearch(value, field, search) {
-        console.log('value:', value)
+      onSearch(field, search) {
         console.log('field:', field)
         console.log('search:', search)
       },
@@ -116,8 +121,7 @@ export default {
       placeholder: '',
       search: true,
       enterButton: '搜索',
-      onSearch(value, field, search) {
-        console.log('value:', value)
+      onSearch(field, search) {
         console.log('field:', field)
         console.log('search:', search)
       },
@@ -169,6 +173,6 @@ export default {
       component: 'Input',
       label: '输入金额时显示中文',
       numberToChinese: true,
-    },
+    }, */
   ],
 }

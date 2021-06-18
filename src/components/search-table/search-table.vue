@@ -1,48 +1,47 @@
 <template>
   <div class="v-component v-search-table">
-    <search-box v-if="hasSearch" ref="search-box" :fields="currentSearchConfig.fields" :options="currentSearchConfig.options"
-      @on-search="dealSearch" @on-reset="dealReset" @on-event="dealEvent">
-      <template v-slot:search-prepend="{ search }">
-        <slot name="search-prepend" :search="search" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
+    <search-box v-if="hasSearch" ref="search-box" :search="model" :fields="currentSearchConfig.fields" :options="currentSearchConfig.options"
+      @on-search="dealSearch" @on-reset="dealReset" @on-event="dealEvent" @on-fold-toggle="onFoldToggle" @update-search="updateSearch">
+      <template v-slot:search-prepend>
+        <slot name="search-prepend" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
       <template v-for="slot in fieldSlotList" v-slot:[slot]="slotProps">
-        <slot :name="slot" :search="slotProps.search" :field="slotProps.field" :label="slotProps.label"
+        <slot :name="slot" :field="slotProps.field" :label="slotProps.label"
           :value="slotProps.value" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
       <template v-slot:search-append="slotProps">
-        <slot name="search-append" :search="slotProps.search" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
+        <slot name="search-append" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
-      <template v-slot:action-prepend="{ search }">
-        <slot name="action-prepend" :search="search" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
+      <template v-slot:action-prepend>
+        <slot name="action-prepend" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
-      <template v-slot:action-append="{ search }">
-        <slot name="action-append" :search="search" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
+      <template v-slot:action-append>
+        <slot name="action-append" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
     </search-box>
     <table-box ref="table-box" :columns="currentTableConfig.columns" :data="tableData"
       :options="currentTableConfig.options" :loading="loading" @on-event="dealEvent">
       <template v-slot:table-prepend="slotProps">
-        <slot name="table-prepend" :search="getSearchValue()" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
+        <slot name="table-prepend" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
       <template v-for="slot in tableSlotList" v-slot:[slot]="slotProps">
-        <slot :name="slot" :row="slotProps.row" :index="slotProps.index" :column="slotProps.column"
-          :search="getSearchValue()" :page="pageSlot" :pageSize="pageSizeSlot">
+        <slot :name="slot" :row="slotProps.row" :index="slotProps.index" :column="slotProps.column" :page="pageSlot" :pageSize="pageSizeSlot">
         </slot>
       </template>
       <template v-slot:header>
-        <slot name="header" :search="getSearchValue()" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
+        <slot name="header" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
       <template v-slot:footer>
-        <slot name="footer" :search="getSearchValue()" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
+        <slot name="footer" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
       <template v-slot:table-append="slotProps">
-        <slot name="table-append" :search="getSearchValue()" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
+        <slot name="table-append" :page="pageSlot" :pageSize="pageSizeSlot"></slot>
       </template>
     </table-box>
     <page-box ref="page-box" v-if="hasPage" :page-config="pageConfig" :total="total" @on-page-change="dealPageChange"
       @on-page-size-change="dealPageSizeChange" @on-event="dealEvent">
       <template v-slot:page-prepend="slotProps">
-        <slot name="page-prepend" :search="getSearchValue()" :page="page" :pageSize="pageSize"></slot>
+        <slot name="page-prepend" :page="page" :pageSize="pageSize"></slot>
       </template>
     </page-box>
   </div>
@@ -59,6 +58,12 @@ import defaultPageConfig from './pageConfig'
 export default {
   name: 'SearchTable',
   props: {
+    model: {
+      type: Object,
+      default () {
+        return {}
+      }
+    },
     searchConfig: {
       type: Object,
       validator (val) {
@@ -201,25 +206,25 @@ export default {
     }
   },
   methods: {
-    dealSearch (search = {}, done = () => {}, page = 1, eventType = 'search') { // 搜索
+    dealSearch (done = () => {}, page = 1, eventType = 'search') { // 搜索
       let pageBox = this.$refs['page-box']
       pageBox && pageBox.changePage(page)
       if (pageBox) {
         this.page = page
         this.pageSize = pageBox.currentPageConfig.pageSize
-        this.$emit('on-search', search, page, pageBox.currentPageConfig.pageSize, done, eventType)
+        this.$emit('on-search', page, pageBox.currentPageConfig.pageSize, done, eventType)
       } else {
-        this.$emit('on-search', search, 1, 0, done, eventType)
+        this.$emit('on-search', 1, 0, done, eventType)
       }
     },
-    dealReset (search = {}, page = 1) {
+    dealReset (page = 1) {
       let pageBox = this.$refs['page-box']
       if (pageBox) {
         this.page = page
         this.pageSize = pageBox.currentPageConfig.pageSize
-        this.$emit('on-reset', search, page, pageBox.currentPageConfig.pageSize)
+        this.$emit('on-reset', page, pageBox.currentPageConfig.pageSize)
       } else {
-        this.$emit('on-reset', search, 1, 0)
+        this.$emit('on-reset', 1, 0)
       }
     },
     dealEvent (fnName, ...rest) {
@@ -227,9 +232,9 @@ export default {
       let pageBox = this.$refs['page-box']
       let params = []
       if (pageBox) {
-        params = rest.concat(this.getSearchValue(), pageBox.current, pageBox.currentPageConfig.pageSize)
+        params = rest.concat(pageBox.current, pageBox.currentPageConfig.pageSize)
       } else {
-        params = rest.concat(this.getSearchValue(), 1, 0)
+        params = rest.concat(1, 0)
       }
       if (typeOf(fnName) === 'function') {
         fnName.bind(target)(...params)
@@ -241,13 +246,19 @@ export default {
         }
       }
     },
+    onFoldToggle (fold) {
+      this.$emit('on-fold-toggle', fold)
+    },
     dealPageChange (page) {
       this.page = page
-      this.dealSearch(this.getSearchValue(), () => { }, page, 'pageChange')
+      this.dealSearch(() => { }, page, 'pageChange')
     },
     dealPageSizeChange (pageSize) {
       this.pageSize = pageSize
-      this.dealSearch(this.getSearchValue(), () => { }, 1, 'pageSizeChange')
+      this.dealSearch(() => { }, 1, 'pageSizeChange')
+    },
+    updateSearch (val) {
+      this.$emit('update:model', val)
     },
     search () {
       if (this.hasSearch) {
@@ -263,12 +274,6 @@ export default {
         this.dealSearch()
         this.dealReset()
       }
-    },
-    getSearchValue () {
-      if (this.hasSearch) {
-        return deepCopy(this.$refs['search-box'].search)
-      }
-      return {}
     }
   },
   components: {

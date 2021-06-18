@@ -1,5 +1,5 @@
 <template>
-  <search-table :search-config="searchConfig" :table-config="tableConfig"
+  <search-table :model="model" :search-config="searchConfig" :table-config="tableConfig"
     :page-config="pageConfig" :table-data="tableData" @on-search="getData">
     <template v-slot:selectOptionSlot="{ search, field, label, value }">
       <div>
@@ -26,6 +26,9 @@ import tableData from './data'
 export default {
   data() {
     return {
+      model: {
+        select: 'beijing'
+      },
       searchConfig,
       tableConfig,
       pageConfig,
@@ -83,8 +86,7 @@ export default {
   },
   created() {},
   methods: {
-    getData(search, page, pageSize, done) {
-      console.log('search:', search)
+    getData(page, pageSize, done) {
       console.log('page:', page)
       console.log('pageSize:', pageSize)
       setTimeout(() => {

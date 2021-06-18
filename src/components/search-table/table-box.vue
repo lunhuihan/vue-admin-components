@@ -111,15 +111,13 @@ export default {
     dealReturnEvent (fnName, ...rest) {
       if (!fnName) return
       let target = this.findVm()
-      let search = this.$parent.getSearchValue()
-      let params = rest.concat(search)
       if (typeOf(fnName) === 'function') {
-        return fnName.bind(target)(...params)
+        return fnName.bind(target)(...rest)
       }
       if (typeOf(fnName) === 'string') {
         let fn = target[fnName]
         if (typeOf(fn) === 'function') {
-          return target[fnName](...params)
+          return target[fnName](...rest)
         }
       }
     }

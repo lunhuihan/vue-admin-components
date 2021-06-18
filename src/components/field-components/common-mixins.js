@@ -11,7 +11,11 @@ export default {
   },
   mounted() {
     const fieldParentComp = this.findComp(['SearchBox', 'VForm'])
-    this.parentOptions = fieldParentComp.options
+    if (fieldParentComp.$options.name === 'SearchBox') {
+      this.parentOptions = fieldParentComp.options
+    } else {
+      this.parentOptions = fieldParentComp.currentOptions
+    }
   },
   methods: {
     calFieldStyle ({ component, width, long, style= {} }, defaultValue = '') {
