@@ -27,7 +27,8 @@ export default {
   data() {
     return {
       model: {
-        select: 'beijing'
+        select21: 'beijing',
+        select22: ['beijing', 'shanghai']
       },
       searchConfig,
       tableConfig,
@@ -36,23 +37,23 @@ export default {
       list: [
         {
           value: 'beijing',
-          label: '北京1111',
+          label: '北京',
         },
         {
           value: 'shanghai',
-          label: '上海2222',
+          label: '上海',
         },
         {
           value: 'shenzhen',
-          label: '深圳3333',
+          label: '深圳',
         },
         {
           value: 'hangzhou',
-          label: '杭州4444',
+          label: '杭州',
         },
         {
           value: 'guangzhou',
-          label: '广州5555',
+          label: '广州',
         },
       ],
       cityList: [

@@ -45,6 +45,9 @@ export default {
   },
   mounted () {
     this.$refs[`_name`].focus()
+    setTimeout(() => {
+      this.$refs['search-table'].search()
+    }, 2000)
   },
   methods: {
     getData(page, pageSize, done, eventType) {
@@ -57,6 +60,7 @@ export default {
       }, 3000)
     },
     onReset(key1, key2, key3, key4, key5) {
+      this.$refs['search-table'].clearCurrentRow()
       console.log('kye1:', key1)
       console.log('key2:', key2)
       console.log('key3:', key3)
@@ -64,13 +68,12 @@ export default {
       console.log('key5:', key5)
     },
     reset() {
-      this.$refs['search-table'].reset()
+      this.$refs['search-table'].clearCurrentRow()
     },
     search() {
       this.$refs['search-table'].search()
     },
     foldToggle (fold) {
-      console.log('fold:', fold)
     }
   },
   components: {},

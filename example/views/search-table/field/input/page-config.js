@@ -7,7 +7,7 @@ export default {
   showElevator: true,
   showSizer: true,
   className: 'custom',
-  onChange (page, pageConfig, search) { 
+  onChange (page, pageConfig, search) {
     /* console.log('page:', page)
     console.log('pageConfig:', pageConfig)
     console.log('search:', search) */

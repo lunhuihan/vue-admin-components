@@ -152,9 +152,9 @@ export default {
       }
       return startDate
     },
-    _formatTime(time, type, returnDateType, returnDateSeparator) {
+    _formatTime(time, type, returnDateType = '', returnDateSeparator) {
       // 日期  日期控件类型  返回日期类型 返回日期分隔符
-      switch (returnDateType) {
+      switch (returnDateType.toLowerCase()) {
         case 'number':
           return time.getTime()
         case 'string':

@@ -21,7 +21,7 @@ export default {
         endTime: '',
         // name: ' 轮回韩 ',
         // age: '29330rr',
-        // birthday: ['2021/03/10', '2021/04/20'],
+        // birthday: [1623400158263, 1623600158263],
         // inputNumber: 18,
         // grade: 1,
         // school: '20210901',
@@ -34,7 +34,7 @@ export default {
       },
       config: {
         labelWidth: 100,
-        // inline: true,
+        inline: true,
         // size: 'large',
         // readonly: true,
         fields: [

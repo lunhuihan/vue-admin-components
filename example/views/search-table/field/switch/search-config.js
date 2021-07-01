@@ -2,6 +2,7 @@ export default {
   labelWidth: 70,
   fieldWidth: 200,
   fold: true,
+  // size: 'large',
   fields: [
     {
       name: 'switch',

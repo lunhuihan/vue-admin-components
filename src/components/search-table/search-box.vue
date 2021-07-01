@@ -3,16 +3,15 @@
     <!-- prepend插槽 -->
     <slot name="search-prepend"></slot>
     <!-- 表单域 -->
-    <Form ref="form" class="search-box-form" inline :model="search"
-      :rules="formRule"
-      :label-width="Number(options.labelWidth)"
+    <Form ref="form" :class="calFormClass" inline :model="search"
+      :rules="formRule" :label-width="Number(options.labelWidth)"
       :label-position="options.labelPosition ? options.labelPosition : 'right'"
-      :label-colon="options.labelColon" :hide-required-mark="options.hideRequiredMark"
-      :show-message="options.showMessage">
+      :label-colon="options.labelColon"
+      :hide-required-mark="options.hideRequiredMark"
+      :show-message="options.showMessage" :style="formStyle">
       <FormItem v-for="(item, fieldIndex) in fields"
         :key="`field-${fieldIndex}`" :prop="item.name" :label="item.label"
-        :label-width="item.labelWidth"
-        :class="{'ivu-form-item-slot': isSlot(item.slot)}"
+        :label-width="item.labelWidth" :class="_calFormItemClass(item)"
         :style="{width: !isSlot(item.slot) ? 'auto' : calFormItemWidth(item)}">
         <!-- 系统内置组件 -->
         <template v-if="!isSlot(item.slot)">
@@ -131,57 +130,66 @@
           <slot :name="item.slot"></slot>
         </template>
       </FormItem>
-      <template v-if="!options.fold">
-        <!-- 默认使用有【搜索】和【重置】按钮 -->
-        <!-- 操作按钮不换行 -->
-        <template v-if="!options.actionLineFeed">
+
+      <!-- 搜索重置按钮区 -->
+      <!-- 1.操作按钮另起一行 -->
+      <div class="action-line-feed-wrap" v-if="options.actionLineFeed">
+        <slot name="action-prepend"></slot>
+        <Button v-if="!options.hiddenSearchBtn" type="primary"
+          :size="actionSize" :icon="options.hiddenActionIcon ? '' : 'md-search'"
+          :loading="searchBtnLoading" @click="onSearch">搜索</Button>
+        <Button v-if="!options.hiddenResetBtn" type="primary" ghost
+          :size="actionSize"
+          :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
+          :loading="resetBtnLoading" @click="onReset">重置</Button>
+        <slot name="action-append"></slot>
+      </div>
+      <template v-else>
+        <!-- 2.操作按钮有收缩展开 -->
+        <template v-if="typeOf(options.fold) === 'boolean'">
+          <div class="action-wrap">
+            <slot name="action-prepend"></slot>
+            <Button v-if="!options.hiddenSearchBtn" type="primary"
+              :size="actionSize"
+              :icon="options.hiddenActionIcon ? '' : 'md-search'"
+              :loading="searchBtnLoading" @click="onSearch">搜索</Button>
+            <Button v-if="!options.hiddenResetBtn" type="primary" ghost
+              :size="actionSize"
+              :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
+              :loading="resetBtnLoading" @click="onReset">重置</Button>
+            <slot name="action-append"></slot>
+            <template
+              v-if="!options.hiddenSearchBtn || !options.hiddenResetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append']">
+              <span class="fold-bar" v-show="options.fold"
+                @click="toggleFold(false)">
+                展开
+                <Icon type="ios-arrow-down" size="16" />
+              </span>
+              <span class="fold-bar" v-show="!options.fold"
+                @click="toggleFold(true)">
+                收起
+                <Icon type="ios-arrow-up" size="16" />
+              </span>
+            </template>
+          </div>
+        </template>
+        <!-- 3.操作按钮跟随在搜索项后面 -->
+        <template v-if="typeOf(options.fold) !== 'boolean'">
           <slot name="action-prepend"></slot>
           <FormItem v-if="!options.hiddenSearchBtn" :label-width="0">
-            <Button type="primary"
+            <Button type="primary" :size="actionSize"
               :icon="options.hiddenActionIcon ? '' : 'md-search'"
               :loading="searchBtnLoading" @click="onSearch">搜索</Button>
           </FormItem>
           <FormItem v-if="!options.hiddenResetBtn" :label-width="0">
-            <Button type="primary" ghost
+            <Button type="primary" ghost :size="actionSize"
               :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
               :loading="resetBtnLoading" @click="onReset">重置</Button>
           </FormItem>
           <slot name="action-append"></slot>
         </template>
       </template>
-      <div class="action-wrap" v-else>
-        <slot name="action-prepend"></slot>
-        <Button v-if="!options.hiddenSearchBtn" type="primary"
-          :icon="options.hiddenActionIcon ? '' : 'md-search'"
-          :loading="searchBtnLoading" @click="onSearch">搜索</Button>
-        <Button v-if="!options.hiddenResetBtn" type="primary" ghost
-          :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
-          :loading="resetBtnLoading" @click="onReset">重置</Button>
-        <slot name="action-append"></slot>
-        <template
-          v-if="!options.hiddenSearchBtn || !options.hiddenResetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append']">
-          <span class="fold-bar" v-if="isFold" @click="toggleFold(false)">
-            展开
-            <Icon type="ios-arrow-down" size="16" />
-          </span>
-          <span class="fold-bar" v-else @click="toggleFold(true)">
-            收起
-            <Icon type="ios-arrow-up" size="16" />
-          </span>
-        </template>
-      </div>
     </Form>
-    <div class="action-line-feed-wrap"
-      v-if="!options.fold && options.actionLineFeed && (!options.hiddenSearchBtn || !options.hiddenResetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append'])">
-      <slot name="action-prepend"></slot>
-      <Button v-if="!options.hiddenSearchBtn" type="primary"
-        :icon="options.hiddenActionIcon ? '' : 'md-search'"
-        :loading="searchBtnLoading" @click="onSearch">搜索</Button>
-      <Button v-if="!options.hiddenResetBtn" type="primary" ghost
-        :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
-        :loading="resetBtnLoading" @click="onReset">重置</Button>
-      <slot name="action-append"></slot>
-    </div>
     <!-- append插槽 -->
     <slot name="search-append"></slot>
   </div>
@@ -194,7 +202,11 @@ import cancelFocus from '../../mixins/cancel-focus'
 import Time from '../../utils/time'
 import timeout from '../../utils/timeout'
 import eventBus from '../../utils/event'
-import { labelPositionRange, DateValueType } from '../../utils/constant'
+import {
+  labelPositionRange,
+  DateValueType,
+  sizeRange,
+} from '../../utils/constant'
 import VInput from '../field-components/v-input'
 import VInputNumber from '../field-components/v-input-number'
 import VSelect from '../field-components/v-select'
@@ -327,13 +339,16 @@ export default {
       default() {
         return {}
       },
-      validator({ labelPosition }) {
+      validator({ labelPosition, fold, actionLineFeed }) {
         if (labelPosition && !labelPositionRange.includes(labelPosition)) {
           throw new RangeError(
             `search-config的labelPosition属性不支持${labelPositionRange.join(
               '、'
             )}以外的值！`
           )
+        }
+        if (fold && actionLineFeed) {
+          throw new Error(`search-config中fold和actionLineFeed不可同时设置！`)
         }
         return true
       },
@@ -359,15 +374,25 @@ export default {
       formRule: {},
       typeOf,
       showFieldNum: 0,
+      formStyle: {},
       searchBtnLoading: false,
       resetBtnLoading: false,
-      isFold: false,
-      _dealFieldFold: null
     }
   },
   computed: {
+    calFormClass() {
+      let { size = 'default', fold } = this.options
+      return [
+        `search-form-${size}`,
+        { 'search-form-hasfold': typeOf(fold) === 'boolean' },
+        `search-form-fold-${fold}`,
+      ]
+    },
     dataSource() {
-      let fields = this.fields.filter(({ component, data }) => checkIsDataCmp(component) && Array.isArray(data))
+      let fields = this.fields.filter(
+        ({ component, data }) =>
+          checkIsDataCmp(component) && Array.isArray(data)
+      )
       let result = {}
       fields.forEach(({ name, data, labelKey, valueKey }) => {
         result[name] = data.map((dataItem) => {
@@ -379,6 +404,10 @@ export default {
         })
       })
       return result
+    },
+    actionSize() {
+      if (sizeRange.includes(this.options.size)) return this.options.size
+      return 'default'
     },
   },
   watch: {
@@ -397,25 +426,11 @@ export default {
       },
       deep: true,
     },
-    'options.fold': {
-      immediate: true,
-      handler(val) {
-        this.isFold = !!val
-      },
-    },
   },
-  created() {
-    this._dealFieldFold = timeout(this.dealFieldFold)
-    eventBus.$on('view-change', this._dealFieldFold)
-  },
+  created() {},
   mounted() {
-    if (!!this.options.fold) {
-      setTimeout(() => {
-        this.dealFieldFold()
-        window.addEventListener('resize', this._dealFieldFold)
-      }, 100)
-    }
-    this.addRef()
+    this._setFormStyle()
+    this._addRef()
   },
   methods: {
     _setOriginValue(formValue) {
@@ -488,13 +503,33 @@ export default {
         }
       })
     },
-    addRef() {
+    _addRef() {
       let vm = this.findVm()
       for (let [key, ref] of Object.entries(this.$refs)) {
         if (Array.isArray(ref)) {
           vm.$refs[`_${key}`] = ref[0].$children[0]
         }
       }
+    },
+    _setFormStyle() {
+      if (typeOf(this.options.fold) === 'boolean') {
+        this.formStyle = {
+          paddingRight: `${
+            document.querySelector('.action-wrap').offsetWidth + 5
+          }px`,
+        }
+      }
+    },
+    _calFormItemClass(item) {
+      let result = [`ivur-form-${item.component}`]
+      if (this.isSlot(item.slot)) {
+        result.push('ivu-form-item-slot')
+      }
+      let size = item.size || this.options.size
+      if (size) {
+        result.push(`size-${size}`)
+      }
+      return result
     },
     dealNumber(item) {
       let seatchNumber = parseFloat(this.search[item.name])
@@ -510,37 +545,9 @@ export default {
       if (!fnName) return
       this.$emit('on-event', fnName, ...rest)
     },
-    toggleFold() {
-      this.isFold = !this.isFold
-      this.dealFieldFold()
-      this.$emit('on-fold-toggle', this.isFold)
-    },
-    dealFieldFold() {
-      // 处理搜索栏的展开/收起
-      let searchBox = this.$refs['search-box']
-      if (!searchBox) return
-      let form = searchBox.querySelector('.search-box-form')
-      let formItems = form.querySelectorAll('.ivu-form-item')
-      let actionWrap = form.querySelector('.action-wrap')
-      if (!actionWrap) return
-      let actionWidth = 0
-      let children = actionWrap.children
-      for (let i = 0, len = children.length; i < len; i++) {
-        actionWidth += children[i].offsetWidth + 10
-      }
-      let allWidth = form.clientWidth - actionWidth + 10
-      let sum = 0
-      formItems.forEach((item) => {
-        sum += item.offsetWidth + 10
-        if (sum >= allWidth && this.isFold) {
-          item.style.display = 'none'
-        } else {
-          item.style.display = 'inline-flex'
-        }
-      })
-      if (this.isFold && form.clientHeight > 100) {
-        this.dealFieldFold()
-      }
+    toggleFold(val) {
+      this.options.fold = val
+      this.$emit('on-fold-toggle', val)
     },
     isSlot(slot) {
       return typeof slot === 'string' && !!slot.trim()
@@ -573,7 +580,7 @@ export default {
           this.resetBtnLoading = false
         })
       }, 50)
-    }
+    },
   },
 }
 </script>

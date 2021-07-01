@@ -1,15 +1,16 @@
 export default {
   // fieldWidth: 200,
-  fold: true,
+  // fold: true,
   // hiddenSearchBtn: true,
   // hiddenResetBtn: true,
   // hiddenActionIcon: true,
   labelWidth: 100,
   // labelColon: true,
   hideRequiredMark: true,
+  actionLineFeed: true,
   // size: 'large',
   fields: [
-    {
+    /* {
       name: 'name',
       component: 'Input',
       label: '姓名',
@@ -19,6 +20,55 @@ export default {
         required: true,
         message: '请输入姓名'
       }]
+    }, */
+    {
+      name: 'favor',
+      component: 'RadioGroup',
+      value: 0,
+      // type: 'button',
+      label: '兴趣爱好',
+      // width: 220,
+      labelKey: 'desc',
+      valueKey: 'code',
+      data: [
+        {
+          desc: '羽毛球',
+          code: 0
+        },
+        {
+          desc: '篮球',
+          code: 1
+        },
+        {
+          desc: '足球',
+          code: 2
+        }
+      ]
+    },
+    {
+      name: 'event',
+      component: 'CheckboxGroup',
+      label: '事件处理',
+      labelWidth: 100,
+      data: [
+        {
+          value: 'dy',
+          label: '电影'
+        },
+        {
+          value: 'dsj',
+          label: '电视剧'
+        },
+        {
+          value: 'xs',
+          label: '小说'
+        }
+      ],
+      onChange (checked, field, search) {
+        console.log('checked:', checked)
+        console.log('field:', field)
+        console.log('search:', search)
+      }
     },
     {
       name: 'InputB',
@@ -35,7 +85,7 @@ export default {
       labelWidth: 100,
       maxlength: 30,
       showWordLimit: true,
-    }/* ,
+    },
     {
       name: 'tel',
       component: 'Input',
@@ -56,7 +106,7 @@ export default {
       maxlength: 11,
       onBlur: 'test',
     },
-    {
+    /* {
       name: 'password',
       component: 'Input',
       label: '密码框',

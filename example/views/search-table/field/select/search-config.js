@@ -230,9 +230,7 @@ export default {
       label: '远程搜索默认值',
       placeholder: '请搜索',
       labelWidth: 120,
-      remote: true,
       loading: false,
-      value: 'beijing',
       defaultLabel: '北京',
       data: [],
       onChange (value, field, search) {
@@ -240,7 +238,7 @@ export default {
         console.log('field:', field)
         console.log('search:', search)
       },
-      remoteMethod(query, field, search) {
+      remoteMethod(query, field) {
         if (query !== '') {
           field.loading = true
           setTimeout(() => {
@@ -255,7 +253,7 @@ export default {
           this.$set(field, 'data', [])
           field.loading = false
         }
-      },
+      }
     },
     {
       name: 'select22',
@@ -263,10 +261,8 @@ export default {
       label: '远程搜索默认值-多选',
       placeholder: '请搜索',
       labelWidth: 130,
-      remote: true,
       multiple: true,
       loading: false,
-      value: ['beijing', 'shanghai'],
       defaultLabel: ['北京', '上海'],
       data: [],
       onChange (value, field, search) {

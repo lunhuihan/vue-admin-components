@@ -1,7 +1,6 @@
 export default {
-  fieldWidth: 200,
   fold: true,
-  size: 'small',
+  // size: 'large',
   fields: [
     {
       name: 'checkbox',
@@ -22,7 +21,6 @@ export default {
       component: 'Checkbox',
       value: '',
       label: 'indeterminate',
-      width: 130,
       indeterminate: true,
       onChange (checked, field, search) {
         console.log('checked:', checked)
@@ -34,7 +32,6 @@ export default {
       name: 'course',
       component: 'CheckboxGroup',
       label: 'CheckboxGroup',
-      labelWidth: 120,
       value: ['xg', 'xj'],
       labelKey: 'desc',
       valueKey: 'code',
@@ -78,6 +75,29 @@ export default {
         console.log('field:', field)
         console.log('search:', search)
       }
+    },
+    {
+      name: 'course1',
+      component: 'CheckboxGroup',
+      label: '兴趣爱好',
+      labelKey: 'desc',
+      valueKey: 'code',
+      border: true,
+      data: [
+        {
+          code: 'xg',
+          desc: '西瓜',
+          disabled: true
+        },
+        {
+          code: 'xj',
+          desc: '香蕉'
+        },
+        {
+          code: 'bl',
+          desc: '菠萝'
+        }
+      ]
     }
   ]
 }

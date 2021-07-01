@@ -4,7 +4,7 @@
     :size="calFieldSize(item)"
     @on-change="(val) => { dealEvent(item.onChange, val, item) }">
     <Checkbox v-for="(checkboxItem, index) in dataSource" :label="checkboxItem.value"
-      :key="`checkbox-${item.name}-${index}`" :size="calFieldSize(item)" :disabled="calFieldDisabled(checkboxItem)">
+      :key="`checkbox-${item.name}-${index}`" :size="calFieldSize(item)" :disabled="calFieldDisabled(checkboxItem)" :border="item.border">
       <Icon :type="checkboxItem.icon" v-if="checkboxItem.icon"></Icon>
       <span>{{checkboxItem.label}}</span>
     </Checkbox>

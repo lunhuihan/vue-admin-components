@@ -1,5 +1,5 @@
 <template>
-  <search-table :search-config="searchConfig" :table-config="tableConfig" :table-data="tableData" :page-config="pageConfig"
+  <search-table :model.sync="search" :search-config="searchConfig" :table-config="tableConfig" :table-data="tableData" :page-config="pageConfig"
     @on-search="getData" @on-reset="reset">
     <template v-slot:custom>
       <InputNumber :max="10" :min="1" v-model="value"></InputNumber>
@@ -17,6 +17,9 @@ import tableData from './data'
 export default {
   data () {
     return {
+      search: {
+        formatter: 30
+      },
       searchConfig,
       tableConfig,
       tableData,
@@ -27,16 +30,15 @@ export default {
   created () {
   },
   methods: {
-    getData (search, page, pageSize, done) {
-      console.log('search:', search)
-      console.log('formatter:', typeof search.formatter)
+    getData (page, pageSize, done) {
+      console.log('search:', this.search)
       console.log('page:', page)
       console.log('pageSize:', pageSize)
       setTimeout(() => {
         done()
       }, 3000)
     },
-    reset (search, page, pageSize) {
+    reset (page, pageSize) {
       this.value = 2
     }
   },

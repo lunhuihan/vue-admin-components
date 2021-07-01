@@ -2,7 +2,7 @@
   <div class="table-box" >
     <!-- prepend插槽 -->
     <slot name="table-prepend"></slot>
-    <Table :ref="options.ref || ''" :class="options.className" :width="options.width" :height="options.height" :columns="columns" :data="data" :stripe="typeOf(options.stripe) === 'boolean' ? options.stripe : true"
+    <Table ref="table" :class="options.className" :width="options.width" :height="options.height" :columns="columns" :data="data" :stripe="typeOf(options.stripe) === 'boolean' ? options.stripe : true"
       :border="typeOf(options.border) === 'boolean' ? options.border : true" :row-class-name="(row, index) => { return dealReturnEvent(options.rowClassName, row, index) }" :loading="loading"
       :show-header="options.showHeader" :max-height="options.maxHeight" :disabled-hover="options.disabledHover"
       :highlight-row="options.highlightRow" :size="options.size" :no-data-text="options.noDataText"
@@ -98,12 +98,16 @@ export default {
   },
   created () {},
   mounted () {
-    if (this.options.ref) {
-      let vm = this.findVm()
-      vm.$refs[this.options.ref] = this.$refs[this.options.ref]
-    }
+    this.addRef()
   },
   methods: {
+    addRef () {
+      let refName = this.options.name
+      if (refName) {
+        let vm = this.findVm()
+        vm.$refs[refName] = this.$refs[refName]
+      }
+    },
     dealEvent (fnName, ...rest) {
       if (!fnName) return
       this.$emit('on-event', fnName, ...rest)

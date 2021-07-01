@@ -197,10 +197,6 @@ export default {
   created () {
   },
   mounted () {
-    let vm = this.findVm()
-    vm.$refs['_search-box'] = this.hasSearch ? this.$refs['search-box'] : ''
-    vm.$refs['_table-box'] = this.$refs['table-box']
-    vm.$refs['_page-box'] = this.hasPage ? this.$refs['page-box'] : ''
     if (this.hasPage) {
       this.pageSize = this.$refs['page-box'].currentPageConfig.pageSize
     }
@@ -247,6 +243,7 @@ export default {
       }
     },
     onFoldToggle (fold) {
+      this.searchConfig.fold = fold
       this.$emit('on-fold-toggle', fold)
     },
     dealPageChange (page) {
@@ -259,6 +256,12 @@ export default {
     },
     updateSearch (val) {
       this.$emit('update:model', val)
+    },
+    clearCurrentRow () { // 表格methods
+      this.$refs['table-box'].$refs.table.clearCurrentRow()
+    },
+    selectAll () { // 表格methods
+      this.$refs['table-box'].$refs.table.selectAll()
     },
     search () {
       if (this.hasSearch) {

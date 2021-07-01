@@ -3,6 +3,7 @@ export default {
   // fieldWidth: 200,
   fold: true,
   labelColon: true,
+  // size: 'large',
   fields: [
     {
       name: 'favor',

@@ -61,7 +61,6 @@ export default {
       name: 'formatter',
       component: 'InputNumber',
       label: 'formatter',
-      value: 30,
       formatter: value => (value + '%'),
       parser: value => value.replace('%', '')
     },

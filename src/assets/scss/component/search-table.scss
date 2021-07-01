@@ -2,6 +2,29 @@
 .v-search-table {
   $font-default: 14px;
   .search-box {
+    .search-form-hasfold{
+      position: relative;
+      .action-wrap{
+        position: absolute;
+        right: 0;
+        top: 0;
+        background: white;
+        z-index: 2;
+      }
+      &.search-form-fold-true{
+        margin-bottom: $space-system;
+        overflow: hidden;
+        &.search-form-default{
+          height: 32px;
+        }
+        &.search-form-large{
+          height: 40px;
+        }
+      }
+    }
+    .ivu-radio-group-large{
+      font-size: 16px !important;
+    }
     .ivu-form {
       display: flex;
       align-items: flex-start;
@@ -59,7 +82,7 @@
       font-size: 0 !important;
     }
     .ivu-radio-default {
-      font-size: $font-default;
+      // font-size: $font-default;
     }
     .action-wrap {
       display: inline-flex;
@@ -82,11 +105,14 @@
       }
     }
     .action-line-feed-wrap {
-      margin-bottom: $space-system;
+      width: 100%;
       text-align: center;
       font-size: 0;
       .ivu-btn {
-        margin-right: 10px;
+        margin-bottom: $space-system;
+      }
+      .ivu-btn + .ivu-btn{
+        margin-left: 10px;
       }
     }
   }

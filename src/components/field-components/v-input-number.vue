@@ -49,7 +49,9 @@ export default {
     value: {
       immediate: true,
       handler(v) {
-        if (typeOf(v) !== 'number') return
+        if (typeOf(v) !== 'number') {
+          this.$emit('input', 1)
+        }
         let { min, max } = this.item
         this.currentValue = getAreaNumber(v, min, max)
       },
