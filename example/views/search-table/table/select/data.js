@@ -22,5 +22,11 @@ export default [
     age: 26,
     address: 'Ottawa No. 2 Lake Park',
     date: '2016-10-04'
+  },
+  {
+    name: 'Jon Snow',
+    age: 34,
+    address: 'Ottawa No. 2 Lake Park',
+    date: '2016-10-04'
   }
 ]

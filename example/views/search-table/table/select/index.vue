@@ -1,21 +1,27 @@
 <template>
   <div>
-    <search-table :search-config="searchConfig" :table-config="tableConfig" :table-data="tableData" @on-search="getData">
+    <search-table :search-config="searchConfig" :table-config="tableConfig"
+      :table-data="tableData" :loading="loading" @on-search="getData">
     </search-table>
     <Divider />
-    <search-table :search-config="searchConfig2" :table-config="tableConfig2" :table-data="tableData2" @on-search="getData">
+    <search-table :search-config="searchConfig2" :table-config="tableConfig2"
+      :table-data="tableData2" :loading="loading" @on-search="getData">
     </search-table>
     <Divider />
-    <search-table :search-config="searchConfig3" :table-config="tableConfig3" :table-data="tableData3" @on-search="getData">
+    <search-table :search-config="searchConfig3" :table-config="tableConfig3"
+      :table-data="tableData3" :loading="loading" @on-search="getData">
     </search-table>
     <Divider />
-    <search-table :search-config="searchConfig4" :table-config="tableConfig4" :table-data="tableData" @on-search="getData">
+    <search-table :search-config="searchConfig4" :table-config="tableConfig4"
+      :table-data="tableData" :loading="loading" @on-search="getData">
     </search-table>
     <Divider />
-    <search-table :search-config="searchConfig5" :table-config="tableConfig5" :table-data="tableData5" @on-search="getData">
+    <search-table :search-config="searchConfig5" :table-config="tableConfig5"
+      :table-data="tableData5" :loading="loading" @on-search="getData">
     </search-table>
     <Divider />
-    <search-table :search-config="searchConfig6" :table-config="tableConfig6" :table-data="tableData" @on-search="getData">
+    <search-table :search-config="searchConfig6" :table-config="tableConfig6"
+      :table-data="tableData" :loading="loading" @on-search="getData">
     </search-table>
   </div>
 </template>
@@ -39,8 +45,10 @@ import tableData3 from './data3'
 import tableData5 from './data5'
 
 export default {
-  data () {
+  data() {
     return {
+      sortType: '',
+      order: '',
       searchConfig,
       searchConfig2,
       searchConfig3,
@@ -56,22 +64,44 @@ export default {
       tableData,
       tableData2,
       tableData3,
-      tableData5
+      tableData5,
+      filterList: [],
+      filteredValue: [],
+      loading: false
     }
   },
-  created () {
+  created() {
+    setTimeout(() => {
+      this.filterList = [
+        {
+          label: '小于25岁',
+          value: 1,
+        },
+        {
+          label: '大于等于25岁',
+          value: 2,
+        },
+        {
+          label: '大于等于28岁',
+          value: 3,
+        },
+        {
+          label: '大于等于48岁',
+          value: 4,
+        }
+      ]
+    }, 2000)
   },
   methods: {
-    getData (search, page, pageSize, done) {
-      console.log('search:', search)
-      console.log('page:', page)
-      console.log('pageSize:', pageSize)
+    getData(page = 1, pageSize = 10, done = () => {}) {
+      this.loading = true
       setTimeout(() => {
+        this.tableData = []
+        this.loading = false
         done()
       }, 3000)
     }
   },
-  components: {
-  }
+  components: {},
 }
 </script>

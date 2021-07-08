@@ -5,7 +5,7 @@
     :size="calFieldSize(item)" :button-style="item.buttonStyle"
     @on-change="(val) => { dealEvent(item.onChange, val, item) }">
     <Radio :label="radioItem.value" v-for="(radioItem, index) in dataSource"
-      :key="`radio-${item.name}-${index}`" :disabled="calFieldDisabled(item)"
+      :key="`radio-${item.name}-${index}`" :disabled="calFieldDisabled(radioItem)"
       :border="item.border">
       <template v-if="item.radioSlot">
         <slot :label="radioItem.label" :value="radioItem.value" :disabled="radioItem.disabled"></slot>

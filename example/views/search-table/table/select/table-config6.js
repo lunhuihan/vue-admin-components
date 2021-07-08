@@ -3,7 +3,7 @@ export default {
   columns: [
     {
       title: 'Name',
-      key: 'name'
+      key: 'name',
     },
     {
       title: 'Age',
@@ -11,26 +11,24 @@ export default {
       filters: [
         {
           label: '小于25岁',
-          value: 1
+          value: 1,
         },
         {
           label: '大于等于25岁',
-          value: 2
-        }
+          value: 2,
+        },
+        {
+          label: '大于等于30岁',
+          value: 3,
+        },
       ],
-      filterMultiple: false,
-      filteredValue: [1],
-      filterMethod(value, row, search) {
-        if (value === 1) {
-          return row.age < 25
-        } else if (value === 2) {
-          return row.age >= 25
-        }
-      }
+      // filterMultiple: false,
+      // filteredValue: 'filteredValue',
+      filterRemote: 'getData'
     },
     {
       title: 'Address',
-      key: 'address'
-    }
-  ]
+      key: 'address',
+    },
+  ],
 }

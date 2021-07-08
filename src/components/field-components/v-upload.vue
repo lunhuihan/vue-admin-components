@@ -1,5 +1,5 @@
 <template>
-  <Upload :style="item.style" :action="item.action" :headers="item.headers" :type="item.type"
+  <Upload :style="item.style" :class="item.className" :action="item.action" :headers="item.headers" :type="item.type"
     :accept="item.accept" :format="item.format" :max-size="item.maxSize"
     :multiple="item.multiple" :paste="item.paste"
     :webkitdirectory="item.webkitdirectory" :disabled="item.disabled"

@@ -1,5 +1,9 @@
 export default {
   border: true,
+  onSortChange (column, key, order) {
+    let orderDesc = order === 'normal' ? '' : order
+    this.getData(`${column.slot}Order`, orderDesc.toUpperCase())
+  },
   columns: [
     {
       title: 'Name',

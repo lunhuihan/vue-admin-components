@@ -88,7 +88,8 @@ export default {
             width: 30,
             style: {
               textAlign: 'center'
-            }
+            },
+            className: 'custom-html'
           },
           {
             name: 'endTime',
@@ -144,6 +145,7 @@ export default {
             name: 'switch',
             component: 'Switch',
             label: '开关',
+            className: 'eee-0'
             // trueValue: 1,
             // falseValue: 0
             // size: 'large'
@@ -218,6 +220,8 @@ export default {
           {
             code: 0,
             desc: '男',
+            disabled: true,
+            icon: 'logo-apple'
           },
           {
             code: 1,

@@ -1,6 +1,6 @@
 <template>
   <div :class="['ivu-switch-wrap', `size-${calFieldSize(item)}`]">
-    <i-switch v-model="currentValue" :class="item.className"
+    <i-switch v-model="currentValue" :class="item.className" :style="item.style"
       :size="calFieldSize(item)" :disabled="calFieldDisabled(item)"
       :true-value="item.trueValue" :false-value="item.falseValue"
       :loading="item.loading" @on-change="(val) => { dealEvent(item.onChange, val, item) }">

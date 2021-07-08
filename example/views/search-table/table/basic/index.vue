@@ -15,7 +15,7 @@
     <search-table :search-config="searchConfig7" :table-data="tableData" :table-config="tableConfig7" @on-search="getData">
     </search-table>
     <Divider />
-    <search-table :search-config="searchConfig8" :table-data="tableData" :table-config="tableConfig8" @on-search="getData">
+    <search-table :search-config="tableConfig88" :table-data="tableData" :table-config="tableConfig8" @on-search="getData">
     </search-table>
     <Divider />
     <search-table :search-config="searchConfig9" :table-data="tableData" :table-config="tableConfig9" @on-search="getData">
@@ -71,7 +71,15 @@ export default {
       loading: true
     }
   },
+  computed: {
+    tableConfig88 () {
+      return { ...this.tableConfig8 }
+    }
+  },
   created () {
+    setTimeout(() => {
+      this.$set(this.tableConfig8, 'height', 100)
+    }, 3000)
   },
   methods: {
     getData (search, page, pageSize, done) {

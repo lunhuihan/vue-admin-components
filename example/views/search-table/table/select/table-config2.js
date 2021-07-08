@@ -1,6 +1,6 @@
 export default {
   border: true,
-  onSortChange (column, key, order, search, current, pageSize) {
+  onSortChange (column, key, order, current, pageSize) {
     this.tableData2 = [
       {
         name: 'Jim Green',
