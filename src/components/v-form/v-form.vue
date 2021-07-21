@@ -16,7 +16,7 @@
         <FormItem v-for="(item, itemIndex) in col"
           :key="`form-item-${itemIndex}`" :prop="item.name" :label="item.label"
           :label-width="parseFloat(item.labelWidth) || parseFloat(currentOptions.labelWidth)"
-          :class="[`label-${currentOptions.labelPosition}`, `size-${_calFormItemSize(item)}`, { 'inline': colStyleInfo[rowIndex][colIndex].multiple }]">
+          :class="[`label-${currentOptions.labelPosition}`, `size-${_calFormItemSize(item)}`, { 'inline': colStyleInfo[rowIndex][colIndex].multiple }, `form-item-${item.component}`]">
           <!-- 系统内置组件 -->
           <template v-if="!_isSlot(item.slot)">
             <!-- Html -->
@@ -152,7 +152,7 @@
       <FormItem v-for="(item, index) in fields" :key="index" :prop="item.name"
         :label="item.label"
         :label-width="parseFloat(item.labelWidth) || parseFloat(currentOptions.labelWidth)"
-        :class="`label-${currentOptions.labelPosition}`">
+        :class="[`label-${currentOptions.labelPosition}`, `size-${_calFormItemSize(item)}`, `form-item-${item.component}`]">
         <!-- 系统内置组件 -->
         <template v-if="!_isSlot(item.slot)">
           <!-- Html -->

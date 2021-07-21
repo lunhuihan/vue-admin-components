@@ -1,42 +1,49 @@
 <template>
+<div class="page v-form-page">
+  <form-control></form-control>
   <v-form ref="form" :model="form" :config="config"
     :data-source="dataSource" @on-reset="reset" @on-submit="submit">
     <template v-slot:uploadSlot>
       <Button>上传</Button>
     </template>
   </v-form>
+</div>
 </template>
 
 <script>
+import formControl from '../form-control.vue'
 import { deepCopy } from '../../../utils/assist'
 export default {
   name: '',
-  components: {},
+  components: { formControl },
   data() {
     return {
       visible: false,
       form: {
         day: [1623400158263, 1623700158263, 1623900158263],
-        startTime: '',
-        endTime: '',
-        // name: ' 轮回韩 ',
-        // age: '29330rr',
-        // birthday: [1623400158263, 1623600158263],
-        // inputNumber: 18,
-        // grade: 1,
-        // school: '20210901',
-        // sex: 0,
-        // work: true,
-        // favor: [0, 2],
-        // area: ['beijing', 'gugong'],
-        // email: '22202'
-        // switch: true
+        startTime: 1623400158263,
+        endTime: 1623700158263,
+        name: ' 轮回韩 ',
+        age: '29330rr',
+        birthday: [1623400158263, 1623600158263],
+        inputNumber: 18,
+        grade: 1,
+        school: '20210901',
+        sex: 0,
+        work: true,
+        favor: [0, 2],
+        area: ['beijing', 'gugong'],
+        email: '22202',
+        switch: true
       },
       config: {
-        labelWidth: 100,
-        inline: true,
-        // size: 'large',
+        // labelWidth: 100,
+        // inline: true,
+        size: 'large',
+        // labelPosition: 'top',
+        span: 10,
         // readonly: true,
+        columns: 1,
         fields: [
           {
             name: 'name',
@@ -219,9 +226,7 @@ export default {
         sex: [
           {
             code: 0,
-            desc: '男',
-            disabled: true,
-            icon: 'logo-apple'
+            desc: '男'
           },
           {
             code: 1,
@@ -295,6 +300,8 @@ export default {
         ],
         company: [],
       },
+      inline: false,
+      labelWidth: 100
     }
   },
   computed: {
@@ -319,6 +326,15 @@ export default {
   created() {},
   mounted() {},
   methods: {
+    changeInline (value) {
+      this.$set(this.config, 'inline', value)
+      if (value) {
+        delete this.config.columns
+      }
+    },
+    onChange (key, value) {
+      this.$set(this.config, key, value)
+    },
     queryCompany(query, field) {
       if (query !== '') {
         field.loading = true
@@ -353,3 +369,8 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+.v-form-page{
+  display: flex;
+}
+</style>
