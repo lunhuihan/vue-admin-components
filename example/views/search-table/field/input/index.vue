@@ -44,7 +44,6 @@ export default {
   created() {
   },
   mounted () {
-    this.$refs[`_name`].focus()
     setTimeout(() => {
       this.$refs['search-table'].search()
     }, 2000)

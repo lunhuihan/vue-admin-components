@@ -1,6 +1,6 @@
 <template>
   <div class="v-component v-sidebar" :class="classes">
-    <Menu theme="dark" :active-name="activeRouteName" :accordion="accordion" :open-names="openedMenus" @on-select="selectMenu">
+    <Menu :theme="theme" :active-name="activeRouteName" :accordion="accordion" :open-names="openedMenus" @on-select="selectMenu">
       <div v-show="!fold">
         <div v-for="(menu, index) in menuList" :key="index">
           <component :is="getMenuType(menu)" :name="menu.routeName || `${index}`" v-if="!menu.hidden">
@@ -26,7 +26,7 @@
         </div>
       </div>
       <div v-show="fold">
-        <Dropdown transfer-class-name="v-sidebar-dropdown-menu" v-for="(menu, index) in menuList" :key="index"
+        <Dropdown :transfer-class-name="`v-sidebar-dropdown-menu ${theme}`" v-for="(menu, index) in menuList" :key="index"
           placement="right-start" :transfer="true" @on-click="selectMenu">
           <template v-if="!menu.hidden">
             <div class="ivu-dropdown-side" :class="{ 'active': calDropdownActive(menu) }" v-if="menu.icon" @click.stop="selectMenu(menu.routeName)">
@@ -48,7 +48,7 @@
 <script>
 import collect from '../../utils/collect'
 import { typeOf } from '../../utils/assist'
-import { defaultOpts } from '../../utils/constant'
+import { defaultOpts, themeRange } from '../../utils/constant'
 import eventBus from '../../utils/event'
 export default {
   name: 'VSidebar',
@@ -83,9 +83,16 @@ export default {
       type: [String, Number],
       default: defaultOpts.sidebarWidth
     },
-    activeBgColor: {
+    activeColor: {
       type: String,
-      default: defaultOpts.activeBgColor
+      default: defaultOpts.activeColor
+    },
+    theme: {
+      type: String,
+      default: 'dark',
+      validator (val) {
+        return themeRange.includes(val)
+      }
     }
   },
   data () {
@@ -100,7 +107,8 @@ export default {
       return [
         fold ? 'fold' : '',
         className,
-        hasChildMenu ? 'has-child' : ''
+        hasChildMenu ? 'has-child' : '',
+        `v-sidebar--${this.theme}`
       ]
     }
   },
@@ -152,17 +160,39 @@ export default {
       document.body.appendChild(style)
     },
     addActiveBgStyle () {
-      if (this.activeBgColor === defaultOpts.activeBgColor) return
+      if (this.activeColor === defaultOpts.activeColor) return
       let style = document.createElement('style')
       style.innerHTML = `
-        .v-sidebar .ivu-menu-vertical .ivu-menu-item-active{
-          background: ${this.activeBgColor} !important;
+        .v-sidebar.v-sidebar--dark .ivu-menu-vertical .ivu-menu-item-active{
+          background: ${this.activeColor} !important;
         }
-        .v-sidebar .ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item-active{
-          background: ${this.activeBgColor} !important;
+        .v-sidebar.v-sidebar--dark .ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item-active{
+          background: ${this.activeColor} !important;
         }
-        .v-sidebar .ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item-active:hover{
-          background: ${this.activeBgColor} !important;
+        .v-sidebar.v-sidebar--dark .ivu-menu-vertical .ivu-menu-submenu .ivu-menu-item-active:hover{
+          background: ${this.activeColor} !important;
+        }
+        .v-sidebar-dropdown-menu.dark .ivu-dropdown-item.active{
+          background-color: ${this.activeColor} !important;
+        }
+        .v-sidebar.v-sidebar--light .ivu-menu-vertical .ivu-menu-item-active{
+          color: ${this.activeColor} !important;
+        }
+        .v-sidebar.v-sidebar--light .ivu-menu-vertical .ivu-menu-item-active:after{
+          background: ${this.activeColor} !important;
+        }
+        .v-sidebar.v-sidebar--light .ivu-menu-item:hover{
+          color: ${this.activeColor};
+        }
+        .v-sidebar.v-sidebar--light .ivu-menu-submenu-title:hover{
+          color: ${this.activeColor};
+        }
+        .v-sidebar--light .ivu-dropdown-side.active{
+          color: ${this.activeColor};
+          border-right: 2px solid ${this.activeColor};
+        }
+        .v-sidebar-dropdown-menu.light .ivu-dropdown-item.active{
+          color: ${this.activeColor} !important;
         }
       `
       document.body.appendChild(style)

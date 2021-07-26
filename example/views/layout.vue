@@ -1,13 +1,13 @@
 <template>
   <div class="layout-page">
     <!-- nav -->
-    <v-nav :logo="logo" system-name="综合管理台" user-name="轮回韩" :height="60" :fold="fold" @on-fold="toggle">
+    <v-nav :logo="logo" system-name="综合管理台" user-name="轮回韩" :height="60" theme="dark" :fold="fold" @on-fold="toggle">
       <div class="center" slot="center">这是slot的内容</div>
       <!-- <div class="user" slot="user">这是替换用户部分的内容</div> -->
     </v-nav>
     <!-- layout -->
-    <!-- <v-sidebar :menu-list="menuList" :active-route-name="activeRouteName" active-bg-color="#5dcbc8" :auto-jump="false"  @select="selectMenu" :fold="fold"></v-sidebar> -->
-    <v-sidebar-horizontal :menu-list="menuList" :active-route-name="activeRouteName" active-bg-color="#5dcbc8" @select="selectMenu" :fold="fold" :showFirstMenu="false" sub-active-color="#5dcbc8" @subsidebar-toggle="subsidebarToggle"></v-sidebar-horizontal>
+    <!-- <v-sidebar theme="light" :menu-list="menuList" :active-route-name="activeRouteName" active-color="#5dcbc8" @select="selectMenu" :fold="fold"></v-sidebar> -->
+    <v-sidebar-horizontal theme="light" :menu-list="menuList" :active-route-name="activeRouteName" active-color="#5dcbc8" @select="selectMenu" :fold="fold" :showFirstMenu="false" :sub-width="130" @subsidebar-toggle="subsidebarToggle"></v-sidebar-horizontal>
     <!-- content -->
     <v-content>
       <router-view />

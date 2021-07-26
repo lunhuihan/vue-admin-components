@@ -38,7 +38,7 @@ export const defaultOpts = {
   sidebarHorizontalSubWidth: 120,
   navHeight: 60,
   sysSpace: 15,
-  activeBgColor: '#2d8cf0',
+  activeColor: '#2d8cf0',
   subActiveColor: '#2d8cf0',
   bgColor: '#354053'
 }
@@ -48,3 +48,7 @@ export const labelPositionRange = ['left', 'right']
 export const DateValueType = ['number', 'date', 'string']
 
 export const sizeRange = ['small', 'default', 'large']
+
+export const themeRange = ['dark', 'light']
+
+

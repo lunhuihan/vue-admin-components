@@ -6,48 +6,41 @@ $sub-p-l: 22px !default;
   left: 0;
   top: $nav-height;
   bottom: 0;
-  overflow-y: auto;
   z-index: 9;
-  display: flex;
-  transition: transform $transition-time;
+  transition: all $transition-time;
+  border-right: 1px solid $border-color;
   .sidebar-nav {
     width: $sidebar-horizontal-nav-width;
-    background: $sidebar-dark-bg-color;
     z-index: 8;
+    position: absolute;
+    left: 0;
+    height: 100%;
     .sidebar-nav-link {
       &:first-child {
         margin-top: 0;
       }
-      margin: 10px 0;
       padding: 0 15px;
-      border-left: 3px solid transparent;
+      border-left: 2px solid transparent;
       font-size: 14px;
       cursor: pointer;
-      height: 46px;
+      height: 52px;
       display: flex;
       align-items: center;
-      color: rgba(255, 255, 255, 0.7);
       .ivu-icon {
         width: 20px;
         margin-right: 10px;
       }
-      &:hover {
-        color: #fff;
-        border-left: $theme-color 3px solid;
-      }
-      &.active {
-        color: #fff;
-        background: $theme-color;
-      }
     }
   }
   .sidebar-sub {
-    position: relative;
+    position: absolute;
+    right: 0;
+    height: 100%;
     width: $sidebar-horizontal-sub-width;
     background: white;
     transition: transform $transition-time;
-    &.fold{
-      transform: translateX(-100%);
+    &:not(.fold){
+      overflow: hidden;
     }
     .parent-title {
       height: 60px;
@@ -129,5 +122,37 @@ $sub-p-l: 22px !default;
   }
   & + .v-content {
     background-color: $content-bg-color;
+  }
+  &--dark{
+    .sidebar-nav {
+      background: $sidebar-dark-bg-color;
+      .sidebar-nav-link {
+        color: rgba(255, 255, 255, 0.7);
+        &:hover {
+          color: #fff;
+          border-left: $theme-color 2px solid;
+        }
+        &.active {
+          color: #fff;
+          background: $theme-color;
+        }
+      }
+    }
+  }
+  &--light{
+    .sidebar-nav{
+      border-right: 1px solid $border-color;
+      background-color: white;
+      .sidebar-nav-link{
+        &:hover {
+          color: $theme-color;
+        }
+        &.active{
+          background-color: $theme-light-color;
+          color: $theme-color;
+          border-left: $theme-color 2px solid;
+        }
+      }
+    }
   }
 }

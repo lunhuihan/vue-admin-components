@@ -5,7 +5,7 @@
   justify-content: space-between;
   align-items: center;
   background: white;
-  border-bottom: 1px solid $border-color;
+  z-index: 10;
   &.fold{
     .logo-wrap{
       width: $sidebar-fold-width;
@@ -24,7 +24,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: $theme-color;
     transition: all  $transition-time;
     cursor: pointer;
     .logo-img{
@@ -72,11 +71,30 @@
       margin-right: 10px;
     }
     .ivu-icon-md-log-out {
-      color: $text-color;
       cursor: pointer;
-      &:hover {
-        color: $theme-color;
+    }
+  }
+  &--light{
+    background: white;
+    border-bottom: 1px solid $border-color;
+    .logo-wrap{
+      color: $theme-color;
+    }
+    .user-wrap {
+      .ivu-icon-md-log-out {
+        color: $text-color;
+        &:hover {
+          color: $theme-color;
+        }
       }
+    }
+  }
+  &--dark{
+    background: $nav-dark-bg-color;
+    color: white;
+    .ivu-avatar{
+      background: #ffffff;
+      color: $nav-dark-bg-color;
     }
   }
 }

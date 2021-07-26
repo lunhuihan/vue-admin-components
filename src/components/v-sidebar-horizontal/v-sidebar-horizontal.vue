@@ -1,5 +1,5 @@
 <template>
-  <div class="v-component v-sidebar-horizontal" :class="classes">
+  <div class="v-component v-sidebar-horizontal" :class="classes" :style="{ width: calWidth + 'px'}">
     <ul class="sidebar-nav">
       <li class="sidebar-nav-link" :class="[{active: index === activeSidebarNavIndex}, menu.className]" v-for="(menu, index) in menuList"
         :key="index" @click="selectMenu(menu)">
@@ -32,7 +32,7 @@
 <script>
 import collect from '../../utils/collect'
 import { typeOf } from '../../utils/assist'
-import { defaultOpts } from '../../utils/constant'
+import { defaultOpts, themeRange } from '../../utils/constant'
 import eventBus from '../../utils/event'
 export default {
   name: 'VSidebarHorizontal',
@@ -67,17 +67,20 @@ export default {
       type: [String, Number],
       default: defaultOpts.sidebarHorizontalSubWidth
     },
-    activeBgColor: {
+    activeColor: {
       type: String,
-      default: defaultOpts.activeBgColor
-    },
-    subActiveColor: {
-      type: String,
-      default: defaultOpts.subActiveColor
+      default: defaultOpts.activeColor
     },
     showFirstMenuTitle: {
       type: Boolean,
       default: true
+    },
+    theme: {
+      type: String,
+      default: 'dark',
+      validator (val) {
+        return themeRange.includes(val)
+      }
     }
   },
   data () {
@@ -100,15 +103,24 @@ export default {
   },
   computed: {
     classes () {
-      let { fold, className, menuList } = this
+      let { fold, className, menuList, sidebarSubFold } = this
       return [
         fold ? 'fold' : '',
-        this.hasSidebarSub && !this.sidebarSubFold ? '' : 'no-sidebar-sub',
-        className
+        this.hasSidebarSub && !sidebarSubFold ? '' : 'no-sidebar-sub',
+        className,
+        `v-sidebar-horizontal--${this.theme}`
       ]
     },
     routeName () {
       return this.$route.name
+    },
+    calWidth () {
+      let { fold, sidebarSubFold, width, subWidth } = this
+      if (this.hasSidebarSub && !sidebarSubFold) {
+        return width + subWidth
+      } else {
+        return width
+      }
     },
     menuRouteNameList () {
       let getRouteName = (list, result = []) => {
@@ -162,7 +174,6 @@ export default {
         }
         .v-nav .logo-wrap{
           width: ${parseFloat(width)}px !important;
-          background: #20222a;
         }
         .v-nav.fold .logo-wrap{
           width: 0px !important;
@@ -184,28 +195,31 @@ export default {
           left: 0px !important;
         }
       `
-      if (this.activeBgColor !== defaultOpts.activeBgColor) {
+      if (this.activeColor !== defaultOpts.activeColor) {
         style.innerHTML += `
-          .v-sidebar-horizontal .sidebar-nav .sidebar-nav-link.active{
-            background: ${this.activeBgColor} !important;
-          }
-          .v-sidebar-horizontal .sidebar-nav .sidebar-nav-link:hover{
-            border-left: ${this.activeBgColor} 3px solid !important;
-          }
-        `
-      }
-      if (this.subActiveColor !== defaultOpts.subActiveColor) {
-        style.innerHTML += `
-          .v-sidebar-horizontal .sidebar-sub .sidebar-link.active{
-            color: ${this.subActiveColor} !important;
-          }
-          .v-sidebar-horizontal .sidebar-sub .sidebar-link.active::before{
-            background: ${this.subActiveColor} !important;
-          }
-          .v-sidebar-horizontal .sidebar-sub .sidebar-link:hover{
-            color: ${this.subActiveColor} !important;
-          }
-        `
+            .v-sidebar-horizontal--dark .sidebar-nav .sidebar-nav-link.active{
+              background: ${this.activeColor} !important;
+            }
+            .v-sidebar-horizontal--dark .sidebar-nav .sidebar-nav-link:hover{
+              border-left: ${this.activeColor} 2px solid !important;
+            }
+            .v-sidebar-horizontal .sidebar-sub .sidebar-link.active{
+              color: ${this.activeColor} !important;
+            }
+            .v-sidebar-horizontal .sidebar-sub .sidebar-link.active::before{
+              background: ${this.activeColor} !important;
+            }
+            .v-sidebar-horizontal .sidebar-sub .sidebar-link:hover{
+              color: ${this.activeColor} !important;
+            }
+            .v-sidebar-horizontal--light .sidebar-nav .sidebar-nav-link:hover {
+              color: ${this.activeColor};
+            }
+            .v-sidebar-horizontal--light .sidebar-nav .sidebar-nav-link.active {
+              color: ${this.activeColor};
+              border-left: ${this.activeColor} 2px solid;
+            }
+          `
       }
       document.body.appendChild(style)
     },

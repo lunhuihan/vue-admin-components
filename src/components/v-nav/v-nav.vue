@@ -1,5 +1,5 @@
 <template>
-  <div class="v-component v-nav" :class="{'fold': fold}">
+  <div class="v-component v-nav" :class="[{'fold': fold}, `v-nav--${theme}`]">
     <div class="logo-wrap" @click="handleLogo">
       <slot name="logo">
         <img class="logo-img" :src="logo" alt="" v-if="logo">
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { defaultOpts } from '../../utils/constant'
+import { defaultOpts, themeRange } from '../../utils/constant'
 export default {
   name: 'VNav',
   props: {
@@ -36,6 +36,13 @@ export default {
     height: {
       type: [Number, String],
       default: defaultOpts.navHeight
+    },
+    theme: {
+      type: String,
+      default: 'light',
+      validator (val) {
+        return themeRange.includes(val)
+      }
     }
   },
   data () {
