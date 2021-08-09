@@ -8,7 +8,7 @@
     :loading-text="item.loadingText || '加载中'"
     :not-found-text="item.notFoundText || '无匹配数据'"
     :label-in-value="item.labelInValue" :placement="item.placement"
-    :transfer="item.transfer" :element-id="item.elementId"
+    :transfer="calFieldTransfer(item.transfer)" :element-id="item.elementId"
     :transfer-class-name="item.transferClassName" :prefix="item.prefix"
     :allow-create="item.allowCreate"
     :max-tag-count="Number(item.maxTagCount) || 100"
@@ -34,6 +34,10 @@ export default {
   props: {
     value: [String, Number, Array],
     item: Object,
+    transfer: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {},
   data() {

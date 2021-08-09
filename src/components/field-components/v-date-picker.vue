@@ -4,7 +4,7 @@
     :placeholder="item.placeholder" :size="calFieldSize(item)"
     :disabled="calFieldDisabled(item)" :clearable="calClear(item)"
     :readonly="item.readonly" :editable="item.editable"
-    :transfer="item.transfer" :element-id="item.elementId" :format="item.format"
+    :transfer="calFieldTransfer(item.transfer)" :element-id="item.elementId" :format="item.format"
     :placement="item.placement" :options="calDatePickerOptions(item.options)"
     :split-panels="item.splitPanels" :multiple="item.multiple"
     :show-week-numbers="item.showWeekNumbers"
@@ -44,6 +44,10 @@ export default {
   props: {
     value: [String, Number, Date, Array],
     item: Object,
+    transfer: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {},
   data() {

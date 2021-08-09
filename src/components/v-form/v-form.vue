@@ -3,20 +3,27 @@
     :model="model" :rules="formRule" :inline="currentOptions.inline"
     :style="_calWidth(currentOptions.width)"
     :label-width="parseFloat(currentOptions.labelWidth)"
+    :label-position="currentOptions.labelPosition"
     :label-colon="currentOptions.labelColon"
     :hide-required-mark="currentOptions.hideRequiredMark"
     :show-message="currentOptions.showMessage"
     :disabled="currentOptions.disabled" @on-validate="onValidate">
     <template v-if="!currentOptions.inline">
-      <Row v-for="(row, rowIndex) in gridFields" :key="`row-${rowIndex}`"
-        :gutter="currentOptions.colSpace">
-        <Col v-for="(col, colIndex) in row" :key="`col-${colIndex}`"
+      <Row class="form-item-row" v-for="(row, rowIndex) in gridFields"
+        :key="`row-${rowIndex}`" :gutter="currentOptions.colSpace">
+        <Col class="form-item-col" :class="_calColClass(col)"
+          v-for="(col, colIndex) in row" :key="`col-${colIndex}`"
           :flex="colStyleInfo[rowIndex][colIndex].flex"
           :style="colStyleInfo[rowIndex][colIndex].style">
         <FormItem v-for="(item, itemIndex) in col"
           :key="`form-item-${itemIndex}`" :prop="item.name" :label="item.label"
           :label-width="parseFloat(item.labelWidth) || parseFloat(currentOptions.labelWidth)"
-          :class="[`label-${currentOptions.labelPosition}`, `size-${_calFormItemSize(item)}`, { 'inline': colStyleInfo[rowIndex][colIndex].multiple }, `form-item-${item.component}`]">
+          :class="[`label-${currentOptions.labelPosition}`, `size-${_calFormItemSize(item)}`, { 'inline': colStyleInfo[rowIndex][colIndex].multiple }, `form-item-${item.component}`, `${item.formItemClass ? item.formItemClass : ''}`]">
+          <!-- label-append -->
+          <div class="form-label-append"
+            v-if="item.labelAppendHtml && currentOptions.labelPosition === 'top'"
+            v-html="item.labelAppendHtml"
+            :style="_labelAppendStyle(item.label)"></div>
           <!-- 系统内置组件 -->
           <template v-if="!_isSlot(item.slot)">
             <!-- Html -->
@@ -152,7 +159,7 @@
       <FormItem v-for="(item, index) in fields" :key="index" :prop="item.name"
         :label="item.label"
         :label-width="parseFloat(item.labelWidth) || parseFloat(currentOptions.labelWidth)"
-        :class="[`label-${currentOptions.labelPosition}`, `size-${_calFormItemSize(item)}`, `form-item-${item.component}`]">
+        :class="[`label-${currentOptions.labelPosition}`, `size-${_calFormItemSize(item)}`, 'inline', `form-item-${item.component}`, `${item.formItemClass ? item.formItemClass : ''}`]">
         <!-- 系统内置组件 -->
         <template v-if="!_isSlot(item.slot)">
           <!-- Html -->
@@ -285,19 +292,23 @@
       :style="{paddingLeft: `${actionPL}px`}"
       v-if="(submitBtnOpts || resetBtnOpts) && !currentOptions.readonly">
       <Button v-if="submitBtnOpts" :class="submitBtnOpts.className"
-        :style="_calWidth(submitBtnOpts.width, 'btn')"
+        :style="_calWidth(submitBtnOpts.long ? '100%' : submitBtnOpts.width, 'btn')"
         :size="submitBtnOpts.size || currentOptions.size"
         :type="submitBtnOpts.type" :ghost="submitBtnOpts.ghost"
         :html-type="submitBtnOpts.htmlType"
         :loading="submitBtnOpts.loading || submitBtnLoading"
-        :icon="submitBtnOpts.icon" :disabled="submitBtnOpts.disabled"
+        :icon="submitBtnOpts.icon"
+        :disabled="submitBtnOpts.disabled || submitDisabled"
+        :long="submitBtnOpts.long"
         @click="onSubmit">{{submitBtnOpts.text}}</Button>
       <Button v-if="resetBtnOpts" :class="resetBtnOpts.className"
-        :style="_calWidth(resetBtnOpts.width, 'btn')" :type="resetBtnOpts.type"
+        :style="_calWidth(resetBtnOpts.long ? '100%' : resetBtnOpts.width, 'btn')"
+        :type="resetBtnOpts.type"
         :size="resetBtnOpts.size || currentOptions.size"
         :html-type="resetBtnOpts.htmlType" :ghost="resetBtnOpts.ghost"
         :loading="resetBtnOpts.loading || resetBtnLoading"
         :icon="resetBtnOpts.icon" :disabled="resetBtnOpts.disabled"
+        :long="resetBtnOpts.long"
         @click="onReset">{{resetBtnOpts.text}}</Button>
     </div>
   </Form>
@@ -349,6 +360,7 @@ const componentTypeRange = [
   'Cascader',
   'Upload',
   'Button',
+  'Html'
 ]
 
 const actionDefaultOptions = {
@@ -379,7 +391,7 @@ const defaultOptions = {
   resetBtn: {
     ...actionDefaultOptions,
     type: 'default',
-    text: '取消',
+    text: '重置',
   },
 }
 
@@ -400,39 +412,30 @@ export default {
       type: Object,
       required: true,
     },
-    config: {
+    options: {
       // 表单整体配置
       type: Object,
-      required: true,
       validator({
         inline,
         columns = 1,
         colSpace = 0,
         actionAlign = 'left',
         submitBtn = {},
-        resetBtn = {},
-        fields
+        resetBtn = {}
       } = {}) {
-        // 必须项配置检测
-        if (typeOf(fields) !== 'array') {
-          throw new TypeError(
-            `请在config中配置表单项fields！`
-          )
-        }
-
         // 检测表单整体配置
         if (inline && columns > 1) {
-          throw new Error('config中inline与columns不可同时设置！')
+          throw new Error('options中inline与columns不可同时设置！')
         }
         if (typeof columns !== 'number') {
-          throw new TypeError('config中columns的类型需为Number类型！')
+          throw new TypeError('options中columns的类型需为Number类型！')
         }
         if (typeof colSpace !== 'number') {
-          throw new TypeError('config中colSpace的类型需为Number类型！')
+          throw new TypeError('options中colSpace的类型需为Number类型！')
         }
         if (!actionAlignRange.includes(actionAlign)) {
           throw new RangeError(
-            `config中actionAlign属性不支持${actionAlignRange.join(
+            `options中actionAlign属性不支持${actionAlignRange.join(
               '、'
             )}以外的值！`
           )
@@ -443,7 +446,7 @@ export default {
           typeOf(submitBtn) !== 'object'
         ) {
           throw new TypeError(
-            `config中submitBtn的类型需为Object类型或者Boolean类型！`
+            `options中submitBtn的类型需为Object类型或者Boolean类型！`
           )
         }
 
@@ -453,13 +456,21 @@ export default {
           typeOf(resetBtn) !== 'object'
         ) {
           throw new TypeError(
-            `config中resetBtn的类型需为Object类型或者Boolean类型！`
+            `options中resetBtn的类型需为Object类型或者Boolean类型！`
           )
         }
-
+        return true
+      },
+    },
+    fields: {
+      type: Array,
+      default() {
+        return []
+      },
+      validator (val) {
         // 检测表单域配置
         let nameList = []
-        fields.forEach(
+        val.forEach(
           ({
             component = '',
             name = '',
@@ -506,8 +517,9 @@ export default {
             name && nameList.push(name)
           }
         )
+
         return true
-      },
+      }
     },
     dataSource: {
       // 表单每一项的数据源配置
@@ -515,6 +527,10 @@ export default {
       default() {
         return {}
       },
+    },
+    submitDisabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -532,11 +548,7 @@ export default {
   },
   computed: {
     currentOptions() {
-      let { fields, ...rest } = this.config
-      return merge(defaultOptions, { ...rest })
-    },
-    fields () {
-      return this.config.fields || []
+      return merge(defaultOptions, { ...this.options })
     },
     nameField() {
       return collect.createObj(this.fields, 'name')
@@ -584,7 +596,8 @@ export default {
             return parseInt(item.colSpan) || 1
           })
           const multiple = colSpanList.length > 1
-          const flex = getMax(colSpanList) / _this.currentOptions.columns
+          let flex = getMax(colSpanList) / _this.currentOptions.columns
+          flex = flex > 1 ? 1 : flex
           const percent = `${flex * 100}%`
           return {
             flex,
@@ -607,7 +620,7 @@ export default {
       if (actionAlign === 'left') {
         return labelPosition === 'top'
           ? 0
-          : parseFloat(labelWidth) || parseFloat(lastField.labelWidth)
+          : parseFloat(labelWidth) || parseFloat(lastField ? lastField.labelWidth : 0)
       }
       return 0
     },
@@ -640,7 +653,7 @@ export default {
         }
       },
     },
-    'config.fields': {
+    fields: {
       immediate: true,
       handler(val) {
         this._setFormRule()
@@ -829,8 +842,29 @@ export default {
           }
       }
     },
+    _calColClass (col) {
+      let { labelPosition } = this.currentOptions
+      const noLabel = col.some(item => {
+        return item.component !== 'Html' && item.component !== 'Button' && !item.slot && !item.label
+      })
+      if (labelPosition === 'top' && col.length > 1 && noLabel) {
+        return 'col-flex-end'
+      }
+      return ''
+    },
+    _labelAppendStyle (label) {
+      let { size } = this.currentOptions
+      if (size === 'large') {
+        return {
+          left: (label.length - 1) * 16 + 20 + 'px'
+        }
+      }
+      return {
+        left: (label.length - 1) * 14 + 18 + 'px'
+      }
+    },
     _calFormItemSize({ size }) {
-      const returnSize = size || this.config.size
+      const returnSize = size || this.currentOptions.size
       return sizeRange.includes(returnSize) ? returnSize : 'default'
     },
     onValidate(prop, status, error) {

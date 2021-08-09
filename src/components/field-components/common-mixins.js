@@ -101,6 +101,12 @@ export default {
     calFieldDisabled ({ disabled }) {
       return disabled || this.parentOptions.disabled || this.parentOptions.readonly
     },
+    calFieldTransfer (transfer) {
+      if (typeOf(transfer) === 'boolean') {
+        return transfer
+      }
+      return this.transfer
+    },
     selectQueryChange(...args) {
       this.$emit('select-query-change', ...args)
     },

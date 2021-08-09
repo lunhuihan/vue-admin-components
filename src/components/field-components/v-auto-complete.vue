@@ -3,7 +3,7 @@
     :class="calFieldClass(item)" :size="calFieldSize(item)"
     :clearable="calClear(item)" :disabled="calFieldDisabled(item)"
     :placeholder="item.placeholder" :icon="item.icon"
-    :placement="item.placement" :transfer="item.transfer"
+    :placement="item.placement" :transfer="calFieldTransfer(item.transfer)"
     :element-id="item.elementId" :transfer-class-name="item.transferClassName"
     :data="item.filterMethod ? dataSource : []"
     :filter-method="typeOf(item.filterMethod) === 'boolean' ? item.filterMethod : (value, option) => { return dealReturnEvent(item.filterMethod, value, option, item) }"
@@ -27,6 +27,10 @@ export default {
     value: [String, Number],
     item: Object,
     dataSource: Array,
+    transfer: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {},
   data() {

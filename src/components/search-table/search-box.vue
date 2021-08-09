@@ -43,7 +43,7 @@
 
           <!-- Select -->
           <v-select :ref="item.name" v-if="item.component === 'Select'"
-            v-model="search[item.name]" :item="item" @deal-event="dealEvent">
+            v-model="search[item.name]" :item="item" transfer @deal-event="dealEvent">
             <template v-slot:options
               v-if="typeOf(dataSource[item.name]) === 'array' && dataSource[item.name].length">
               <Option v-for="(optionItem, optionIndex) in dataSource[item.name]"
@@ -60,7 +60,7 @@
 
           <!-- DatePicker -->
           <v-date-picker :ref="item.name" v-if="item.component === 'DatePicker'"
-            v-model="search[item.name]" :item="item" @deal-event="dealEvent">
+            v-model="search[item.name]" :item="item" transfer @deal-event="dealEvent">
           </v-date-picker>
 
           <!-- RadioGroup -->
@@ -94,7 +94,7 @@
           <!-- AutoComplete 数据源使用item.data-->
           <v-auto-complete :ref="item.name"
             v-if="item.component === 'AutoComplete'" v-model="search[item.name]"
-            :item="item" :data-source="item.data" @deal-event="dealEvent">
+            :item="item" :data-source="item.data" transfer @deal-event="dealEvent">
             <template v-slot:default v-if="item.dropdownSlot">
               <slot :name="item.dropdownSlot" :field="item">
               </slot>
@@ -107,7 +107,7 @@
 
           <!-- Cascader 数据源使用item.data-->
           <v-cascader :ref="item.name" v-if="item.component === 'Cascader'"
-            v-model="search[item.name]" :item="item" :data-source="item.data"
+            v-model="search[item.name]" :item="item" transfer :data-source="item.data"
             @deal-event="dealEvent">
             <template v-slot:default v-if="item.selectSlot">
               <slot :name="item.selectSlot" :field="item">

@@ -1,22 +1,30 @@
 @charset "utf-8";
 .v-form {
   $field-height: 32px !important;
-  $field-large-height: 38px !important;
+  $field-large-height: 40px !important;
+  .form-item-col{
+    &.col-flex-end{
+      display: inline-flex;
+      align-items: flex-end;
+    }
+  }
   .ivu-form-item {
+    display: flex;
     &.inline{
       display: inline-flex;
     }
     &.label-top{
       flex-direction: column;
       .ivu-form-item-label{
-        text-align: left;
+        justify-content: flex-start;
         display: inline-flex;
         float: none;
+        line-height: 1;
       }
     }
     &.label-left{
       .ivu-form-item-label{
-        text-align: left;
+        justify-content: flex-start;
       }
     }
     &.size-large{
@@ -24,13 +32,23 @@
         font-size: 16px !important;
         height: $field-large-height;
       }
+      .ivu-form-item-content{
+        line-height: $field-large-height;
+      }
       &.form-item-Upload{
         .ivu-btn{
           height: $field-large-height;
         }
       }
       .field-html{
-        line-height: 38px;
+        line-height: $field-large-height;
+      }
+      .ivu-input-suffix i, .ivu-input-prefix i{
+        line-height: $field-large-height;
+      }
+      .ivu-input-icon{
+        height: $field-large-height;
+        line-height: $field-large-height;
       }
     }
     .ivu-form-item-label{
@@ -38,11 +56,18 @@
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
+      justify-content: flex-end;
       padding-top: 0 !important;
       padding-bottom: 0 !important;
       line-height: 1.2;
     }
+    .form-label-append{
+      position: absolute;
+      bottom: 100%;
+      word-break: keep-all;
+    }
     .ivu-form-item-content {
+      flex: 1;
       display: flex;
       margin-left: 0 !important;
       .ivu-cascader,.ivu-radio-wrapper,.ivu-radio-group,.ivu-checkbox-group,.ivu-checkbox-group-item {
@@ -168,6 +193,12 @@
       .ivu-select-selected-value{
         height: $field-large-height;
       }
+      .ivu-select-input{
+        font-size: 16px;
+        height: $field-large-height;
+        line-height: $field-large-height;
+        top: 1px;
+      }
     }
     // 输入框、autocomplete
     .ivu-input,.ivu-auto-complete,.ivu-input-number{
@@ -175,6 +206,9 @@
       &:hover,&:focus{
         box-shadow: none;
         border: 1px solid white;
+      }
+      & + .ivu-input-prefix, & + .ivu-input-suffix{
+        display: none;
       }
     }
     // 下拉

@@ -6,7 +6,7 @@
     :clearable="calClear(item)" :trigger="item.trigger"
     :filterable="item.filterable"
     :load-data="(childItem, callback) => { dealEvent(item.loadData, childItem, callback, item) }"
-    :not-found-text="item.notFoundText" :transfer="item.transfer"
+    :not-found-text="item.notFoundText" :transfer="calFieldTransfer(item.transfer)"
     :element-id="item.elementId"
     :render-format="item.renderFormat ? (labels, selectedData) => { return dealReturnEvent(item.renderFormat, labels, selectedData, item)} : undefined"
     @on-change="(val, selectedData) => { dealEvent(item.onChange, val, selectedData, item) }"
@@ -25,6 +25,10 @@ export default {
     value: Array,
     item: Object,
     dataSource: Array,
+    transfer: {
+      type: Boolean,
+      default: false
+    }
   },
   components: {},
   data() {

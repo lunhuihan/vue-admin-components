@@ -11,6 +11,7 @@ export default {
       label: '基本',
       labelKey: 'desc',
       valueKey: 'code',
+      // transfer: true,
       data: [
         {
           desc: '北京',
