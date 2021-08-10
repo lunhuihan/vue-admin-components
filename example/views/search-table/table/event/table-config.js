@@ -1,14 +1,13 @@
 export default {
-  onRowClick (row, index, search, page, pageSize) { 
+  onRowClick (row, index, page, pageSize) {
     console.log('-------')
     console.log(row)
     console.log(index)
-    console.log(search)
     console.log(page)
     console.log(pageSize)
     console.log('-------')
   },
-  onRowDblclick(row, index, search) { 
+  onRowDblclick(row, index, search) {
     console.log('row:', row)
     console.log('index:', index)
     console.log('search:', search)
@@ -18,15 +17,15 @@ export default {
     console.log('currentRow:', currentRow)
     console.log('oldCurrentRow:', oldCurrentRow)
   },
-  onSelect(selection, row, search) { 
+  onSelect(selection, row, search) {
     /* console.log('selection:', selection)
     console.log('row:', row)
     console.log('search:', search) */
   },
-  onSelectionChange () { 
+  onSelectionChange () {
     console.log(this.$options.name)
   },
-  onFilterChange (column, search) { 
+  onFilterChange (column, search) {
     console.log('column:', column)
     console.log('search:', search)
   },

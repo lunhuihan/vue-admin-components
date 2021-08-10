@@ -28,8 +28,7 @@ export default {
   },
   created () {},
   methods: {
-    getData (search, page, pageSize, done) {
-      console.log('search:', search)
+    getData (page, pageSize, done) {
       console.log('page:', page)
       console.log('pageSize:', pageSize)
       setTimeout(() => {

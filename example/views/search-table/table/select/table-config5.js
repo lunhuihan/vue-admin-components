@@ -1,17 +1,14 @@
 export default {
   border: true,
-  onSelect (selection, row, search) { 
+  onSelect (selection, row) {
     console.log(selection)
     console.log(row)
-    console.log(search)
   },
-  onSelectAll (selection, search) { 
+  onSelectAll (selection) {
     console.log(selection)
-    console.log(search)
   },
-  onSelectionChange(selection, search) { 
+  onSelectionChange(selection) {
     console.log(selection)
-    console.log(search)
   },
   columns: [
     {

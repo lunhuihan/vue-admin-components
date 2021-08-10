@@ -32,8 +32,7 @@ export default {
     this.getData()
   },
   methods: {
-    getData (search = {}, page, pageSize, done = () => { }) {
-      console.log(search)
+    getData (page, pageSize, done = () => { }) {
       console.log(page)
       console.log(pageSize)
       console.log(done)

@@ -2,7 +2,7 @@
   <div class="page v-form-page">
     <v-form ref="form" :model.async="form" :options="options" :fields="fields"
       :data-source="dataSource" :submit-disabled="submitDisabled"
-      @on-reset="reset" @on-submit="submit">
+      @on-submit="submit">
       <template v-slot:uploadSlot>
         <Button>上传</Button>
       </template>

@@ -1,8 +1,9 @@
 // import { deepCopy } from '../../../../utils/assist'
 export default {
   labelWidth: 70,
-  fieldWidth: 200,
+  fieldWidth: 140,
   fold: true,
+  // size: 'large',
   fields: [
     {
       name: 'cascader',
@@ -114,9 +115,6 @@ export default {
           ]
         }
       ]
-    },
-    {
-      slot: 'test'
     },
     {
       name: 'cascader2',
@@ -429,9 +427,8 @@ export default {
       value: [],
       label: 'render-format格式化',
       labelWidth: 150,
-      renderFormat(labels, selectedData, field, search) {
+      renderFormat(labels, selectedData, field) {
         console.log('field:', field)
-        console.log('search:', search.cascader6)
         const index = labels.length - 1
         const data = selectedData[index] || false
         if (data && data.code) {

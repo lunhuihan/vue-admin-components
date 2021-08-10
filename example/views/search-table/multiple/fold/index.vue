@@ -33,7 +33,7 @@ export default {
     this.getData()
   },
   methods: {
-    getData (search = {}, page = 1, pageSize = 10, done = () => { }) {
+    getData (page = 1, pageSize = 10, done = () => { }) {
       this.loading = true
       setTimeout(() => {
         this.tableData = data

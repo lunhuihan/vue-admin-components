@@ -72,8 +72,7 @@ export default {
   mounted () {
   },
   methods: {
-    getData (search = {}, page = 1, pageSize = 10, done = () => { }) {
-      console.log('search:', search)
+    getData (page = 1, pageSize = 10, done = () => { }) {
       console.log('page:', page)
       console.log('pageSize:', pageSize)
       this.loading = true

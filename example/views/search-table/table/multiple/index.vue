@@ -88,18 +88,16 @@ export default {
   created () {
   },
   methods: {
-    getData (search, page, pageSize, done) {
-      console.log('search:', search)
+    getData (page, pageSize, done) {
       console.log('page:', page)
       console.log('pageSize:', pageSize)
       setTimeout(() => {
         done()
       }, 3000)
     },
-    show (index, row, search) {
+    show (index, row) {
       console.log('index:', index)
       console.log('row:', row)
-      console.log('search:', search)
       /* this.$Modal.info({
         title: 'User Info',
         content: `Name：${this.tableConfig.data[index].name}<br>Age：${this.tableConfig.data[index].age}<br>Address：${this.tableConfig.data[index].address}`
