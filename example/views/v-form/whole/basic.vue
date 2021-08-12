@@ -1,7 +1,7 @@
 <template>
   <div class="page v-form-page">
     <v-form ref="form" :model.async="form" :options="options" :fields="fields"
-      :data-source="dataSource" :submit-disabled="submitDisabled"
+      :data-source="dataSource"
       @on-submit="submit">
       <template v-slot:uploadSlot>
         <Button>上传</Button>
@@ -16,6 +16,15 @@ export default {
   name: '',
   components: {  },
   data() {
+    const qualityPwd = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入'))
+      } else if (!/^(?![^a-zA-Z]+$)(?!\D+$)/.test(value)) {
+        callback(new Error('密码必须包含数字和字母'))
+      } else {
+        callback()
+      }
+    }
     return {
       visible: false,
       submitDisabled: true,
@@ -47,6 +56,9 @@ export default {
         submitBtn: {
           // long: true
           // width: '100%',
+          icon: 'ios-search',
+          loading: true,
+          // shape: 'circle'
         },
         // resetBtn: false,
       },
@@ -61,12 +73,7 @@ export default {
           labelAppendHtml: '（这是描述语这是描述语这是描述语这是描述语）',
           // group: 'B',
           colSpan: 2,
-          rules: [
-            {
-              required: true,
-              message: '请输入姓名',
-            },
-          ],
+          // required: true
         },
         {
           name: 'age',
@@ -376,6 +383,7 @@ export default {
       }, 1000)
     },
     submit(done) {
+      // this.fields[0].error = '错误'
       setTimeout(() => {
         done()
       }, 1000)

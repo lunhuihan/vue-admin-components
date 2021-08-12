@@ -18,6 +18,7 @@
         <FormItem v-for="(item, itemIndex) in col"
           :key="`form-item-${itemIndex}`" :prop="item.name" :label="item.label"
           :label-width="parseFloat(item.labelWidth) || parseFloat(currentOptions.labelWidth)"
+          :required="item.required" :error="item.error"
           :class="[`label-${currentOptions.labelPosition}`, `size-${_calFormItemSize(item)}`, { 'inline': colStyleInfo[rowIndex][colIndex].multiple }, `form-item-${item.component}`, `${item.formItemClass ? item.formItemClass : ''}`]">
           <!-- label-append -->
           <div class="form-label-append"
@@ -156,9 +157,9 @@
       </Row>
     </template>
     <template v-else>
-      <FormItem v-for="(item, index) in fields" :key="index" :prop="item.name"
-        :label="item.label"
+      <FormItem v-for="(item, index) in fields" :key="index" :prop="item.name" :label="item.label"
         :label-width="parseFloat(item.labelWidth) || parseFloat(currentOptions.labelWidth)"
+        :required="item.required" :error="item.error"
         :class="[`label-${currentOptions.labelPosition}`, `size-${_calFormItemSize(item)}`, 'inline', `form-item-${item.component}`, `${item.formItemClass ? item.formItemClass : ''}`]">
         <!-- 系统内置组件 -->
         <template v-if="!_isSlot(item.slot)">
@@ -299,7 +300,7 @@
         :loading="submitBtnOpts.loading || submitBtnLoading"
         :icon="submitBtnOpts.icon"
         :disabled="submitBtnOpts.disabled || submitDisabled"
-        :long="submitBtnOpts.long"
+        :long="submitBtnOpts.long" :shape="submitBtnOpts.shape"
         @click="onSubmit">{{submitBtnOpts.text}}</Button>
       <Button v-if="resetBtnOpts" :class="resetBtnOpts.className"
         :style="_calWidth(resetBtnOpts.long ? '100%' : resetBtnOpts.width, 'btn')"
@@ -308,7 +309,7 @@
         :html-type="resetBtnOpts.htmlType" :ghost="resetBtnOpts.ghost"
         :loading="resetBtnOpts.loading || resetBtnLoading"
         :icon="resetBtnOpts.icon" :disabled="resetBtnOpts.disabled"
-        :long="resetBtnOpts.long"
+        :long="resetBtnOpts.long" :shape="resetBtnOpts.shape"
         @click="onReset">{{resetBtnOpts.text}}</Button>
     </div>
   </Form>

@@ -12,6 +12,7 @@
       <FormItem v-for="(item, fieldIndex) in fields"
         :key="`field-${fieldIndex}`" :prop="item.name" :label="item.label"
         :label-width="item.labelWidth" :class="_calFormItemClass(item)"
+        :required="item.required" :error="item.error"
         :style="{width: !isSlot(item.slot) ? 'auto' : calFormItemWidth(item)}">
         <!-- 系统内置组件 -->
         <template v-if="!isSlot(item.slot)">
