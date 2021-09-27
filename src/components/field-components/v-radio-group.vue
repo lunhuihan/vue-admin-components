@@ -8,11 +8,11 @@
       :key="`radio-${item.name}-${index}`" :disabled="calFieldDisabled(radioItem)"
       :border="item.border">
       <template v-if="item.radioSlot">
-        <slot :label="radioItem.label" :value="radioItem.value" :disabled="radioItem.disabled"></slot>
+        <slot :label="radioItem.label" :value="radioItem.value" :disabled="radioItem.disabled" :data="radioItem" :index="index"></slot>
       </template>
       <template v-else>
         <Icon :type="radioItem.icon" v-if="radioItem.icon"></Icon>
-        <span>{{radioItem.label}}</span>
+        <span v-html="radioItem.label"></span>
       </template>
     </Radio>
   </RadioGroup>

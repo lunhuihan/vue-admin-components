@@ -1,12 +1,12 @@
 <template>
   <div class="page v-form-page">
     <v-form ref="form" :model.async="form" :options="options" :fields="fields"
-      :data-source="dataSource"
-      @on-submit="submit">
-      <template v-slot:uploadSlot>
-        <Button>上传</Button>
+      :data-source="dataSource" @on-submit="submit">
+      <template v-slot:favorRadio="{value}">
+        <p class="item">这是签约文件{{value}}<a class="link">查看详情</a></p>
       </template>
     </v-form>
+    <div v-if="show">111111</div>
   </div>
 </template>
 
@@ -29,304 +29,80 @@ export default {
       visible: false,
       submitDisabled: true,
       form: {
-        day: [1623400158263, 1623700158263, 1623900158263],
-        startTime: 1623400158263,
-        endTime: 1623700158263,
-        name: ' 轮回韩 ',
-        age: '29330rr',
-        birthday: [1623400158263, 1623600158263],
-        inputNumber: 18,
-        grade: 1,
-        school: '20210901',
-        sex: 0,
-        work: true,
-        favor: [0, 2],
-        area: ['beijing', 'gugong'],
-        email: '22202',
-        switch: true,
+        favor: []
       },
       options: {
-        labelWidth: 100,
-        // inline: true,
-        size: 'large',
-        // labelPosition: 'right',
-        // span: 10,
-        // readonly: true,
-        columns: 3,
-        submitBtn: {
-          // long: true
-          // width: '100%',
-          icon: 'ios-search',
-          loading: true,
-          // shape: 'circle'
-        },
-        // resetBtn: false,
+        labelWidth: 100
       },
+      show: false,
       fields: [
+        {
+          name: 'grade',
+          component: 'Select',
+          label: '年级',
+          required: true
+        },
         {
           name: 'name',
           component: 'Input',
           label: '姓名',
-          prefix: 'ios-barcode-outline',
-          className: 'name-input',
-          formItemClass: 'form-name-input',
-          labelAppendHtml: '（这是描述语这是描述语这是描述语这是描述语）',
-          // group: 'B',
-          colSpan: 2,
-          // required: true
-        },
-        {
-          name: 'age',
-          component: 'Input',
-          label: '年龄',
-          number: true,
-          colSpan: 1
-          // group: 'B',
-        },
-        {
-          name: 'birthday',
-          component: 'DatePicker',
-          label: '出生日期',
-          type: 'daterange',
-          width: 240,
-          returnDateType: 'string',
-          returnDateSeparator: '.'
-        },
-        {
-          name: 'day',
-          component: 'DatePicker',
-          label: '多选日期',
-          type: 'date',
-          multiple: true,
-          returnDateType: 'string',
-          returnDateSeparator: '/',
-        },
-        {
-          name: 'startTime',
-          component: 'DatePicker',
-          label: '度假日期',
-          // width: 120,
-          options: 'startTimeOptions',
-          group: 'A',
-          colSpan: 2,
-        },
-        {
-          component: 'Html',
-          html: '~',
-          group: 'A',
-          width: 30,
-          style: {
-            textAlign: 'center',
-          },
-          className: 'custom-html',
-        },
-        {
-          name: 'endTime',
-          component: 'DatePicker',
-          // width: 120,
-          options: 'endTimeOptions',
-          group: 'A',
-        },
-        {
-          name: 'inputNumber',
-          component: 'InputNumber',
-          label: '数字输入框',
-          min: 1,
-          max: 20,
-          // size: 'large'
-        },
-        {
-          name: 'grade',
-          component: 'Select',
-          label: '等级',
-        },
-        {
-          name: 'school',
-          component: 'DatePicker',
-          label: '上学日期',
-          // width: 240,
-          // type: 'datetime',
-          returnDateType: 'string',
-          returnDateSeparator: '/',
-        },
-        {
-          name: 'sex',
-          component: 'RadioGroup',
-          label: '性别',
-          labelKey: 'desc',
-          valueKey: 'code',
-        },
-        {
-          name: 'work',
-          component: 'Checkbox',
-          label: '是否工作',
-          text: '是否工作',
-          // size: 'large'
-          // trueValue: 'y',
-          // falseValue: 'n'
+          required: true
         },
         {
           name: 'favor',
           component: 'CheckboxGroup',
           label: '兴趣爱好',
-        },
-        {
-          name: 'switch',
-          component: 'Switch',
-          label: '开关',
-          className: 'eee-0',
-          // trueValue: 1,
-          // falseValue: 0
-          // size: 'large'
-        },
-        {
-          name: 'email',
-          component: 'AutoComplete',
-          label: '邮箱',
-          onSearch(value, field) {
-            this.dataSource.email =
-              !value || value.indexOf('@') >= 0
-                ? []
-                : [value + '@qq.com', value + '@sina.com', value + '@163.com']
-          },
-        },
-        {
-          name: 'area',
-          component: 'Cascader',
-          label: '地区',
-          renderFormat(labels, selectedData, field, formValue) {
-            console.log('field:', field)
-            console.log('formValue:', formValue)
-            const index = labels.length - 1
-            const data = selectedData[index] || false
-            if (data && data.code) {
-              return labels[index] + ' - ' + data.code
+          // radioSlot: 'favorRadio',
+          vertical: true,
+          required: true
+         /*  rules: [
+            {
+              required: true, message: '请选择', trigger: 'change'
             }
-            return labels[index]
-          },
-        },
-        {
-          name: 'img',
-          component: 'Upload',
-          label: '上传图片',
-          action: '//jsonplaceholder.typicode.com/posts/',
-          contentSlot: 'uploadSlot',
-          onSuccess(res) {
-            console.log('res:', res)
-          },
-          onError(res) {
-            console.log('res:', res)
-          },
-        },
-        {
-          name: 'company',
-          label: '公司',
-          component: 'Select',
-          remoteMethod: 'queryCompany',
-          loading: false,
-          onQueryChange() {
-            console.log('------queryChange-----')
-          },
-        },
+          ] */
+        }
       ],
       dataSource: {
-        grade: [
-          {
-            label: '初级',
-            value: 0,
-          },
-          {
-            label: '中级',
-            value: 1,
-          },
-          {
-            label: '高级',
-            value: 2,
-          },
-        ],
-        sex: [
-          {
-            code: 0,
-            desc: '男',
-          },
-          {
-            code: 1,
-            desc: '女',
-          },
-        ],
         favor: [
           {
-            label: '足球',
-            value: 0,
-          },
-          {
-            label: '篮球',
+            label: '0',
             value: 1,
+            id: '001',
+            name: '名称1'
           },
           {
-            label: '棒球',
+            label: '1',
             value: 2,
-          },
-        ],
-        email: [],
-        area: [
-          {
-            value: 'beijing',
-            label: '北京',
-            children: [
-              {
-                value: 'gugong',
-                label: '故宫',
-              },
-              {
-                value: 'tiantan',
-                label: '天坛',
-              },
-              {
-                value: 'wangfujing',
-                label: '王府井',
-              },
-            ],
+            id: '002',
+            name: '名称2'
           },
           {
-            value: 'jiangsu',
-            label: '江苏',
-            children: [
-              {
-                value: 'nanjing',
-                label: '南京',
-                children: [
-                  {
-                    value: 'fuzimiao',
-                    label: '夫子庙',
-                  },
-                ],
-              },
-              {
-                value: 'suzhou',
-                label: '苏州',
-                children: [
-                  {
-                    value: 'zhuozhengyuan',
-                    label: '拙政园',
-                  },
-                  {
-                    value: 'shizilin',
-                    label: '狮子林',
-                  },
-                ],
-              },
-            ],
-          },
+            label: '2',
+            value: 3,
+            id: '003',
+            name: '名称3'
+          }
         ],
-        company: [],
-      },
-      inline: false,
-      labelWidth: 100,
+        grade: [
+          {
+            label: '一年级',
+            value: 0
+          },
+          {
+            label: '二年级',
+            value: 1
+          },
+          {
+            label: '三年级',
+            value: 2
+          }
+        ]
+      }
     }
   },
   computed: {
     startTimeOptions() {
+      e.provent
       let endTime = this.form.endTime
 
       return {
@@ -344,7 +120,11 @@ export default {
       }
     },
   },
-  created() {},
+  created() {
+    setTimeout(() => {
+      this.show = true
+    }, 5000)
+  },
   mounted() {},
   methods: {
     changeInline(value) {
@@ -383,6 +163,7 @@ export default {
       }, 1000)
     },
     submit(done) {
+      console.log('提交')
       // this.fields[0].error = '错误'
       setTimeout(() => {
         done()

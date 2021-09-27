@@ -6,7 +6,7 @@
     <Checkbox v-for="(checkboxItem, index) in dataSource" :label="checkboxItem.value"
       :key="`checkbox-${item.name}-${index}`" :size="calFieldSize(item)" :disabled="calFieldDisabled(checkboxItem)" :border="item.border">
       <Icon :type="checkboxItem.icon" v-if="checkboxItem.icon"></Icon>
-      <span>{{checkboxItem.label}}</span>
+      <span v-html="checkboxItem.label"></span>
     </Checkbox>
   </CheckboxGroup>
 </template>

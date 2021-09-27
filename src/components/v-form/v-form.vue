@@ -83,7 +83,8 @@
               @deal-event="_dealEvent">
               <template v-slot:default="slotProps" v-if="item.radioSlot">
                 <slot :name="item.radioSlot" :field="item"
-                  :label="slotProps.label" :value="slotProps.value">
+                  :data="slotProps.data" :label="slotProps.label"
+                  :value="slotProps.value">
                 </slot>
               </template>
             </v-radio-group>
@@ -157,7 +158,8 @@
       </Row>
     </template>
     <template v-else>
-      <FormItem v-for="(item, index) in fields" :key="index" :prop="item.name" :label="item.label"
+      <FormItem v-for="(item, index) in fields" :key="index" :prop="item.name"
+        :label="item.label"
         :label-width="parseFloat(item.labelWidth) || parseFloat(currentOptions.labelWidth)"
         :required="item.required" :error="item.error"
         :class="[`label-${currentOptions.labelPosition}`, `size-${_calFormItemSize(item)}`, 'inline', `form-item-${item.component}`, `${item.formItemClass ? item.formItemClass : ''}`]">
@@ -216,7 +218,7 @@
             v-model="model[item.name]" :item="item"
             :data-source="formDataSource[item.name]" @deal-event="_dealEvent">
             <template v-slot:default="slotProps" v-if="item.radioSlot">
-              <slot :name="item.radioSlot" :field="item"
+              <slot :name="item.radioSlot" :field="item" :data="slotProps.data"
                 :label="slotProps.label" :value="slotProps.value">
               </slot>
             </template>
@@ -322,6 +324,7 @@ import {
   adaptNumberUnit,
   checkKeyHazyExist,
   checkIsDataCmp,
+  operTypeZh
 } from '../../utils/assist'
 import { DateValueType, sizeRange } from '../../utils/constant'
 import collect from '../../utils/collect'
@@ -361,7 +364,7 @@ const componentTypeRange = [
   'Cascader',
   'Upload',
   'Button',
-  'Html'
+  'Html',
 ]
 
 const actionDefaultOptions = {
@@ -371,7 +374,7 @@ const actionDefaultOptions = {
   htmlType: 'button',
   long: false,
   loading: false,
-  disabled: false
+  disabled: false,
 }
 
 const actionAlignRange = ['left', 'center', 'right']
@@ -422,7 +425,7 @@ export default {
         colSpace = 0,
         actionAlign = 'left',
         submitBtn = {},
-        resetBtn = {}
+        resetBtn = {},
       } = {}) {
         // 检测表单整体配置
         if (inline && columns > 1) {
@@ -468,7 +471,7 @@ export default {
       default() {
         return []
       },
-      validator (val) {
+      validator(val) {
         // 检测表单域配置
         let nameList = []
         val.forEach(
@@ -520,7 +523,7 @@ export default {
         )
 
         return true
-      }
+      },
     },
     dataSource: {
       // 表单每一项的数据源配置
@@ -531,8 +534,8 @@ export default {
     },
     submitDisabled: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
@@ -554,6 +557,20 @@ export default {
     nameField() {
       return collect.createObj(this.fields, 'name')
     },
+    /* fields() {
+      return this.fields.map((field, index) => {
+        let { required, rules = [], component, label = '' } = field
+        if (required) {
+          rules.unshift({
+            required: true,
+            message: `请${operTypeZh(component)}${label}`,
+            trigger: 'blur'
+          })
+          return { rules, ...field }
+        }
+        return { ...field }
+      })
+    }, */
     groupFields() {
       let groupInfo = {}
       let groupArr = []
@@ -621,7 +638,8 @@ export default {
       if (actionAlign === 'left') {
         return labelPosition === 'top'
           ? 0
-          : parseFloat(labelWidth) || parseFloat(lastField ? lastField.labelWidth : 0)
+          : parseFloat(labelWidth) ||
+              parseFloat(lastField ? lastField.labelWidth : 0)
       }
       return 0
     },
@@ -843,25 +861,30 @@ export default {
           }
       }
     },
-    _calColClass (col) {
+    _calColClass(col) {
       let { labelPosition } = this.currentOptions
-      const noLabel = col.some(item => {
-        return item.component !== 'Html' && item.component !== 'Button' && !item.slot && !item.label
+      const noLabel = col.some((item) => {
+        return (
+          item.component !== 'Html' &&
+          item.component !== 'Button' &&
+          !item.slot &&
+          !item.label
+        )
       })
       if (labelPosition === 'top' && col.length > 1 && noLabel) {
         return 'col-flex-end'
       }
       return ''
     },
-    _labelAppendStyle (label) {
+    _labelAppendStyle(label) {
       let { size } = this.currentOptions
       if (size === 'large') {
         return {
-          left: (label.length - 1) * 16 + 20 + 'px'
+          left: (label.length - 1) * 16 + 20 + 'px',
         }
       }
       return {
-        left: (label.length - 1) * 14 + 18 + 'px'
+        left: (label.length - 1) * 14 + 18 + 'px',
       }
     },
     _calFormItemSize({ size }) {
@@ -872,7 +895,6 @@ export default {
       this.$emit('on-validate', prop, status, error)
     },
     onSubmit() {
-      // 提交表单
       this.$refs[`form-${this.refId}`].validate((valid) => {
         if (valid) {
           this.submitBtnLoading = true

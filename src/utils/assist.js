@@ -70,3 +70,23 @@ export function checkIsDataCmp(component) {
     component === 'Cascader'
   )
 }
+
+
+export function operTypeZh(component) {
+  switch (component) {
+    case 'Select':
+    case 'DatePicker':
+    case 'TimePicker':
+    case 'RadioGroup':
+    case 'CheckboxGroup':
+    case 'Switch':
+    case 'Cascader':
+      return '选择'
+    case 'Checkbox':
+      return '勾选'
+    case 'Upload':
+      return '上传'
+    default:
+      return '输入'
+  }
+}
