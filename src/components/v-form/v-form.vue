@@ -30,169 +30,211 @@
             <!-- Html -->
             <v-html v-if="item.component === 'Html'" :item="item"></v-html>
             <!-- Input -->
-            <v-input v-if="item.component === 'Input'" :ref="item.name"
-              v-model="model[item.name]" :item="item" @deal-event="_dealEvent"
-              @deal-number="_dealNumber">
-              <!-- 前置slot -->
-              <template v-slot:prepend
-                v-if="(!item.type || item.type === 'text') && item.prependSlot">
-                <slot :name="item.prependSlot" :field="item">
-                </slot>
-              </template>
-              <!-- 后置slot -->
-              <template v-slot:append
-                v-if="(!item.type || item.type === 'text') && item.appendSlot">
-                <slot :name="item.appendSlot" :field="item">
-                </slot>
-              </template>
-            </v-input>
+            <template v-if="item.component === 'Input'">
+              <slot :name="item.beforeSlot"></slot>
+              <v-input :ref="item.name" v-model="model[item.name]" :item="item"
+                @deal-event="_dealEvent" @deal-number="_dealNumber">
+                <!-- 前置slot -->
+                <template v-slot:prepend
+                  v-if="(!item.type || item.type === 'text') && item.prependSlot">
+                  <slot :name="item.prependSlot" :field="item">
+                  </slot>
+                </template>
+                <!-- 后置slot -->
+                <template v-slot:append
+                  v-if="(!item.type || item.type === 'text') && item.appendSlot">
+                  <slot :name="item.appendSlot" :field="item">
+                  </slot>
+                </template>
+              </v-input>
+              <slot :name="item.afterSlot"></slot>
+            </template>
 
             <!-- InputNumber -->
-            <v-input-number :ref="item.name"
-              v-if="item.component === 'InputNumber'" v-model="model[item.name]"
-              :item="item" @deal-event="_dealEvent"></v-input-number>
+            <template v-if="item.component === 'InputNumber'">
+              <slot :name="item.beforeSlot"></slot>
+              <v-input-number :ref="item.name" v-model="model[item.name]"
+                :item="item" @deal-event="_dealEvent"></v-input-number>
+              <slot :name="item.afterSlot"></slot>
+            </template>
 
             <!-- Select -->
-            <v-select :ref="item.name" v-if="item.component === 'Select'"
-              v-model="model[item.name]" :item="item" @deal-event="_dealEvent">
-              <template v-slot:options
-                v-if="typeOf(formDataSource[item.name]) === 'array' && formDataSource[item.name].length">
-                <Option
-                  v-for="(optionItem, optionIndex) in formDataSource[item.name]"
-                  :value="optionItem.value" :label="optionItem.label"
-                  :key="optionIndex" :disabled="optionItem.disabled">
-                  <template v-slot:default v-if="item.optionSlot">
-                    <slot :name="item.optionSlot" :field="item"
-                      :label="optionItem.label" :value="optionItem.value"
-                      :data="optionItem" :index="radioIndex">
-                    </slot>
-                  </template>
-                </Option>
-              </template>
-            </v-select>
+            <template v-if="item.component === 'Select'">
+              <slot :name="item.beforeSlot"></slot>
+              <v-select :ref="item.name" v-model="model[item.name]" :item="item"
+                @deal-event="_dealEvent">
+                <template v-slot:options
+                  v-if="typeOf(formDataSource[item.name]) === 'array' && formDataSource[item.name].length">
+                  <Option
+                    v-for="(optionItem, optionIndex) in formDataSource[item.name]"
+                    :value="optionItem.value" :label="optionItem.label"
+                    :key="optionIndex" :disabled="optionItem.disabled">
+                    <template v-slot:default v-if="item.optionSlot">
+                      <slot :name="item.optionSlot" :field="item"
+                        :label="optionItem.label" :value="optionItem.value"
+                        :data="optionItem" :index="optionIndex">
+                      </slot>
+                    </template>
+                  </Option>
+                </template>
+              </v-select>
+              <slot :name="item.afterSlot"></slot>
+            </template>
 
             <!-- DatePicker -->
-            <v-date-picker :ref="item.name"
-              v-if="item.component === 'DatePicker'" v-model="model[item.name]"
-              :item="item" @deal-event="_dealEvent">
-            </v-date-picker>
+            <template v-if="item.component === 'DatePicker'">
+              <slot :name="item.beforeSlot"></slot>
+              <v-date-picker :ref="item.name" v-model="model[item.name]"
+                :item="item" @deal-event="_dealEvent">
+              </v-date-picker>
+              <slot :name="item.afterSlot"></slot>
+            </template>
 
             <!-- RadioGroup -->
-            <RadioGroup :ref="item.name" v-if="item.component === 'RadioGroup'"
-              v-model="model[item.name]" :type="item.type"
-              :button-style="item.buttonStyle" :style="calFieldStyle(item)"
-              :class="calFieldClass(item)" :size="calFieldSize(item)"
-              @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
-              <Radio :label="radioItem.value"
-                v-for="(radioItem, radioIndex) in formDataSource[item.name]"
-                :key="`radio-${item.name}-${radioIndex}`"
-                :disabled="calFieldDisabled(radioItem)" :border="item.border">
-                <template v-if="item.radioSlot">
-                  <slot :name="item.radioSlot" :field="item"
-                    :label="radioItem.label" :value="radioItem.value"
-                    :data="radioItem" :index="radioIndex">
-                  </slot>
-                </template>
-                <template v-else>
-                  <Icon :type="radioItem.icon" v-if="radioItem.icon"></Icon>
-                  <span v-html="radioItem.label"></span>
-                </template>
-              </Radio>
-            </RadioGroup>
+            <template v-if="item.component === 'RadioGroup'">
+              <slot :name="item.beforeSlot"></slot>
+              <RadioGroup :ref="item.name" v-model="model[item.name]"
+                :type="item.type" :button-style="item.buttonStyle"
+                :style="calFieldStyle(item)" :class="calFieldClass(item)"
+                :size="calFieldSize(item)"
+                @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
+                <Radio :label="radioItem.value"
+                  v-for="(radioItem, radioIndex) in formDataSource[item.name]"
+                  :key="`radio-${item.name}-${radioIndex}`"
+                  :disabled="calFieldDisabled(radioItem)" :border="item.border">
+                  <template v-if="item.radioSlot">
+                    <slot :name="item.radioSlot" :field="item"
+                      :label="radioItem.label" :value="radioItem.value"
+                      :data="radioItem" :index="radioIndex">
+                    </slot>
+                  </template>
+                  <template v-else>
+                    <Icon :type="radioItem.icon" v-if="radioItem.icon"></Icon>
+                    <span v-html="radioItem.label"></span>
+                  </template>
+                </Radio>
+              </RadioGroup>
+              <slot :name="item.afterSlot"></slot>
+            </template>
 
             <!-- Checkbox -->
-            <Checkbox :ref="item.name" v-if="item.component === 'Checkbox'"
-              v-model="model[item.name]" :style="calFieldStyle(item)"
-              :class="item.className" :size="calFieldSize(item)"
-              :indeterminate="item.indeterminate"
-              :disabled="calFieldDisabled(item)" :true-value="item.trueValue"
-              :false-value="item.falseValue"
-              @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
-              <template v-if="item.checkboxSlot">
-                <slot :name="item.checkboxSlot" :field="item">
-                </slot>
-              </template>
-              <template v-else>
-                <Icon :type="item.icon" v-if="item.icon"></Icon>
-                <span v-html="item.text"></span>
-              </template>
-            </Checkbox>
-
-            <!-- CheckboxGroup -->
-            <CheckboxGroup :ref="item.name"
-              v-if="item.component === 'CheckboxGroup'"
-              v-model="model[item.name]" :type="item.type"
-              :style="calFieldStyle(item)" :class="calFieldClass(item)"
-              :size="calFieldSize(item)"
-              @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
-              <Checkbox
-                v-for="(checkboxItem, checkboxIndex) in formDataSource[item.name]"
-                :label="checkboxItem.value"
-                :key="`checkbox-${item.name}-${checkboxIndex}`"
-                :size="calFieldSize(item)"
-                :disabled="calFieldDisabled(checkboxItem)"
-                :border="item.border">
+            <template v-if="item.component === 'Checkbox'">
+              <slot :name="item.beforeSlot"></slot>
+              <Checkbox :ref="item.name" v-model="model[item.name]"
+                :style="calFieldStyle(item)" :class="item.className"
+                :size="calFieldSize(item)" :indeterminate="item.indeterminate"
+                :disabled="calFieldDisabled(item)" :true-value="item.trueValue"
+                :false-value="item.falseValue"
+                @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
                 <template v-if="item.checkboxSlot">
-                  <slot :name="item.checkboxSlot" :field="item"
-                    :label="checkboxItem.label" :value="checkboxItem.value"
-                    :data="checkboxItem" :index="checkboxIndex">
+                  <slot :name="item.checkboxSlot" :field="item">
                   </slot>
                 </template>
                 <template v-else>
-                  <Icon :type="checkboxItem.icon" v-if="checkboxItem.icon">
-                  </Icon>
-                  <span v-html="checkboxItem.label"></span>
+                  <Icon :type="item.icon" v-if="item.icon"></Icon>
+                  <span v-html="item.text"></span>
                 </template>
               </Checkbox>
-            </CheckboxGroup>
+              <slot :name="item.afterSlot"></slot>
+            </template>
+
+            <!-- CheckboxGroup -->
+            <template v-if="item.component === 'CheckboxGroup'">
+              <slot :name="item.beforeSlot"></slot>
+              <CheckboxGroup :ref="item.name" v-model="model[item.name]"
+                :type="item.type" :style="calFieldStyle(item)"
+                :class="calFieldClass(item)" :size="calFieldSize(item)"
+                @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
+                <Checkbox
+                  v-for="(checkboxItem, checkboxIndex) in formDataSource[item.name]"
+                  :label="checkboxItem.value"
+                  :key="`checkbox-${item.name}-${checkboxIndex}`"
+                  :size="calFieldSize(item)"
+                  :disabled="calFieldDisabled(checkboxItem)"
+                  :border="item.border">
+                  <template v-if="item.checkboxSlot">
+                    <slot :name="item.checkboxSlot" :field="item"
+                      :label="checkboxItem.label" :value="checkboxItem.value"
+                      :data="checkboxItem" :index="checkboxIndex">
+                    </slot>
+                  </template>
+                  <template v-else>
+                    <Icon :type="checkboxItem.icon" v-if="checkboxItem.icon">
+                    </Icon>
+                    <span v-html="checkboxItem.label"></span>
+                  </template>
+                </Checkbox>
+              </CheckboxGroup>
+              <slot :name="item.afterSlot"></slot>
+            </template>
 
             <!-- Switch -->
-            <v-switch :ref="item.name" v-if="item.component === 'Switch'"
-              v-model="model[item.name]" :item="item" @deal-event="_dealEvent">
-            </v-switch>
+            <template v-if="item.component === 'Switch'">
+              <slot :name="item.beforeSlot"></slot>
+              <v-switch :ref="item.name" v-model="model[item.name]" :item="item"
+                @deal-event="_dealEvent">
+              </v-switch>
+              <slot :name="item.afterSlot"></slot>
+            </template>
 
             <!-- AutoComplete -->
-            <v-auto-complete :ref="item.name"
-              v-if="item.component === 'AutoComplete'"
-              v-model="model[item.name]" :item="item"
-              :data-source="dataSource[item.name]" @deal-event="_dealEvent">
-              <template v-slot:default v-if="item.dropdownSlot">
-                <slot :name="item.dropdownSlot" :field="item">
-                </slot>
-              </template>
-              <template v-slot:default v-else-if="!item.filterMethod">
-                <Option v-for="(item, index) in dataSource[item.name]"
-                  :value="item" :key="`autocomplete-${index}`">{{ item }}
-                </Option>
-              </template>
-            </v-auto-complete>
+            <template v-if="item.component === 'AutoComplete'">
+              <slot :name="item.beforeSlot"></slot>
+              <v-auto-complete :ref="item.name" v-model="model[item.name]"
+                :item="item" :data-source="dataSource[item.name]"
+                @deal-event="_dealEvent">
+                <template v-slot:default v-if="item.dropdownSlot">
+                  <slot :name="item.dropdownSlot" :field="item">
+                  </slot>
+                </template>
+                <template v-slot:default v-else-if="!item.filterMethod">
+                  <Option
+                    v-for="(optionItem, optionIndex) in dataSource[item.name]"
+                    :value="optionItem" :key="`autocomplete-${optionIndex}`">
+                    {{ optionItem }}
+                  </Option>
+                </template>
+              </v-auto-complete>
+              <slot :name="item.afterSlot"></slot>
+            </template>
 
             <!-- Cascader -->
-            <v-cascader :ref="item.name" v-if="item.component === 'Cascader'"
-              v-model="model[item.name]" :item="item"
-              :data-source="dataSource[item.name]" @deal-event="_dealEvent">
-              <template v-slot:default v-if="item.selectSlot">
-                <slot :name="item.selectSlot" :field="item">
-                </slot>
-              </template>
-            </v-cascader>
+            <template v-if="item.component === 'Cascader'">
+              <slot :name="item.beforeSlot"></slot>
+              <v-cascader :ref="item.name" v-model="model[item.name]"
+                :item="item" :data-source="dataSource[item.name]"
+                @deal-event="_dealEvent">
+                <template v-slot:default v-if="item.selectSlot">
+                  <slot :name="item.selectSlot" :field="item">
+                  </slot>
+                </template>
+              </v-cascader>
+              <slot :name="item.afterSlot"></slot>
+            </template>
 
             <!-- Upload -->
-            <v-upload :ref="item.name" v-if="item.component === 'Upload'"
-              v-model="model[item.name]" :item="item" @deal-event="_dealEvent">
-              <template v-slot:default v-if="item.contentSlot">
-                <slot :name="item.contentSlot" :field="item">
-                </slot>
-              </template>
-            </v-upload>
+            <template v-if="item.component === 'Upload'">
+              <slot :name="item.beforeSlot"></slot>
+              <v-upload :ref="item.name" v-model="model[item.name]" :item="item"
+                @deal-event="_dealEvent">
+                <template v-slot:default v-if="item.contentSlot">
+                  <slot :name="item.contentSlot" :field="item">
+                  </slot>
+                </template>
+              </v-upload>
+              <slot :name="item.afterSlot"></slot>
+            </template>
 
             <!-- Button -->
-            <v-button v-if="item.component === 'Button'" :item="item"
-              @deal-event="_dealEvent">
-              <template v-slot:default v-if="item.contentSlot">
-                <slot :name="item.contentSlot" :field="item"></slot>
-              </template>
-            </v-button>
+            <template v-if="item.component === 'Button'">
+              <slot :name="item.beforeSlot"></slot>
+              <v-button :item="item" @deal-event="_dealEvent">
+                <template v-slot:default v-if="item.contentSlot">
+                  <slot :name="item.contentSlot" :field="item"></slot>
+                </template>
+              </v-button>
+              <slot :name="item.afterSlot"></slot>
+            </template>
 
           </template>
           <!-- 自定义组件 -->
@@ -214,164 +256,210 @@
           <!-- Html -->
           <v-html v-if="item.component === 'Html'" :item="item"></v-html>
           <!-- Input -->
-          <v-input v-if="item.component === 'Input'" :ref="item.name"
-            v-model="model[item.name]" :item="item" @deal-event="_dealEvent"
-            @deal-number="_dealNumber">
-            <!-- 前置slot -->
-            <template v-slot:prepend
-              v-if="(!item.type || item.type === 'text') && item.prependSlot">
-              <slot :name="item.prependSlot" :field="item">
-              </slot>
-            </template>
-            <!-- 后置slot -->
-            <template v-slot:append
-              v-if="(!item.type || item.type === 'text') && item.appendSlot">
-              <slot :name="item.appendSlot" :field="item">
-              </slot>
-            </template>
-          </v-input>
+          <template v-if="item.component === 'Input'">
+            <slot :name="item.beforeSlot"></slot>
+            <v-input :ref="item.name" v-model="model[item.name]" :item="item"
+              @deal-event="_dealEvent" @deal-number="_dealNumber">
+              <!-- 前置slot -->
+              <template v-slot:prepend
+                v-if="(!item.type || item.type === 'text') && item.prependSlot">
+                <slot :name="item.prependSlot" :field="item">
+                </slot>
+              </template>
+              <!-- 后置slot -->
+              <template v-slot:append
+                v-if="(!item.type || item.type === 'text') && item.appendSlot">
+                <slot :name="item.appendSlot" :field="item">
+                </slot>
+              </template>
+            </v-input>
+            <slot :name="item.afterSlot"></slot>
+          </template>
 
           <!-- InputNumber -->
-          <v-input-number :ref="item.name"
-            v-if="item.component === 'InputNumber'" v-model="model[item.name]"
-            :item="item" @deal-event="_dealEvent"></v-input-number>
+          <template v-if="item.component === 'InputNumber'">
+            <slot :name="item.beforeSlot"></slot>
+            <v-input-number :ref="item.name" v-model="model[item.name]"
+              :item="item" @deal-event="_dealEvent"></v-input-number>
+            <slot :name="item.afterSlot"></slot>
+          </template>
 
           <!-- Select -->
-          <v-select :ref="item.name" v-if="item.component === 'Select'"
-            v-model="model[item.name]" :item="item" @deal-event="_dealEvent">
-            <template v-slot:options
-              v-if="typeOf(formDataSource[item.name]) === 'array' && formDataSource[item.name].length">
-              <Option
-                v-for="(optionItem, optionIndex) in formDataSource[item.name]"
-                :value="optionItem.value" :label="optionItem.label"
-                :key="optionIndex" :disabled="optionItem.disabled">
-                <template v-slot:default v-if="item.optionSlot">
-                  <slot :name="item.optionSlot" :field="item"
-                    :label="optionItem.label" :value="optionItem.value">
-                  </slot>
-                </template>
-              </Option>
-            </template>
-          </v-select>
+          <template v-if="item.component === 'Select'">
+            <slot :name="item.beforeSlot"></slot>
+            <v-select :ref="item.name" v-model="model[item.name]" :item="item"
+              @deal-event="_dealEvent">
+              <template v-slot:options
+                v-if="typeOf(formDataSource[item.name]) === 'array' && formDataSource[item.name].length">
+                <Option
+                  v-for="(optionItem, optionIndex) in formDataSource[item.name]"
+                  :value="optionItem.value" :label="optionItem.label"
+                  :key="optionIndex" :disabled="optionItem.disabled">
+                  <template v-slot:default v-if="item.optionSlot">
+                    <slot :name="item.optionSlot" :field="item"
+                      :label="optionItem.label" :value="optionItem.value"
+                      :data="optionItem" :index="optionIndex">
+                    </slot>
+                  </template>
+                </Option>
+              </template>
+            </v-select>
+            <slot :name="item.afterSlot"></slot>
+          </template>
 
           <!-- DatePicker -->
-          <v-date-picker :ref="item.name" v-if="item.component === 'DatePicker'"
-            v-model="model[item.name]" :item="item" @deal-event="_dealEvent">
-          </v-date-picker>
+          <template v-if="item.component === 'DatePicker'">
+            <slot :name="item.beforeSlot"></slot>
+            <v-date-picker :ref="item.name" v-model="model[item.name]"
+              :item="item" @deal-event="_dealEvent">
+            </v-date-picker>
+            <slot :name="item.afterSlot"></slot>
+          </template>
 
           <!-- RadioGroup -->
-          <RadioGroup v-if="item.component === 'RadioGroup'"
-            v-model="model[item.name]" :type="item.type"
-            :button-style="item.buttonStyle" :style="calFieldStyle(item)"
-            :class="calFieldClass(item)" :size="calFieldSize(item)"
-            @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
-            <Radio :label="radioItem.value"
-              v-for="(radioItem, radioIndex) in formDataSource[item.name]"
-              :key="`radio-${item.name}-${radioIndex}`"
-              :disabled="calFieldDisabled(radioItem)" :border="item.border">
-              <template v-if="item.radioSlot">
-                <slot :name="item.radioSlot" :field="item"
-                  :label="radioItem.label" :value="radioItem.value"
-                  :data="radioItem" :index="radioIndex">
-                </slot>
-              </template>
-              <template v-else>
-                <Icon :type="radioItem.icon" v-if="radioItem.icon"></Icon>
-                <span v-html="radioItem.label"></span>
-              </template>
-            </Radio>
-          </RadioGroup>
+          <template v-if="item.component === 'RadioGroup'">
+            <slot :name="item.beforeSlot"></slot>
+            <RadioGroup :ref="item.name" v-model="model[item.name]"
+              :type="item.type" :button-style="item.buttonStyle"
+              :style="calFieldStyle(item)" :class="calFieldClass(item)"
+              :size="calFieldSize(item)"
+              @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
+              <Radio :label="radioItem.value"
+                v-for="(radioItem, radioIndex) in formDataSource[item.name]"
+                :key="`radio-${item.name}-${radioIndex}`"
+                :disabled="calFieldDisabled(radioItem)" :border="item.border">
+                <template v-if="item.radioSlot">
+                  <slot :name="item.radioSlot" :field="item"
+                    :label="radioItem.label" :value="radioItem.value"
+                    :data="radioItem" :index="radioIndex">
+                  </slot>
+                </template>
+                <template v-else>
+                  <Icon :type="radioItem.icon" v-if="radioItem.icon"></Icon>
+                  <span v-html="radioItem.label"></span>
+                </template>
+              </Radio>
+            </RadioGroup>
+            <slot :name="item.afterSlot"></slot>
+          </template>
 
           <!-- Checkbox -->
-          <Checkbox :ref="item.name" v-if="item.component === 'Checkbox'"
-            v-model="model[item.name]" :style="calFieldStyle(item)"
-            :class="item.className" :size="calFieldSize(item)"
-            :indeterminate="item.indeterminate"
-            :disabled="calFieldDisabled(item)" :true-value="item.trueValue"
-            :false-value="item.falseValue"
-            @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
-            <template v-if="item.checkboxSlot">
-              <slot :name="item.checkboxSlot" :field="item">
-              </slot>
-            </template>
-            <template v-else>
-              <Icon :type="item.icon" v-if="item.icon"></Icon>
-              <span v-html="item.text"></span>
-            </template>
-          </Checkbox>
-
-          <!-- CheckboxGroup -->
-          <CheckboxGroup :ref="item.name"
-            v-if="item.component === 'CheckboxGroup'" v-model="model[item.name]"
-            :type="item.type" :style="calFieldStyle(item)"
-            :class="calFieldClass(item)" :size="calFieldSize(item)"
-            @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
-            <Checkbox
-              v-for="(checkboxItem, checkboxIndex) in formDataSource[item.name]"
-              :label="checkboxItem.value"
-              :key="`checkbox-${item.name}-${checkboxIndex}`"
-              :size="calFieldSize(item)"
-              :disabled="calFieldDisabled(checkboxItem)" :border="item.border">
+          <template v-if="item.component === 'Checkbox'">
+            <slot :name="item.beforeSlot"></slot>
+            <Checkbox :ref="item.name" v-model="model[item.name]"
+              :style="calFieldStyle(item)" :class="item.className"
+              :size="calFieldSize(item)" :indeterminate="item.indeterminate"
+              :disabled="calFieldDisabled(item)" :true-value="item.trueValue"
+              :false-value="item.falseValue"
+              @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
               <template v-if="item.checkboxSlot">
-                <slot :name="item.checkboxSlot" :field="item"
-                  :label="checkboxItem.label" :value="checkboxItem.value"
-                  :data="checkboxItem" :index="checkboxIndex">
+                <slot :name="item.checkboxSlot" :field="item">
                 </slot>
               </template>
               <template v-else>
-                <Icon :type="checkboxItem.icon" v-if="checkboxItem.icon"></Icon>
-                <span v-html="checkboxItem.label"></span>
+                <Icon :type="item.icon" v-if="item.icon"></Icon>
+                <span v-html="item.text"></span>
               </template>
             </Checkbox>
-          </CheckboxGroup>
+            <slot :name="item.afterSlot"></slot>
+          </template>
+
+          <!-- CheckboxGroup -->
+          <template v-if="item.component === 'CheckboxGroup'">
+            <slot :name="item.beforeSlot"></slot>
+            <CheckboxGroup :ref="item.name" v-model="model[item.name]"
+              :type="item.type" :style="calFieldStyle(item)"
+              :class="calFieldClass(item)" :size="calFieldSize(item)"
+              @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
+              <Checkbox
+                v-for="(checkboxItem, checkboxIndex) in formDataSource[item.name]"
+                :label="checkboxItem.value"
+                :key="`checkbox-${item.name}-${checkboxIndex}`"
+                :size="calFieldSize(item)"
+                :disabled="calFieldDisabled(checkboxItem)"
+                :border="item.border">
+                <template v-if="item.checkboxSlot">
+                  <slot :name="item.checkboxSlot" :field="item"
+                    :label="checkboxItem.label" :value="checkboxItem.value"
+                    :data="checkboxItem" :index="checkboxIndex">
+                  </slot>
+                </template>
+                <template v-else>
+                  <Icon :type="checkboxItem.icon" v-if="checkboxItem.icon">
+                  </Icon>
+                  <span v-html="checkboxItem.label"></span>
+                </template>
+              </Checkbox>
+            </CheckboxGroup>
+            <slot :name="item.afterSlot"></slot>
+          </template>
 
           <!-- Switch -->
-          <v-switch :ref="item.name" v-if="item.component === 'Switch'"
-            v-model="model[item.name]" :item="item" @deal-event="_dealEvent">
-          </v-switch>
+          <template v-if="item.component === 'Switch'">
+            <slot :name="item.beforeSlot"></slot>
+            <v-switch :ref="item.name" v-model="model[item.name]" :item="item"
+              @deal-event="_dealEvent">
+            </v-switch>
+            <slot :name="item.afterSlot"></slot>
+          </template>
 
           <!-- AutoComplete -->
-          <v-auto-complete :ref="item.name"
-            v-if="item.component === 'AutoComplete'" v-model="model[item.name]"
-            :item="item" :data-source="dataSource[item.name]"
-            @deal-event="_dealEvent">
-            <template v-slot:default v-if="item.dropdownSlot">
-              <slot :name="item.dropdownSlot" :field="item">
-              </slot>
-            </template>
-            <template v-slot:default v-else-if="!item.filterMethod">
-              <Option v-for="(item, index) in dataSource[item.name]"
-                :value="item" :key="`autocomplete-${index}`">{{ item }}
-              </Option>
-            </template>
-          </v-auto-complete>
+          <template v-if="item.component === 'AutoComplete'">
+            <slot :name="item.beforeSlot"></slot>
+            <v-auto-complete :ref="item.name" v-model="model[item.name]"
+              :item="item" :data-source="dataSource[item.name]"
+              @deal-event="_dealEvent">
+              <template v-slot:default v-if="item.dropdownSlot">
+                <slot :name="item.dropdownSlot" :field="item">
+                </slot>
+              </template>
+              <template v-slot:default v-else-if="!item.filterMethod">
+                <Option
+                  v-for="(optionItem, optionIndex) in dataSource[item.name]"
+                  :value="optionItem" :key="`autocomplete-${optionIndex}`">
+                  {{ optionItem }}
+                </Option>
+              </template>
+            </v-auto-complete>
+            <slot :name="item.afterSlot"></slot>
+          </template>
 
           <!-- Cascader -->
-          <v-cascader :ref="item.name" v-if="item.component === 'Cascader'"
-            v-model="model[item.name]" :item="item"
-            :data-source="dataSource[item.name]" @deal-event="_dealEvent">
-            <template v-slot:default v-if="item.selectSlot">
-              <slot :name="item.selectSlot" :field="item">
-              </slot>
-            </template>
-          </v-cascader>
+          <template v-if="item.component === 'Cascader'">
+            <slot :name="item.beforeSlot"></slot>
+            <v-cascader :ref="item.name" v-model="model[item.name]" :item="item"
+              :data-source="dataSource[item.name]" @deal-event="_dealEvent">
+              <template v-slot:default v-if="item.selectSlot">
+                <slot :name="item.selectSlot" :field="item">
+                </slot>
+              </template>
+            </v-cascader>
+            <slot :name="item.afterSlot"></slot>
+          </template>
 
           <!-- Upload -->
-          <v-upload :ref="item.name" v-if="item.component === 'Upload'"
-            v-model="model[item.name]" :item="item" @deal-event="_dealEvent">
-            <template v-slot:default v-if="item.contentSlot">
-              <slot :name="item.contentSlot" :field="item">
-              </slot>
-            </template>
-          </v-upload>
+          <template v-if="item.component === 'Upload'">
+            <slot :name="item.beforeSlot"></slot>
+            <v-upload :ref="item.name" v-model="model[item.name]" :item="item"
+              @deal-event="_dealEvent">
+              <template v-slot:default v-if="item.contentSlot">
+                <slot :name="item.contentSlot" :field="item">
+                </slot>
+              </template>
+            </v-upload>
+            <slot :name="item.afterSlot"></slot>
+          </template>
 
           <!-- Button -->
-          <v-button v-if="item.component === 'Button'" :item="item"
-            @deal-event="_dealEvent">
-            <template v-slot:default v-if="item.contentSlot">
-              <slot :name="item.contentSlot" :field="item"></slot>
-            </template>
-          </v-button>
+          <template v-if="item.component === 'Button'">
+            <slot :name="item.beforeSlot"></slot>
+            <v-button :item="item" @deal-event="_dealEvent">
+              <template v-slot:default v-if="item.contentSlot">
+                <slot :name="item.contentSlot" :field="item"></slot>
+              </template>
+            </v-button>
+            <slot :name="item.afterSlot"></slot>
+          </template>
         </template>
         <!-- 自定义组件 -->
         <template v-else>
@@ -379,10 +467,12 @@
         </template>
       </FormItem>
     </template>
+    <slot name="action-before"></slot>
     <div class="v-form-actions"
       :class="[`align-${currentOptions.actionAlign}`, { 'inline': currentOptions.inline}]"
       :style="{paddingLeft: `${actionPL}px`}"
       v-if="(submitBtnOpts || resetBtnOpts) && !currentOptions.readonly">
+      <slot name="submit-before"></slot>
       <Button v-if="submitBtnOpts" :class="submitBtnOpts.className"
         :style="_calWidth(submitBtnOpts.long ? '100%' : submitBtnOpts.width, 'btn')"
         :size="submitBtnOpts.size || currentOptions.size"
@@ -393,6 +483,8 @@
         :disabled="submitBtnOpts.disabled || submitDisabled"
         :long="submitBtnOpts.long" :shape="submitBtnOpts.shape"
         @click="onSubmit">{{submitBtnOpts.text}}</Button>
+      <slot name="submit-after"></slot>
+      <slot name="reset-before"></slot>
       <Button v-if="resetBtnOpts" :class="resetBtnOpts.className"
         :style="_calWidth(resetBtnOpts.long ? '100%' : resetBtnOpts.width, 'btn')"
         :type="resetBtnOpts.type"
@@ -402,6 +494,7 @@
         :icon="resetBtnOpts.icon" :disabled="resetBtnOpts.disabled"
         :long="resetBtnOpts.long" :shape="resetBtnOpts.shape"
         @click="onReset">{{resetBtnOpts.text}}</Button>
+      <slot name="reset-after"></slot>
     </div>
   </Form>
 </template>
@@ -487,7 +580,6 @@ const defaultOptions = {
     text: '重置',
   },
 }
-
 
 function getMax(colSpanList = []) {
   let max = 0

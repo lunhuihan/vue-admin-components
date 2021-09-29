@@ -2,11 +2,26 @@
   <div class="page v-form-page">
     <v-form ref="form" :model.async="form" :options="options" :fields="fields"
       :data-source="dataSource" @on-submit="submit">
+      <template v-slot:tipSlot>
+        <Icon type="ios-search"></Icon>
+      </template>
+      <template v-slot:selectSlot>
+        <Button type="primary" style="margin-left: 5px;">校验</Button>
+      </template>
       <template v-slot:favorRadio="{field, value, data}">
         <p class="item">这是签约文件{{value}}<a class="link">查看详情{{data.id}}</a></p>
       </template>
       <template v-slot:checkboxSlot="{field, value, data}">
         <span>轮回韩</span>
+      </template>
+      <template v-slot:action-before>
+        <Button type="error" style="margin-left: 5px;">提交</Button>
+      </template>
+      <template v-slot:submit-before>
+        <Button type="warning" style="margin-left: 5px;">提交之前</Button>
+      </template>
+      <template v-slot:submit-after>
+        <Button type="warning" style="margin-left: 5px;">提交之后</Button>
       </template>
     </v-form>
   </div>
@@ -42,7 +57,8 @@ export default {
         // readonly: true,
         // disabled: true,
         // columns: 2,
-        size: 'large'
+        // inline: true
+        // size: 'large'
       },
       show: false,
       fields: [
@@ -56,14 +72,14 @@ export default {
           name: 'name',
           component: 'Input',
           label: '姓名',
-          required: true,
+          required: true
         },
         {
           name: 'favor',
           component: 'RadioGroup',
           label: '兴趣爱好',
           radioSlot: 'favorRadio',
-          vertical: true,
+          // vertical: true,
           required: true,
           className: 'test',
           colSpan: 2
@@ -79,15 +95,20 @@ export default {
           component: 'CheckboxGroup',
           label: '账单日',
           required: true,
-          vertical: true,
-          checkboxSlot: 'checkboxSlot',
+          // vertical: true,
+          checkboxSlot: 'checkboxSlot'
         },
         {
-          name: 'name1',
-          component: 'Input',
-          label: '姓名',
-          required: true,
+          name: 'num',
+          component: 'InputNumber',
+          label: '件数',
+          required: true
         },
+        {
+          name: 'date',
+          component: 'DatePicker',
+          label: '开学日期'
+        }
       ],
       dataSource: {
         favor: [
@@ -139,7 +160,7 @@ export default {
             label: '周三',
             value: 2,
           },
-        ],
+        ]
       },
     }
   },
