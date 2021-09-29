@@ -84,6 +84,23 @@
         &-large{
           height: $field-large-height;
         }
+        &.vertical{
+          display: flex;
+          flex-direction: column;
+          height: auto !important;
+          label{
+            margin-right: 0;
+            height: $field-height;
+            line-height: $field-height;
+          }
+          &.ivu-radio-large{
+            label{
+              margin-right: 0;
+              height: $field-large-height;
+              line-height: $field-large-height;
+            }
+          }
+        }
       }
       .ivu-input-number{
         &-large{
@@ -97,12 +114,26 @@
         display: inline-flex;
         align-items: center;
         margin-right: 5px;
-        &-large{
-          padding-top: 1px;
-        }
       }
       .ivu-checkbox-group{
         height: $field-height;
+        &.vertical{
+          display: flex;
+          flex-direction: column;
+          height: auto !important;
+          label{
+            margin-right: 0;
+            height: $field-height;
+            line-height: $field-height;
+          }
+          &.ivu-checkbox-large{
+            label{
+              margin-right: 0;
+              height: $field-large-height;
+              line-height: $field-large-height;
+            }
+          }
+        }
       }
       .ivu-checkbox-wrapper{
         display: inline-flex;

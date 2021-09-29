@@ -2,11 +2,13 @@
   <div class="page v-form-page">
     <v-form ref="form" :model.async="form" :options="options" :fields="fields"
       :data-source="dataSource" @on-submit="submit">
-      <template v-slot:favorRadio="{value}">
-        <p class="item">这是签约文件{{value}}<a class="link">查看详情</a></p>
+      <template v-slot:favorRadio="{field, value, data}">
+        <p class="item">这是签约文件{{value}}<a class="link">查看详情{{data.id}}</a></p>
+      </template>
+      <template v-slot:checkboxSlot="{field, value, data}">
+        <span>轮回韩</span>
       </template>
     </v-form>
-    <div v-if="show">111111</div>
   </div>
 </template>
 
@@ -14,7 +16,7 @@
 import { deepCopy } from '../../../utils/assist'
 export default {
   name: '',
-  components: {  },
+  components: {},
   data() {
     const qualityPwd = (rule, value, callback) => {
       if (!value) {
@@ -29,10 +31,18 @@ export default {
       visible: false,
       submitDisabled: true,
       form: {
-        favor: []
+        favor: '1',
+        grade: 0,
+        name: '测试',
+        trans: true,
+        account: [1]
       },
       options: {
-        labelWidth: 100
+        labelWidth: 100,
+        // readonly: true,
+        // disabled: true,
+        // columns: 2,
+        size: 'large'
       },
       show: false,
       fields: [
@@ -40,64 +50,97 @@ export default {
           name: 'grade',
           component: 'Select',
           label: '年级',
-          required: true
+          required: true,
         },
         {
           name: 'name',
           component: 'Input',
           label: '姓名',
-          required: true
+          required: true,
         },
         {
           name: 'favor',
-          component: 'CheckboxGroup',
+          component: 'RadioGroup',
           label: '兴趣爱好',
-          // radioSlot: 'favorRadio',
+          radioSlot: 'favorRadio',
           vertical: true,
+          required: true,
+          className: 'test',
+          colSpan: 2
+        },
+        {
+          name: 'trans',
+          component: 'Checkbox',
+          label: '是否转账',
           required: true
-         /*  rules: [
-            {
-              required: true, message: '请选择', trigger: 'change'
-            }
-          ] */
-        }
+        },
+        {
+          name: 'account',
+          component: 'CheckboxGroup',
+          label: '账单日',
+          required: true,
+          vertical: true,
+          checkboxSlot: 'checkboxSlot',
+        },
+        {
+          name: 'name1',
+          component: 'Input',
+          label: '姓名',
+          required: true,
+        },
       ],
       dataSource: {
         favor: [
           {
-            label: '0',
+            label: '<strong>游泳</strong>',
             value: 1,
             id: '001',
-            name: '名称1'
+            name: '名称1',
           },
           {
-            label: '1',
+            label: '爬山',
             value: 2,
             id: '002',
-            name: '名称2'
+            name: '名称2',
           },
           {
-            label: '2',
+            label: '打球',
             value: 3,
             id: '003',
-            name: '名称3'
-          }
+            disabled: true,
+            name: '名称3',
+          },
         ],
         grade: [
           {
             label: '一年级',
-            value: 0
+            value: 0,
           },
           {
             label: '二年级',
-            value: 1
+            value: 1,
           },
           {
             label: '三年级',
-            value: 2
-          }
-        ]
-      }
+            value: 2,
+          },
+        ],
+        account: [
+          {
+            label: '周一',
+            value: 0,
+            disabled: true
+          },
+          {
+            label: '周二',
+            value: 1,
+          },
+          {
+            label: '周三',
+            value: 2,
+          },
+        ],
+      },
     }
   },
   computed: {

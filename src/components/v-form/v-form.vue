@@ -63,7 +63,8 @@
                   :key="optionIndex" :disabled="optionItem.disabled">
                   <template v-slot:default v-if="item.optionSlot">
                     <slot :name="item.optionSlot" :field="item"
-                      :label="optionItem.label" :value="optionItem.value">
+                      :label="optionItem.label" :value="optionItem.value"
+                      :data="optionItem" :index="radioIndex">
                     </slot>
                   </template>
                 </Option>
@@ -77,29 +78,74 @@
             </v-date-picker>
 
             <!-- RadioGroup -->
-            <v-radio-group :ref="item.name"
-              v-if="item.component === 'RadioGroup'" v-model="model[item.name]"
-              :item="item" :data-source="formDataSource[item.name]"
-              @deal-event="_dealEvent">
-              <template v-slot:default="slotProps" v-if="item.radioSlot">
-                <slot :name="item.radioSlot" :field="item"
-                  :data="slotProps.data" :label="slotProps.label"
-                  :value="slotProps.value">
-                </slot>
-              </template>
-            </v-radio-group>
+            <RadioGroup :ref="item.name" v-if="item.component === 'RadioGroup'"
+              v-model="model[item.name]" :type="item.type"
+              :button-style="item.buttonStyle" :style="calFieldStyle(item)"
+              :class="calFieldClass(item)" :size="calFieldSize(item)"
+              @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
+              <Radio :label="radioItem.value"
+                v-for="(radioItem, radioIndex) in formDataSource[item.name]"
+                :key="`radio-${item.name}-${radioIndex}`"
+                :disabled="calFieldDisabled(radioItem)" :border="item.border">
+                <template v-if="item.radioSlot">
+                  <slot :name="item.radioSlot" :field="item"
+                    :label="radioItem.label" :value="radioItem.value"
+                    :data="radioItem" :index="radioIndex">
+                  </slot>
+                </template>
+                <template v-else>
+                  <Icon :type="radioItem.icon" v-if="radioItem.icon"></Icon>
+                  <span v-html="radioItem.label"></span>
+                </template>
+              </Radio>
+            </RadioGroup>
 
             <!-- Checkbox -->
-            <v-checkbox :ref="item.name" v-if="item.component === 'Checkbox'"
-              v-model="model[item.name]" :item="item" @deal-event="_dealEvent">
-            </v-checkbox>
+            <Checkbox :ref="item.name" v-if="item.component === 'Checkbox'"
+              v-model="model[item.name]" :style="calFieldStyle(item)"
+              :class="item.className" :size="calFieldSize(item)"
+              :indeterminate="item.indeterminate"
+              :disabled="calFieldDisabled(item)" :true-value="item.trueValue"
+              :false-value="item.falseValue"
+              @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
+              <template v-if="item.checkboxSlot">
+                <slot :name="item.checkboxSlot" :field="item">
+                </slot>
+              </template>
+              <template v-else>
+                <Icon :type="item.icon" v-if="item.icon"></Icon>
+                <span v-html="item.text"></span>
+              </template>
+            </Checkbox>
 
             <!-- CheckboxGroup -->
-            <v-checkbox-group :ref="item.name"
+            <CheckboxGroup :ref="item.name"
               v-if="item.component === 'CheckboxGroup'"
-              v-model="model[item.name]" :item="item"
-              :data-source="formDataSource[item.name]" @deal-event="_dealEvent">
-            </v-checkbox-group>
+              v-model="model[item.name]" :type="item.type"
+              :style="calFieldStyle(item)" :class="calFieldClass(item)"
+              :size="calFieldSize(item)"
+              @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
+              <Checkbox
+                v-for="(checkboxItem, checkboxIndex) in formDataSource[item.name]"
+                :label="checkboxItem.value"
+                :key="`checkbox-${item.name}-${checkboxIndex}`"
+                :size="calFieldSize(item)"
+                :disabled="calFieldDisabled(checkboxItem)"
+                :border="item.border">
+                <template v-if="item.checkboxSlot">
+                  <slot :name="item.checkboxSlot" :field="item"
+                    :label="checkboxItem.label" :value="checkboxItem.value"
+                    :data="checkboxItem" :index="checkboxIndex">
+                  </slot>
+                </template>
+                <template v-else>
+                  <Icon :type="checkboxItem.icon" v-if="checkboxItem.icon">
+                  </Icon>
+                  <span v-html="checkboxItem.label"></span>
+                </template>
+              </Checkbox>
+            </CheckboxGroup>
+
             <!-- Switch -->
             <v-switch :ref="item.name" v-if="item.component === 'Switch'"
               v-model="model[item.name]" :item="item" @deal-event="_dealEvent">
@@ -158,8 +204,8 @@
       </Row>
     </template>
     <template v-else>
-      <FormItem v-for="(item, index) in fields" :key="index" :prop="item.name"
-        :label="item.label"
+      <FormItem v-for="(item, index) in ruleFields" :key="index"
+        :prop="item.name" :label="item.label"
         :label-width="parseFloat(item.labelWidth) || parseFloat(currentOptions.labelWidth)"
         :required="item.required" :error="item.error"
         :class="[`label-${currentOptions.labelPosition}`, `size-${_calFormItemSize(item)}`, 'inline', `form-item-${item.component}`, `${item.formItemClass ? item.formItemClass : ''}`]">
@@ -214,27 +260,70 @@
           </v-date-picker>
 
           <!-- RadioGroup -->
-          <v-radio-group :ref="item.name" v-if="item.component === 'RadioGroup'"
-            v-model="model[item.name]" :item="item"
-            :data-source="formDataSource[item.name]" @deal-event="_dealEvent">
-            <template v-slot:default="slotProps" v-if="item.radioSlot">
-              <slot :name="item.radioSlot" :field="item" :data="slotProps.data"
-                :label="slotProps.label" :value="slotProps.value">
-              </slot>
-            </template>
-          </v-radio-group>
+          <RadioGroup v-if="item.component === 'RadioGroup'"
+            v-model="model[item.name]" :type="item.type"
+            :button-style="item.buttonStyle" :style="calFieldStyle(item)"
+            :class="calFieldClass(item)" :size="calFieldSize(item)"
+            @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
+            <Radio :label="radioItem.value"
+              v-for="(radioItem, radioIndex) in formDataSource[item.name]"
+              :key="`radio-${item.name}-${radioIndex}`"
+              :disabled="calFieldDisabled(radioItem)" :border="item.border">
+              <template v-if="item.radioSlot">
+                <slot :name="item.radioSlot" :field="item"
+                  :label="radioItem.label" :value="radioItem.value"
+                  :data="radioItem" :index="radioIndex">
+                </slot>
+              </template>
+              <template v-else>
+                <Icon :type="radioItem.icon" v-if="radioItem.icon"></Icon>
+                <span v-html="radioItem.label"></span>
+              </template>
+            </Radio>
+          </RadioGroup>
 
           <!-- Checkbox -->
-          <v-checkbox :ref="item.name" v-if="item.component === 'Checkbox'"
-            v-model="model[item.name]" :item="item" @deal-event="_dealEvent">
-          </v-checkbox>
+          <Checkbox :ref="item.name" v-if="item.component === 'Checkbox'"
+            v-model="model[item.name]" :style="calFieldStyle(item)"
+            :class="item.className" :size="calFieldSize(item)"
+            :indeterminate="item.indeterminate"
+            :disabled="calFieldDisabled(item)" :true-value="item.trueValue"
+            :false-value="item.falseValue"
+            @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
+            <template v-if="item.checkboxSlot">
+              <slot :name="item.checkboxSlot" :field="item">
+              </slot>
+            </template>
+            <template v-else>
+              <Icon :type="item.icon" v-if="item.icon"></Icon>
+              <span v-html="item.text"></span>
+            </template>
+          </Checkbox>
 
           <!-- CheckboxGroup -->
-          <v-checkbox-group :ref="item.name"
+          <CheckboxGroup :ref="item.name"
             v-if="item.component === 'CheckboxGroup'" v-model="model[item.name]"
-            :item="item" :data-source="formDataSource[item.name]"
-            @deal-event="_dealEvent">
-          </v-checkbox-group>
+            :type="item.type" :style="calFieldStyle(item)"
+            :class="calFieldClass(item)" :size="calFieldSize(item)"
+            @on-change="(val) => { _dealEvent(item.onChange, val, item) }">
+            <Checkbox
+              v-for="(checkboxItem, checkboxIndex) in formDataSource[item.name]"
+              :label="checkboxItem.value"
+              :key="`checkbox-${item.name}-${checkboxIndex}`"
+              :size="calFieldSize(item)"
+              :disabled="calFieldDisabled(checkboxItem)" :border="item.border">
+              <template v-if="item.checkboxSlot">
+                <slot :name="item.checkboxSlot" :field="item"
+                  :label="checkboxItem.label" :value="checkboxItem.value"
+                  :data="checkboxItem" :index="checkboxIndex">
+                </slot>
+              </template>
+              <template v-else>
+                <Icon :type="checkboxItem.icon" v-if="checkboxItem.icon"></Icon>
+                <span v-html="checkboxItem.label"></span>
+              </template>
+            </Checkbox>
+          </CheckboxGroup>
 
           <!-- Switch -->
           <v-switch :ref="item.name" v-if="item.component === 'Switch'"
@@ -324,7 +413,7 @@ import {
   adaptNumberUnit,
   checkKeyHazyExist,
   checkIsDataCmp,
-  operTypeZh
+  operTypeZh,
 } from '../../utils/assist'
 import { DateValueType, sizeRange } from '../../utils/constant'
 import collect from '../../utils/collect'
@@ -333,9 +422,6 @@ import VInput from '../field-components/v-input'
 import VInputNumber from '../field-components/v-input-number'
 import VSelect from '../field-components/v-select'
 import VDatePicker from '../field-components/v-date-picker'
-import VRadioGroup from '../field-components/v-radio-group'
-import VCheckbox from '../field-components/v-checkbox'
-import VCheckboxGroup from '../field-components/v-checkbox-group'
 import VSwitch from '../field-components/v-switch'
 import VAutoComplete from '../field-components/v-auto-complete'
 import VHtml from '../field-components/v-html'
@@ -345,6 +431,7 @@ import VButton from '../field-components/v-button'
 import Time from '../../utils/time'
 import findVm from '../../mixins/find-vm'
 import cancelFocus from '../../mixins/cancel-focus'
+import radioCheckbox from '../../mixins/radio-checkbox'
 
 const time = new Time()
 
@@ -379,6 +466,8 @@ const actionDefaultOptions = {
 
 const actionAlignRange = ['left', 'center', 'right']
 
+const noChildComps = ['Checkbox', 'CheckboxGroup', 'RadioGroup']
+
 const defaultOptions = {
   inline: false,
   columns: 1,
@@ -399,6 +488,7 @@ const defaultOptions = {
   },
 }
 
+
 function getMax(colSpanList = []) {
   let max = 0
   colSpanList.forEach((span) => {
@@ -410,7 +500,7 @@ function getMax(colSpanList = []) {
 }
 export default {
   name: 'VForm',
-  mixins: [findVm, cancelFocus],
+  mixins: [findVm, cancelFocus, radioCheckbox],
   props: {
     model: {
       type: Object,
@@ -557,24 +647,24 @@ export default {
     nameField() {
       return collect.createObj(this.fields, 'name')
     },
-    /* fields() {
+    ruleFields() {
       return this.fields.map((field, index) => {
         let { required, rules = [], component, label = '' } = field
         if (required) {
           rules.unshift({
             required: true,
             message: `请${operTypeZh(component)}${label}`,
-            trigger: 'blur'
           })
+          delete field.required
           return { rules, ...field }
         }
         return { ...field }
       })
-    }, */
+    },
     groupFields() {
       let groupInfo = {}
       let groupArr = []
-      this.fields.forEach((field, index) => {
+      this.ruleFields.forEach((field, index) => {
         let group = field.group
         if (!group) {
           groupInfo[`${index}`] = [field]
@@ -758,7 +848,7 @@ export default {
     },
     _setFormRule() {
       this.formRule = {}
-      this.fields.forEach(({ rules = [], name } = {}) => {
+      this.ruleFields.forEach(({ rules = [], name } = {}) => {
         if (rules && rules.length) {
           this.formRule[name] = rules
         }
@@ -811,7 +901,11 @@ export default {
       let vm = this.findVm()
       for (let [key, ref] of Object.entries(this.$refs)) {
         if (Array.isArray(ref)) {
-          vm.$refs[`_${key}`] = ref[0].$children[0]
+          if (noChildComps.includes(this.nameField[key].component)) {
+            vm.$refs[`_${key}`] = ref[0]
+          } else {
+            vm.$refs[`_${key}`] = ref[0].$children[0]
+          }
         }
       }
     },
@@ -940,9 +1034,6 @@ export default {
     VInputNumber,
     VSelect,
     VDatePicker,
-    VRadioGroup,
-    VCheckbox,
-    VCheckboxGroup,
     VSwitch,
     VAutoComplete,
     VHtml,
