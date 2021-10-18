@@ -19,11 +19,11 @@
           :key="`form-item-${itemIndex}`" :prop="item.name" :label="item.label"
           :label-width="parseFloat(item.labelWidth) || parseFloat(currentOptions.labelWidth)"
           :required="item.required" :error="item.error"
-          :class="[`label-${currentOptions.labelPosition}`, `size-${_calFormItemSize(item)}`, { 'inline': colStyleInfo[rowIndex][colIndex].multiple }, `form-item-${item.component}`, `${item.formItemClass ? item.formItemClass : ''}`]">
+          :class="[`label-${item.labelPosition ? item.labelPosition : currentOptions.labelPosition}`, `size-${_calFormItemSize(item)}`, { 'inline': colStyleInfo[rowIndex][colIndex].multiple }, `form-item-${item.component}`, `${item.formItemClass ? item.formItemClass : ''}`]">
           <!-- label-append -->
           <div class="form-label-append"
-            v-if="item.labelAppendHtml && currentOptions.labelPosition === 'top'"
-            v-html="item.labelAppendHtml"
+            v-if="item.labelAfterHtml && currentOptions.labelPosition === 'top'"
+            v-html="item.labelAfterHtml"
             :style="_labelAppendStyle(item.label)"></div>
           <!-- 系统内置组件 -->
           <template v-if="!_isSlot(item.slot)">
@@ -507,6 +507,7 @@ import {
   checkKeyHazyExist,
   checkIsDataCmp,
   operTypeZh,
+  operTypeTrigger
 } from '../../utils/assist'
 import { DateValueType, sizeRange } from '../../utils/constant'
 import collect from '../../utils/collect'
@@ -561,6 +562,8 @@ const actionAlignRange = ['left', 'center', 'right']
 
 const noChildComps = ['Checkbox', 'CheckboxGroup', 'RadioGroup']
 
+const InputTypeRange = ['text', 'tel', 'integer', 'number', 'positiveInteger', 'positiveNumber', 'password', 'textarea', 'url', 'email', 'date', 'number', 'tel']
+
 const defaultOptions = {
   inline: false,
   columns: 1,
@@ -573,11 +576,13 @@ const defaultOptions = {
     ...actionDefaultOptions,
     type: 'primary',
     text: '提交',
+    done: true
   },
   resetBtn: {
     ...actionDefaultOptions,
     type: 'default',
     text: '重置',
+    done: true
   },
 }
 
@@ -677,6 +682,13 @@ export default {
                 )}以外的值！`
               )
             }
+            if (component === 'Input' && type && !InputTypeRange.includes(type)) {
+              throw new RangeError(
+                  `Input组件的type属性不支持${InputTypeRange.join(
+                    '、'
+                  )}以外的值！`
+                )
+            }
             if ((!name || nameList.includes(name)) && component !== 'Button') {
               throw new Error('请为每一个表单项设置唯一的name属性！')
             }
@@ -743,12 +755,16 @@ export default {
       return this.fields.map((field, index) => {
         let { required, rules = [], component, label = '' } = field
         if (required) {
-          rules.unshift({
+          let rule = {
             required: true,
-            message: `请${operTypeZh(component)}${label}`,
-          })
+            message: `请${operTypeZh(component)}${label}`
+          }
+          if (component === 'Input' || component === 'AutoComplete') {
+            rule.trigger = operTypeTrigger(component)
+          }
+          rules.unshift(rule)
           delete field.required
-          return { rules, ...field }
+          return { ...field, rules }
         }
         return { ...field }
       })
@@ -793,7 +809,7 @@ export default {
       return this.gridFields.map((grid) => {
         return grid.map((col) => {
           let colSpanList = col.map((item) => {
-            return parseInt(item.colSpan) || 1
+            return parseFloat(item.colSpan) || 1
           })
           const multiple = colSpanList.length > 1
           let flex = getMax(colSpanList) / _this.currentOptions.columns
@@ -939,7 +955,6 @@ export default {
       this.originFormValue = result
     },
     _setFormRule() {
-      this.formRule = {}
       this.ruleFields.forEach(({ rules = [], name } = {}) => {
         if (rules && rules.length) {
           this.formRule[name] = rules
@@ -1092,7 +1107,7 @@ export default {
     },
     onReset() {
       // 重置表单
-      this.resetBtnLoading = true
+      this.resetBtnLoading = this.resetBtnOpts.done
       this.resetFields()
       setTimeout(() => {
         this._cancelFocus('.v-form')

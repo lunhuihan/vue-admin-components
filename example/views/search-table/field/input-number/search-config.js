@@ -2,8 +2,8 @@ export default {
   // labelWidth: 150,
   // fieldWidth: 200,
   fold: true,
-  // hiddenSearchBtn: true,
-  // hiddenResetBtn: true,
+  // searchBtn: false,
+  // resetBtn: false,
   // hiddenActionIcon: true,
   fields: [
     {

@@ -136,10 +136,10 @@
       <!-- 1.操作按钮另起一行 -->
       <div class="action-line-feed-wrap" v-if="options.actionLineFeed">
         <slot name="action-prepend"></slot>
-        <Button v-if="!options.hiddenSearchBtn" type="primary"
+        <Button v-if="options.searchBtn" type="primary"
           :size="actionSize" :icon="options.hiddenActionIcon ? '' : 'md-search'"
           :loading="searchBtnLoading" @click="onSearch">搜索</Button>
-        <Button v-if="!options.hiddenResetBtn" type="primary" ghost
+        <Button v-if="options.resetBtn" type="primary" ghost
           :size="actionSize"
           :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
           :loading="resetBtnLoading" @click="onReset">重置</Button>
@@ -150,17 +150,17 @@
         <template v-if="typeOf(options.fold) === 'boolean'">
           <div class="action-wrap">
             <slot name="action-prepend"></slot>
-            <Button v-if="!options.hiddenSearchBtn" type="primary"
+            <Button v-if="options.searchBtn" type="primary"
               :size="actionSize"
               :icon="options.hiddenActionIcon ? '' : 'md-search'"
               :loading="searchBtnLoading" @click="onSearch">搜索</Button>
-            <Button v-if="!options.hiddenResetBtn" type="primary" ghost
+            <Button v-if="options.resetBtn" type="primary" ghost
               :size="actionSize"
               :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
               :loading="resetBtnLoading" @click="onReset">重置</Button>
             <slot name="action-append"></slot>
             <template
-              v-if="!options.hiddenSearchBtn || !options.hiddenResetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append']">
+              v-if="options.searchBtn || options.resetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append']">
               <span class="fold-bar" v-show="options.fold"
                 @click="toggleFold(false)">
                 展开
@@ -177,12 +177,12 @@
         <!-- 3.操作按钮跟随在搜索项后面 -->
         <template v-if="typeOf(options.fold) !== 'boolean'">
           <slot name="action-prepend"></slot>
-          <FormItem v-if="!options.hiddenSearchBtn" :label-width="0">
+          <FormItem v-if="options.searchBtn" :label-width="0">
             <Button type="primary" :size="actionSize"
               :icon="options.hiddenActionIcon ? '' : 'md-search'"
               :loading="searchBtnLoading" @click="onSearch">搜索</Button>
           </FormItem>
-          <FormItem v-if="!options.hiddenResetBtn" :label-width="0">
+          <FormItem v-if="options.resetBtn" :label-width="0">
             <Button type="primary" ghost :size="actionSize"
               :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
               :loading="resetBtnLoading" @click="onReset">重置</Button>
@@ -223,6 +223,8 @@ import VButton from '../field-components/v-button'
 import collect from '../../utils/collect'
 
 const time = new Time()
+
+const InputTypeRange = ['text', 'tel', 'integer', 'number', 'positiveInteger', 'positiveNumber', 'password', 'textarea', 'url', 'email', 'date', 'number', 'tel']
 
 const componentTypeRange = [
   'Input',
@@ -273,6 +275,13 @@ export default {
                   '、'
                 )}以外的值！`
               )
+            }
+            if (component === 'Input' && type && !InputTypeRange.includes(type)) {
+              throw new RangeError(
+                  `Input组件的type属性不支持${InputTypeRange.join(
+                    '、'
+                  )}以外的值！`
+                )
             }
             if ((!name || nameList.includes(name)) && component !== 'Button') {
               throw new Error('请为每一个表单项设置唯一的name属性！')

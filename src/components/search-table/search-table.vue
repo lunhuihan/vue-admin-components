@@ -167,7 +167,7 @@ export default {
       let { fields, ...options } = this.searchConfig
       return {
         fields,
-        options
+        options: { searchBtn: true, resetBtn: true, ...options }
       }
     },
     tableSlotList () {

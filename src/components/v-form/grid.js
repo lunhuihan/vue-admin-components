@@ -53,10 +53,10 @@ class Grid {
   calPerRate (data, max) {
     let colSpan = 1
     if (!Array.isArray(data)) {
-      colSpan = parseInt(data.colSpan) || 1
+      colSpan = parseFloat(data.colSpan) || 1
     } else {
       let colSpanList = data.map((item) => {
-        return parseInt(item.colSpan) || 1
+        return parseFloat(item.colSpan) || 1
       })
       colSpan = Math.max(...colSpanList)
     }

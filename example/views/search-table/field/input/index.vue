@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       model: {
-        name: '轮回韩'
+        name: ''
       },
       searchConfig,
       tableConfig,
@@ -44,9 +44,6 @@ export default {
   created() {
   },
   mounted () {
-    setTimeout(() => {
-      this.$refs['search-table'].search()
-    }, 2000)
   },
   methods: {
     getData(page, pageSize, done, eventType) {

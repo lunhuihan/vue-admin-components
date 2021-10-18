@@ -53,19 +53,19 @@ export default {
             component: 'Input',
             label: '表单宽度',
             labelPosition: 'top',
-            labelAppendHtml: '（默认100%）'
+            labelAfterHtml: '（默认100%）'
           },
           {
             name: 'columns',
             component: 'InputNumber',
             label: '每行显示的表单元素个数',
-            labelAppendHtml: '（默认1，占据一行）'
+            labelAfterHtml: '（默认1，占据一行）'
           },
           {
             name: 'colSpace',
             component: 'InputNumber',
             label: '列与列之间的距离',
-            labelAppendHtml: '（默认0）',
+            labelAfterHtml: '（默认0）',
             step: 5,
             min: 0,
             max: 50
@@ -74,58 +74,58 @@ export default {
             name: 'fieldWidth',
             component: 'Input',
             label: '表单元素的宽度',
-            labelAppendHtml: '（默认auto）'
+            labelAfterHtml: '（默认auto）'
           },
           {
             name: 'labelWidth',
             component: 'Input',
             label: '表单域标签的宽度',
-            labelAppendHtml: '（默认auto）'
+            labelAfterHtml: '（默认auto）'
           },
           {
             name: 'labelPosition',
             component: 'RadioGroup',
             label: '表单域标签的位置',
-            labelAppendHtml: '（默认right）'
+            labelAfterHtml: '（默认right）'
           },
           {
             name: 'size',
             component: 'RadioGroup',
             label: '表单元素大小',
-            labelAppendHtml: '（默认default）'
+            labelAfterHtml: '（默认default）'
           },
           {
             name: 'readonly',
             component: 'Checkbox',
             label: '表单元素是否只读',
-            labelAppendHtml: '（默认false）',
+            labelAfterHtml: '（默认false）',
             text: '只读'
           },
           {
             name: 'disabled',
             component: 'Checkbox',
             label: '是否禁用表单',
-            labelAppendHtml: '（默认false）',
+            labelAfterHtml: '（默认false）',
             text: '禁用'
           },
           {
             name: 'inline',
             component: 'Checkbox',
             label: '表单元素是否行内展示',
-            labelAppendHtml: '（默认false）',
+            labelAfterHtml: '（默认false）',
             text: '行内展示'
           },
           {
             name: 'actionAlign',
             component: 'RadioGroup',
             label: '操作按钮位置',
-            labelAppendHtml: '（默认left）'
+            labelAfterHtml: '（默认left）'
           },
           {
             name: 'labelColon',
             component: 'Checkbox',
             label: '是否自动在 label 名称后添加冒号',
-            labelAppendHtml: '（默认false）',
+            labelAfterHtml: '（默认false）',
             text: 'label后添加冒号',
             formItemClass: 'form-item-labelColon'
           },
@@ -133,21 +133,21 @@ export default {
             name: 'hideRequiredMark',
             component: 'Checkbox',
             label: '是否隐藏所有表单项的必选标记',
-            labelAppendHtml: '（默认false）',
+            labelAfterHtml: '（默认false）',
             text: '隐藏'
           },
           {
             name: 'showMessage',
             component: 'Checkbox',
             label: '是否显示校验错误信息',
-            labelAppendHtml: '（默认true）',
+            labelAfterHtml: '（默认true）',
             text: '显示校验错误信息'
           },
           {
             name: 'submitDisabled',
             component: 'Checkbox',
             label: '是否禁用提交按钮',
-            labelAppendHtml: '（默认false）',
+            labelAfterHtml: '（默认false）',
             text: '禁用提交按钮'
           },
         ]

@@ -1,6 +1,7 @@
 <template>
   <div class="page v-form-page">
-    <v-form ref="form" :model.async="form" :options="options" :fields="fields"
+    <Button type="primary" @click="changeLang">切换成英文</Button>
+    <v-form ref="form" :model.async="form" :options="options" :fields="caledFields"
       :data-source="dataSource" @on-submit="submit">
       <template v-slot:tipSlot>
         <Icon type="ios-search"></Icon>
@@ -43,36 +44,46 @@ export default {
       }
     }
     return {
+      lang: 'ch',
       visible: false,
       submitDisabled: true,
       form: {
-        favor: '1',
-        grade: 0,
-        name: '测试',
+        test: '',
+        favor: '',
+        grade: '',
+        name: '',
         trans: true,
-        account: [1]
+        account: [1],
       },
       options: {
         labelWidth: 100,
+        labelPosition: 'right',
+        fieldWidth: 100,
         // readonly: true,
         // disabled: true,
-        // columns: 2,
+        columns: 3,
         // inline: true
-        // size: 'large'
+        // size: 'large',
+        resetBtn: {
+          done: false
+        }
       },
       show: false,
       fields: [
+        {
+          name: 'test',
+          component: 'Input',
+          label: '数字',
+          type: 'number',
+          required: true
+        },
         {
           name: 'grade',
           component: 'Select',
           label: '年级',
           required: true,
-        },
-        {
-          name: 'name',
-          component: 'Input',
-          label: '姓名',
-          required: true
+          colSpan: 2,
+          // labelPosition: 'right'
         },
         {
           name: 'favor',
@@ -82,13 +93,13 @@ export default {
           // vertical: true,
           required: true,
           className: 'test',
-          colSpan: 2
+          colSpan: 2,
         },
         {
           name: 'trans',
           component: 'Checkbox',
           label: '是否转账',
-          required: true
+          required: true,
         },
         {
           name: 'account',
@@ -96,19 +107,20 @@ export default {
           label: '账单日',
           required: true,
           // vertical: true,
-          checkboxSlot: 'checkboxSlot'
+          checkboxSlot: 'checkboxSlot',
         },
         {
           name: 'num',
           component: 'InputNumber',
           label: '件数',
-          required: true
+          required: true,
         },
         {
           name: 'date',
           component: 'DatePicker',
-          label: '开学日期'
-        }
+          label: '开学日期',
+          required: true,
+        },
       ],
       dataSource: {
         favor: [
@@ -124,13 +136,13 @@ export default {
             id: '002',
             name: '名称2',
           },
-          {
+          /* {
             label: '打球',
             value: 3,
             id: '003',
             disabled: true,
             name: '名称3',
-          },
+          }, */
         ],
         grade: [
           {
@@ -150,7 +162,7 @@ export default {
           {
             label: '周一',
             value: 0,
-            disabled: true
+            disabled: true,
           },
           {
             label: '周二',
@@ -160,11 +172,122 @@ export default {
             label: '周三',
             value: 2,
           },
-        ]
+        ],
       },
     }
   },
   computed: {
+    caledFields () {
+      if (this.lang === 'ch') {
+        return [
+        {
+          name: 'test',
+          component: 'Input',
+          label: '数字',
+          type: 'number',
+          required: true
+        },
+        {
+          name: 'grade',
+          component: 'Select',
+          label: '年级',
+          required: true,
+          colSpan: 2,
+          // labelPosition: 'right'
+        },
+        {
+          name: 'favor',
+          component: 'RadioGroup',
+          label: '兴趣爱好',
+          radioSlot: 'favorRadio',
+          // vertical: true,
+          required: true,
+          className: 'test',
+          colSpan: 2,
+        },
+        {
+          name: 'trans',
+          component: 'Checkbox',
+          label: '是否转账',
+          required: true,
+        },
+        {
+          name: 'account',
+          component: 'CheckboxGroup',
+          label: '账单日',
+          required: true,
+          // vertical: true,
+          checkboxSlot: 'checkboxSlot',
+        },
+        {
+          name: 'num',
+          component: 'InputNumber',
+          label: '件数',
+          required: true,
+        },
+        {
+          name: 'date',
+          component: 'DatePicker',
+          label: '开学日期',
+          required: true,
+        },
+      ]
+      } else {
+        return [
+        {
+          name: 'test',
+          component: 'Input',
+          label: 'number',
+          type: 'number',
+          required: true
+        },
+        {
+          name: 'grade',
+          component: 'Select',
+          label: '年级',
+          required: true,
+          colSpan: 2,
+          // labelPosition: 'right'
+        },
+        {
+          name: 'favor',
+          component: 'RadioGroup',
+          label: 'favor',
+          radioSlot: 'favorRadio',
+          // vertical: true,
+          required: true,
+          className: 'test',
+          colSpan: 2,
+        },
+        {
+          name: 'trans',
+          component: 'Checkbox',
+          label: '是否转账',
+          required: true,
+        },
+        {
+          name: 'account',
+          component: 'CheckboxGroup',
+          label: '账单日',
+          required: true,
+          // vertical: true,
+          checkboxSlot: 'checkboxSlot',
+        },
+        {
+          name: 'num',
+          component: 'InputNumber',
+          label: '件数',
+          required: true,
+        },
+        {
+          name: 'date',
+          component: 'DatePicker',
+          label: '开学日期',
+          required: true,
+        },
+      ]
+      }
+    },
     startTimeOptions() {
       e.provent
       let endTime = this.form.endTime
@@ -189,7 +312,8 @@ export default {
       this.show = true
     }, 5000)
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {
     changeInline(value) {
       this.$set(this.config, 'inline', value)
@@ -233,6 +357,9 @@ export default {
         done()
       }, 1000)
     },
+    changeLang () {
+      this.lang = 'en'
+    }
   },
 }
 </script>

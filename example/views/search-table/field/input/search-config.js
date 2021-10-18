@@ -1,26 +1,27 @@
 export default {
   // fieldWidth: 200,
   // fold: true,
-  // hiddenSearchBtn: true,
-  // hiddenResetBtn: true,
+  // searchBtn: false,
+  resetBtn: false,
   // hiddenActionIcon: true,
   labelWidth: 100,
   // labelColon: true,
   hideRequiredMark: true,
-  actionLineFeed: true,
+  // actionLineFeed: true,
   // size: 'large',
   fields: [
-    /* {
+    {
       name: 'name',
       component: 'Input',
       label: '姓名',
       placeholder: '请输入姓名',
+      type: 'positiveNumber',
       maxlength: 10,
       rules: [{
         required: true,
         message: '请输入姓名'
       }]
-    }, */
+    },
     {
       name: 'favor',
       component: 'RadioGroup',

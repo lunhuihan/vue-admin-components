@@ -1,8 +1,8 @@
 export default {
   labelWidth: 80,
   fieldWidth: 60,
-  hiddenSearchBtn: true,
-  hiddenResetBtn: true,
+  searchBtn: false,
+  resetBtn: false,
   fields: [
     {
       name: 'name',

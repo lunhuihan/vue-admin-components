@@ -90,3 +90,13 @@ export function operTypeZh(component) {
       return '输入'
   }
 }
+
+export function operTypeTrigger(component) {
+  switch (component) {
+    case 'Input':
+    case 'AutoComplete':
+      return 'blur'
+    default:
+      return 'change'
+  }
+}

@@ -1,6 +1,6 @@
 <template>
-  <Input v-model.trim="currentValue" :style="calFieldStyle(item)"
-    :class="calFieldClass(item)" :type="item.type" :number="item.number"
+  <Input ref="Input" v-model.trim="currentValue" :style="calFieldStyle(item)"
+    :class="calFieldClass(item)" :type="computedType" :number="item.number"
     :placeholder="item.placeholder" :size="calFieldSize(item)"
     :clearable="calClear(item)" :disabled="calFieldDisabled(item)"
     :readonly="calReadonly(item)" :maxlength="item.maxlength" :icon="item.icon"
@@ -42,6 +42,10 @@
 <script>
 import commonMixins from './common-mixins'
 import { typeOf } from '../../utils/assist'
+import { formatNumber, trimLeftZero } from '../../utils/number'
+
+const needTransTypeRange = ['tel', 'integer', 'number', 'positiveInteger', 'positiveNumber']
+
 export default {
   name: 'VInput',
   mixins: [commonMixins],
@@ -55,6 +59,17 @@ export default {
       currentValue: '',
     }
   },
+  computed: {
+    type () {
+      return this.item.type
+    },
+    computedType () {
+      if (needTransTypeRange.includes(this.type) && this.type !== 'tel') {
+        return 'text'
+      }
+      return this.type
+    }
+  },
   watch: {
     value: {
       immediate: true,
@@ -66,9 +81,29 @@ export default {
       immediate: true,
       handler(v) {
         if (typeOf(v) === 'undefined') return
-        this.$emit('input', v)
+        let value = v
+        if (v && needTransTypeRange.includes(this.type)) {
+          switch (this.type) {
+            case 'integer':
+              value = trimLeftZero(formatNumber(v, false, true))
+              break
+            case 'number':
+              value = trimLeftZero(formatNumber(v, true, true))
+              break
+            case 'positiveInteger':
+            case 'tel':
+              value = trimLeftZero(formatNumber(v, false, false))
+              break
+            case 'positiveNumber':
+              value = trimLeftZero(formatNumber(v, true, false))
+              break
+          }
+          this.$refs['Input'].currentValue = value
+          this.currentValue = value
+        }
+        this.$emit('input', value)
       },
-    }
+    },
   },
   created() {},
   mounted() {},
