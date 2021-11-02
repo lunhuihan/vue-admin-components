@@ -6,6 +6,9 @@
       <template v-slot:tipSlot>
         <Icon type="ios-search"></Icon>
       </template>
+      <template v-slot:htmlBeforeSlot>
+        <Icon type="md-help-circle" size="20"/>
+      </template>
       <template v-slot:selectSlot>
         <Button type="primary" style="margin-left: 5px;">校验</Button>
       </template>
@@ -194,6 +197,10 @@ export default {
           required: true,
           colSpan: 2,
           // labelPosition: 'right'
+        },
+        {
+          component: 'Html', html: '<h3 class="form-title">AAST解剖分级</h3>',
+          beforeSlot: 'htmlBeforeSlot'
         },
         {
           name: 'favor',

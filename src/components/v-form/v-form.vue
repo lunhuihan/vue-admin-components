@@ -23,12 +23,16 @@
           <!-- label-append -->
           <div class="form-label-append"
             v-if="item.labelAfterHtml && currentOptions.labelPosition === 'top'"
-            v-html="item.labelAfterHtml"
-            :style="_labelAppendStyle(item.label)"></div>
+            v-html="item.labelAfterHtml" :style="_labelAppendStyle(item.label)">
+          </div>
           <!-- 系统内置组件 -->
           <template v-if="!_isSlot(item.slot)">
             <!-- Html -->
-            <v-html v-if="item.component === 'Html'" :item="item"></v-html>
+            <template v-if="item.component === 'Html'">
+              <slot :name="item.beforeSlot"></slot>
+              <v-html :item="item"></v-html>
+              <slot :name="item.afterSlot"></slot>
+            </template>
             <!-- Input -->
             <template v-if="item.component === 'Input'">
               <slot :name="item.beforeSlot"></slot>
@@ -254,7 +258,11 @@
         <!-- 系统内置组件 -->
         <template v-if="!_isSlot(item.slot)">
           <!-- Html -->
-          <v-html v-if="item.component === 'Html'" :item="item"></v-html>
+          <template v-if="item.component === 'Html'">
+            <slot :name="item.beforeSlot"></slot>
+            <v-html :item="item"></v-html>
+            <slot :name="item.afterSlot"></slot>
+          </template>
           <!-- Input -->
           <template v-if="item.component === 'Input'">
             <slot :name="item.beforeSlot"></slot>
@@ -507,7 +515,7 @@ import {
   checkKeyHazyExist,
   checkIsDataCmp,
   operTypeZh,
-  operTypeTrigger
+  operTypeTrigger,
 } from '../../utils/assist'
 import { DateValueType, sizeRange } from '../../utils/constant'
 import collect from '../../utils/collect'
@@ -562,7 +570,19 @@ const actionAlignRange = ['left', 'center', 'right']
 
 const noChildComps = ['Checkbox', 'CheckboxGroup', 'RadioGroup']
 
-const InputTypeRange = ['text', 'tel', 'integer', 'number', 'positiveInteger', 'positiveNumber', 'password', 'textarea', 'url', 'email', 'date', 'number', 'tel']
+const InputTypeRange = [
+  'text',
+  'tel',
+  'integer',
+  'number',
+  'positiveInteger',
+  'positiveNumber',
+  'password',
+  'textarea',
+  'url',
+  'email',
+  'date',
+]
 
 const defaultOptions = {
   inline: false,
@@ -576,13 +596,13 @@ const defaultOptions = {
     ...actionDefaultOptions,
     type: 'primary',
     text: '提交',
-    done: true
+    done: true,
   },
   resetBtn: {
     ...actionDefaultOptions,
     type: 'default',
     text: '重置',
-    done: true
+    done: true,
   },
 }
 
@@ -682,12 +702,16 @@ export default {
                 )}以外的值！`
               )
             }
-            if (component === 'Input' && type && !InputTypeRange.includes(type)) {
+            if (
+              component === 'Input' &&
+              type &&
+              !InputTypeRange.includes(type)
+            ) {
               throw new RangeError(
-                  `Input组件的type属性不支持${InputTypeRange.join(
-                    '、'
-                  )}以外的值！`
-                )
+                `Input组件的type属性不支持${InputTypeRange.join(
+                  '、'
+                )}以外的值！`
+              )
             }
             if ((!name || nameList.includes(name)) && component !== 'Button') {
               throw new Error('请为每一个表单项设置唯一的name属性！')
@@ -757,7 +781,7 @@ export default {
         if (required) {
           let rule = {
             required: true,
-            message: `请${operTypeZh(component)}${label}`
+            message: `请${operTypeZh(component)}${label}`,
           }
           if (component === 'Input' || component === 'AutoComplete') {
             rule.trigger = operTypeTrigger(component)
