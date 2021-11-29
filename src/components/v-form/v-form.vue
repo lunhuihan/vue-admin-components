@@ -70,16 +70,42 @@
                 <template v-slot:options
                   v-if="typeOf(formDataSource[item.name]) === 'array' && formDataSource[item.name].length">
                   <Option
-                    v-for="(optionItem, optionIndex) in formDataSource[item.name]"
-                    :value="optionItem.value" :label="optionItem.label"
-                    :key="optionIndex" :disabled="optionItem.disabled">
-                    <template v-slot:default v-if="item.optionSlot">
+                  v-for="(optionItem, optionIndex) in formDataSource[item.name]"
+                  :value="optionItem.value" :label="optionItem.label"
+                  :key="optionIndex" :disabled="optionItem.disabled">
+                  <template v-slot:default
+                    v-if="item.optionSlot || item.poptip">
+                    <template v-if="!item.poptip">
                       <slot :name="item.optionSlot" :field="item"
                         :label="optionItem.label" :value="optionItem.value"
                         :data="optionItem" :index="optionIndex">
                       </slot>
                     </template>
-                  </Option>
+                    <Poptip v-else :trigger="item.poptip.trigger || 'hover'"
+                      :title="item.poptip.title" :content="item.poptip.content"
+                      :placement="item.poptip.placement || 'top'"
+                      :width="item.poptip.width"
+                      :disabled="item.poptip.disabled"
+                      :transfer="item.poptip.transfer"
+                      :popper-class="item.poptip.popperClass">
+                      <template v-if="item.optionSlot">
+                        <slot :name="item.optionSlot" :field="item"
+                          :label="optionItem.label" :value="optionItem.value"
+                          :data="optionItem" :index="optionIndex">
+                        </slot>
+                      </template>
+                      <template v-else>
+                        {{optionItem.label}}
+                      </template>
+                      <div v-if="item.poptip.slot"
+                        class="v-select-poptip-content" slot="content">
+                        <slot :name="item.poptip.slot" :field="item"
+                          :label="optionItem.label" :value="optionItem.value"
+                          :data="optionItem" :index="optionIndex"></slot>
+                      </div>
+                    </Poptip>
+                  </template>
+                </Option>
                 </template>
               </v-select>
               <slot :name="item.afterSlot"></slot>
@@ -303,11 +329,37 @@
                   v-for="(optionItem, optionIndex) in formDataSource[item.name]"
                   :value="optionItem.value" :label="optionItem.label"
                   :key="optionIndex" :disabled="optionItem.disabled">
-                  <template v-slot:default v-if="item.optionSlot">
-                    <slot :name="item.optionSlot" :field="item"
-                      :label="optionItem.label" :value="optionItem.value"
-                      :data="optionItem" :index="optionIndex">
-                    </slot>
+                  <template v-slot:default
+                    v-if="item.optionSlot || item.poptip">
+                    <template v-if="!item.poptip">
+                      <slot :name="item.optionSlot" :field="item"
+                        :label="optionItem.label" :value="optionItem.value"
+                        :data="optionItem" :index="optionIndex">
+                      </slot>
+                    </template>
+                    <Poptip v-else :trigger="item.poptip.trigger || 'hover'"
+                      :title="item.poptip.title" :content="item.poptip.content"
+                      :placement="item.poptip.placement || 'top'"
+                      :width="item.poptip.width"
+                      :disabled="item.poptip.disabled"
+                      :transfer="item.poptip.transfer"
+                      :popper-class="item.poptip.popperClass">
+                      <template v-if="item.optionSlot">
+                        <slot :name="item.optionSlot" :field="item"
+                          :label="optionItem.label" :value="optionItem.value"
+                          :data="optionItem" :index="optionIndex">
+                        </slot>
+                      </template>
+                      <template v-else>
+                        {{optionItem.label}}
+                      </template>
+                      <div v-if="item.poptip.slot"
+                        class="v-select-poptip-content" slot="content">
+                        <slot :name="item.poptip.slot" :field="item"
+                          :label="optionItem.label" :value="optionItem.value"
+                          :data="optionItem" :index="optionIndex"></slot>
+                      </div>
+                    </Poptip>
                   </template>
                 </Option>
               </template>

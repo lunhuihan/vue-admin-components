@@ -36,11 +36,17 @@ export default {
       enterButton = false,
       clearable = true,
       className = '',
+      poptip
     }) {
       let result = []
       if (component === 'Input') {
         if (clearable && search && enterButton) {
           result.push('input-search-clear')
+        }
+      }
+      if (component === 'Select') {
+        if (poptip) {
+          result.push('v-select-poptip')
         }
       }
       className && result.push(className)

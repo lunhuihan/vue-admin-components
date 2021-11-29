@@ -199,3 +199,17 @@ input::-webkit-credentials-auto-fill-button {
   position: absolute;
   right: 0;
 }
+
+.v-form{
+  .ivu-select{
+    .ivu-poptip,.ivu-poptip-rel{
+      width: 100%;
+    }
+  }
+}
+
+.v-select-poptip{
+  .ivu-select-dropdown{
+    overflow: visible;
+  }
+}

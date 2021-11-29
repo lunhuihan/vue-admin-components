@@ -1,13 +1,13 @@
 <template>
   <div class="page v-form-page">
     <Button type="primary" @click="changeLang">切换成英文</Button>
-    <v-form ref="form" :model.async="form" :options="options" :fields="fields"
+    <v-form ref="form" :model.async="form" :options="options" :fields="caledFields"
       :data-source="dataSource" @on-submit="submit">
       <template v-slot:tipSlot>
         <Icon type="ios-search"></Icon>
       </template>
       <template v-slot:htmlBeforeSlot>
-        <Icon type="md-help-circle" size="20" />
+        <Icon type="md-help-circle" size="20"/>
       </template>
       <template v-slot:selectSlot>
         <Button type="primary" style="margin-left: 5px;">校验</Button>
@@ -17,9 +17,6 @@
       </template>
       <template v-slot:checkboxSlot="{field, value, data}">
         <span>轮回韩</span>
-      </template>
-      <template v-slot:poptip="{index}">
-        <Table stripe :columns="columns1" :data="data1"></Table>
       </template>
       <template v-slot:action-before>
         <Button type="error" style="margin-left: 5px;">提交</Button>
@@ -50,46 +47,6 @@ export default {
       }
     }
     return {
-      columns1: [
-        {
-          title: 'Name',
-          key: 'name',
-        },
-        {
-          title: 'Age',
-          key: 'age',
-        },
-        {
-          title: 'Address',
-          key: 'address',
-        },
-      ],
-      data1: [
-        {
-          name: 'John Brown',
-          age: 18,
-          address: 'New York No. 1 Lake Park',
-          date: '2016-10-03',
-        },
-        {
-          name: 'Jim Green',
-          age: 24,
-          address: 'London No. 1 Lake Park',
-          date: '2016-10-01',
-        },
-        {
-          name: 'Joe Black',
-          age: 30,
-          address: 'Sydney No. 1 Lake Park',
-          date: '2016-10-02',
-        },
-        {
-          name: 'Jon Snow',
-          age: 26,
-          address: 'Ottawa No. 2 Lake Park',
-          date: '2016-10-04',
-        },
-      ],
       lang: 'ch',
       visible: false,
       submitDisabled: true,
@@ -107,12 +64,12 @@ export default {
         fieldWidth: 100,
         // readonly: true,
         // disabled: true,
-        columns: 2,
+        columns: 3,
         // inline: true
         // size: 'large',
         resetBtn: {
-          done: false,
-        },
+          done: false
+        }
       },
       show: false,
       fields: [
@@ -121,7 +78,7 @@ export default {
           component: 'Input',
           label: '数字',
           type: 'number',
-          required: true,
+          required: true
         },
         {
           name: 'grade',
@@ -129,11 +86,6 @@ export default {
           label: '年级',
           required: true,
           colSpan: 2,
-          poptip: {
-            placement: 'right',
-            slot: 'poptip',
-            width: 500
-          },
           // labelPosition: 'right'
         },
         {
@@ -228,6 +180,121 @@ export default {
     }
   },
   computed: {
+    caledFields () {
+      if (this.lang === 'ch') {
+        return [
+        {
+          name: 'test',
+          component: 'Input',
+          label: '数字',
+          type: 'number',
+          required: true
+        },
+        {
+          name: 'grade',
+          component: 'Select',
+          label: '年级',
+          required: true,
+          colSpan: 2,
+          // labelPosition: 'right'
+        },
+        {
+          component: 'Html', html: '<h3 class="form-title">AAST解剖分级</h3>',
+          beforeSlot: 'htmlBeforeSlot'
+        },
+        {
+          name: 'favor',
+          component: 'RadioGroup',
+          label: '兴趣爱好',
+          radioSlot: 'favorRadio',
+          // vertical: true,
+          required: true,
+          className: 'test',
+          colSpan: 2,
+        },
+        {
+          name: 'trans',
+          component: 'Checkbox',
+          label: '是否转账',
+          required: true,
+        },
+        {
+          name: 'account',
+          component: 'CheckboxGroup',
+          label: '账单日',
+          required: true,
+          // vertical: true,
+          checkboxSlot: 'checkboxSlot',
+        },
+        {
+          name: 'num',
+          component: 'InputNumber',
+          label: '件数',
+          required: true,
+        },
+        {
+          name: 'date',
+          component: 'DatePicker',
+          label: '开学日期',
+          required: true,
+        },
+      ]
+      } else {
+        return [
+        {
+          name: 'test',
+          component: 'Input',
+          label: 'number',
+          type: 'number',
+          required: true
+        },
+        {
+          name: 'grade',
+          component: 'Select',
+          label: '年级',
+          required: true,
+          colSpan: 2,
+          // labelPosition: 'right'
+        },
+        {
+          name: 'favor',
+          component: 'RadioGroup',
+          label: 'favor',
+          radioSlot: 'favorRadio',
+          // vertical: true,
+          required: true,
+          className: 'test',
+          colSpan: 2,
+        },
+        {
+          name: 'trans',
+          component: 'Checkbox',
+          label: '是否转账',
+          required: true,
+        },
+        {
+          name: 'account',
+          component: 'CheckboxGroup',
+          label: '账单日',
+          required: true,
+          // vertical: true,
+          checkboxSlot: 'checkboxSlot',
+        },
+        {
+          name: 'num',
+          component: 'InputNumber',
+          label: '件数',
+          required: true,
+        },
+        {
+          name: 'date',
+          component: 'DatePicker',
+          label: '开学日期',
+          required: true,
+        },
+      ]
+      }
+    },
     startTimeOptions() {
       e.provent
       let endTime = this.form.endTime
@@ -252,7 +319,8 @@ export default {
       this.show = true
     }, 5000)
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {
     changeInline(value) {
       this.$set(this.config, 'inline', value)
@@ -296,17 +364,14 @@ export default {
         done()
       }, 1000)
     },
-    changeLang() {
+    changeLang () {
       this.lang = 'en'
-    },
+    }
   },
 }
 </script>
 <style lang="scss" scoped>
 .v-form-page {
   display: flex;
-}
-.long {
-  width: 100%;
 }
 </style>
