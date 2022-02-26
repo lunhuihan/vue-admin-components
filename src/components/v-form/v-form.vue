@@ -40,13 +40,12 @@
                 @deal-event="_dealEvent" @deal-number="_dealNumber">
                 <!-- 前置slot -->
                 <template v-slot:prepend
-                  v-if="(!item.type || item.type === 'text') && item.prependSlot">
+                  v-if="item.prependSlot">
                   <slot :name="item.prependSlot" :field="item">
                   </slot>
                 </template>
                 <!-- 后置slot -->
-                <template v-slot:append
-                  v-if="(!item.type || item.type === 'text') && item.appendSlot">
+                <template v-slot:append v-if="item.appendSlot">
                   <slot :name="item.appendSlot" :field="item">
                   </slot>
                 </template>
@@ -295,14 +294,12 @@
             <v-input :ref="item.name" v-model="model[item.name]" :item="item"
               @deal-event="_dealEvent" @deal-number="_dealNumber">
               <!-- 前置slot -->
-              <template v-slot:prepend
-                v-if="(!item.type || item.type === 'text') && item.prependSlot">
+              <template v-slot:prepend v-if="item.prependSlot">
                 <slot :name="item.prependSlot" :field="item">
                 </slot>
               </template>
               <!-- 后置slot -->
-              <template v-slot:append
-                v-if="(!item.type || item.type === 'text') && item.appendSlot">
+              <template v-slot:append v-if="item.appendSlot">
                 <slot :name="item.appendSlot" :field="item">
                 </slot>
               </template>
@@ -829,13 +826,13 @@ export default {
     },
     ruleFields() {
       return this.fields.map((field, index) => {
-        let { required, rules = [], component, label = '' } = field
+        let { required, rules = [], component, label = '', number } = field
         if (required) {
           let rule = {
             required: true,
             message: `请${operTypeZh(component)}${label}`,
           }
-          if (component === 'Input' || component === 'AutoComplete') {
+          if ((component === 'Input' || component === 'AutoComplete') && !number) {
             rule.trigger = operTypeTrigger(component)
           }
           rules.unshift(rule)
@@ -984,9 +981,7 @@ export default {
             component,
             type,
             falseValue = false,
-            multiple = false,
-            remote,
-            remoteMethod,
+            multiple = false
           }) => {
             let fieldVal = formValue[name]
             if (typeOf(fieldVal) === 'undefined') {

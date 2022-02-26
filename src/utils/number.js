@@ -23,6 +23,11 @@ export function trimExtraChar(value, _char, regExp) {
 }
 
 export function formatNumber(value, allowDot, allowMinus) {
+  const valueType = typeof value
+  if (valueType !== 'number' && valueType !== 'string') return value
+  if (valueType === 'number') {
+    value = value.toString()
+  }
   if (allowDot === void 0) {
     allowDot = true
   }
@@ -44,7 +49,8 @@ export function formatNumber(value, allowDot, allowMinus) {
   }
 
   var regExp = allowDot ? /[^-0-9.]/g : /[^-0-9]/g
-  return value.replace(regExp, '')
+  const result = value.replace(regExp, '')
+  return valueType === 'string' ? result : Number(result)
 } // add num and avoid float number
 
 export function addNumber(num1, num2) {
@@ -53,5 +59,6 @@ export function addNumber(num1, num2) {
 }
 
 export function trimLeftZero(num) {
+  if (typeof num !== 'string') return num
   return num.replace(/^[0]+/, '')
 }

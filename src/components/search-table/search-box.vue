@@ -20,8 +20,7 @@
           <v-html v-if="item.component === 'Html'" :item="item"></v-html>
           <!-- Input -->
           <v-input v-if="item.component === 'Input'" :ref="item.name"
-            v-model="search[item.name]" :item="item" @deal-event="dealEvent"
-            @deal-number="dealNumber">
+            v-model="search[item.name]" :item="item" @deal-event="dealEvent" @deal-number="dealNumber">
             <!-- 前置slot -->
             <template v-slot:prepend
               v-if="(!item.type || item.type === 'text') && item.prependSlot">
@@ -201,8 +200,6 @@ import { typeOf, deepCopy, checkIsDataCmp } from '../../utils/assist'
 import findVm from '../../mixins/find-vm'
 import cancelFocus from '../../mixins/cancel-focus'
 import Time from '../../utils/time'
-import timeout from '../../utils/timeout'
-import eventBus from '../../utils/event'
 import {
   labelPositionRange,
   DateValueType,
@@ -220,7 +217,6 @@ import VAutoComplete from '../field-components/v-auto-complete'
 import VHtml from '../field-components/v-html'
 import VCascader from '../field-components/v-cascader'
 import VButton from '../field-components/v-button'
-import collect from '../../utils/collect'
 
 const time = new Time()
 

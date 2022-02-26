@@ -13,21 +13,19 @@
     @on-click="() => { dealEvent(item.onClick, item) }"
     @on-change="(val) => { dealEvent(item.onChange, val, item) }"
     @on-focus="() => { dealEvent(item.onFocus, item) }"
-    @on-blur="item.number ? dealNumber(item) : () => { dealEvent(item.onBlur, item) }"
+    @on-blur="() => { dealBlur(item) }"
     @on-keyup="(val) => { dealEvent(item.onKeyup, val, item) }"
     @on-keydown="(val) => { dealEvent(item.onKeydown, val, item) }"
     @on-keypress="(val) => { dealEvent(item.onKeypress, val, item) }"
     @on-clear="() => { dealEvent(item.onClear, item) }"
     @on-search="(val) => { dealEvent(item.onSearch, val, item) }">
   <!-- 前置slot -->
-  <template v-slot:prepend
-    v-if="(!item.type || item.type === 'text') && item.prependSlot">
+  <template v-slot:prepend v-if="item.prependSlot">
     <slot name="prepend">
     </slot>
   </template>
   <!-- 后置slot -->
-  <template v-slot:append
-    v-if="(!item.type || item.type === 'text') && item.appendSlot">
+  <template v-slot:append v-if="item.appendSlot">
     <slot name="append">
     </slot>
   </template>
@@ -98,7 +96,9 @@ export default {
               value = trimLeftZero(formatNumber(v, true, false))
               break
           }
-          this.$refs['Input'].currentValue = value
+          if (this.$refs['Input']) {
+            this.$refs['Input'].currentValue = value
+          }
           this.currentValue = value
         }
         this.$emit('input', value)
@@ -107,6 +107,15 @@ export default {
   },
   created() {},
   mounted() {},
-  methods: {},
+  methods: {
+    dealBlur () {
+      let item = this.item
+      if (item.number) {
+        this.dealNumber(item)
+      } else {
+        this.dealEvent(item.onBlur, item)
+      }
+    }
+  },
 }
 </script>

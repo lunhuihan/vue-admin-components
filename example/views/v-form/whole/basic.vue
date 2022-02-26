@@ -3,6 +3,7 @@
     <Button type="primary" @click="changeLang">切换成英文</Button>
     <v-form ref="form" :model.async="form" :options="options" :fields="fields"
       :data-source="dataSource" @on-submit="submit">
+      <template v-slot:scoreSlot>分</template>
       <template v-slot:tipSlot>
         <Icon type="ios-search"></Icon>
       </template>
@@ -31,6 +32,9 @@
         <Button type="warning" style="margin-left: 5px;">提交之后</Button>
       </template>
     </v-form>
+    <Input v-model="value18" type="password" password placeholder="Enter something..." style="width: 200px">
+      <span slot="append">.com</span>
+    </Input>
   </div>
 </template>
 
@@ -50,6 +54,7 @@ export default {
       }
     }
     return {
+      value18: '',
       columns1: [
         {
           title: 'Name',
@@ -120,8 +125,11 @@ export default {
           name: 'test',
           component: 'Input',
           label: '数字',
-          type: 'number',
+          type: 'positiveNumber',
           required: true,
+          appendSlot: 'scoreSlot',
+          onChange: 'tets'
+          // number: true
         },
         {
           name: 'grade',
@@ -299,6 +307,9 @@ export default {
     changeLang() {
       this.lang = 'en'
     },
+    tets () {
+      console.log(1)
+    }
   },
 }
 </script>
