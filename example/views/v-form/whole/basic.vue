@@ -125,10 +125,13 @@ export default {
           name: 'test',
           component: 'Input',
           label: '数字',
-          type: 'positiveNumber',
+          // type: 'positiveInteger',
+          max: 40,
+          min: 10,
+          // min: 20,
           required: true,
           appendSlot: 'scoreSlot',
-          onChange: 'tets'
+          onChange: 'tets',
           // number: true
         },
         {
@@ -260,7 +263,8 @@ export default {
       this.show = true
     }, 5000)
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {
     changeInline(value) {
       this.$set(this.config, 'inline', value)
