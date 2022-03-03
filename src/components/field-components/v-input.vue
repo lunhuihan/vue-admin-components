@@ -100,7 +100,7 @@
 <script>
 import commonMixins from './common-mixins'
 import { typeOf } from '../../utils/assist'
-import { formatNumber, trimLeftZero, range } from '../../utils/number'
+import { formatNumber } from '../../utils/number'
 
 const needTransTypeRange = [
   'tel',
@@ -155,15 +155,19 @@ export default {
     dealBlur() {
       let currentValue = this.currentValue
       let valueType = typeof currentValue
-      let { type, min = Number(currentValue), max = Number(currentValue), number, onBlur } = this.item
+      let { type, min, max, number, onBlur } = this.item
 
       let formatValue = currentValue
       
       // 限制最大值 最小值输入
       if (currentValue !== '' && !Number.isNaN(Number(currentValue))) {
-        const value = range(Number(currentValue), min, max)
-        formatValue = valueType === 'string' ? value.toString() : value
-        console.log('formatValue:', currentValue)
+        if (typeof min === 'number') {
+          formatValue = Math.max(Number(currentValue), min)
+        }
+        if (typeof max === 'number') {
+          formatValue = Math.min(formatValue, max)
+        }
+        formatValue = valueType === 'string' ? Number(formatValue).toString() : formatValue
       }
       // 限制输入非数字
       if (formatValue && needTransTypeRange.includes(type) && formatValue !== '0') {
