@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Input v-model="inputValue" type="text"/>
     <search-table ref="search-table" :model.sync="model" :search-config="searchConfig"
       :table-config="tableConfig" :table-data="tableData"
       :page-config="pageConfig" @on-search="getData" @on-reset="onReset" @on-fold-toggle="foldToggle"
@@ -31,6 +32,7 @@ import tableData from './data'
 export default {
   data() {
     return {
+      inputValue: '',
       model: {
         name: ''
       },

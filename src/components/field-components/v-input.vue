@@ -158,46 +158,51 @@ export default {
       let { type, min, max, number, onBlur } = this.item
 
       let formatValue = currentValue
-      
-      // 限制最大值 最小值输入
-      if (currentValue !== '' && !Number.isNaN(Number(currentValue))) {
-        if (typeof min === 'number') {
-          formatValue = Math.max(Number(currentValue), min)
+      if (needTransTypeRange.includes(type)) {
+        // 限制最大值 最小值输入
+        if (currentValue !== '' && !Number.isNaN(Number(currentValue))) {
+          if (typeof min === 'number') {
+            formatValue = Math.max(Number(currentValue), min)
+          }
+          if (typeof max === 'number') {
+            formatValue = Math.min(formatValue, max)
+          }
+          formatValue =
+            valueType === 'string'
+              ? Number(formatValue).toString()
+              : formatValue
         }
-        if (typeof max === 'number') {
-          formatValue = Math.min(formatValue, max)
+        // 限制输入非数字
+        if (formatValue && formatValue !== '0') {
+          switch (this.type) {
+            case 'integer':
+              formatValue = formatNumber(formatValue, false, true)
+              break
+            case 'number':
+              formatValue = formatNumber(formatValue, true, true)
+              break
+            case 'positiveInteger':
+            case 'tel':
+              formatValue = formatNumber(formatValue, false, false)
+              break
+            case 'positiveNumber':
+              formatValue = formatNumber(formatValue, true, false)
+              break
+          }
         }
-        formatValue = valueType === 'string' ? Number(formatValue).toString() : formatValue
-      }
-      // 限制输入非数字
-      if (formatValue && needTransTypeRange.includes(type) && formatValue !== '0') {
-        switch (this.type) {
-          case 'integer':
-            formatValue = formatNumber(formatValue, false, true)
-            break
-          case 'number':
-            formatValue = formatNumber(formatValue, true, true)
-            break
-          case 'positiveInteger':
-          case 'tel':
-            formatValue = formatNumber(formatValue, false, false)
-            break
-          case 'positiveNumber':
-            formatValue = formatNumber(formatValue, true, false)
-            break
+        if (
+          valueType === 'string' &&
+          (formatValue.endsWith('-') || formatValue.endsWith('.'))
+        ) {
+          formatValue = ''
+        }
+        if (currentValue !== formatValue) {
+          if (this.$refs['Input']) {
+            this.$refs['Input'].currentValue = formatValue
+          }
+          this.currentValue = formatValue
         }
       }
-      if (valueType === 'string' && (formatValue.endsWith('-') || formatValue.endsWith('.'))) {
-        formatValue = ''
-      }
-      if (currentValue !== formatValue) {
-        if (this.$refs['Input']) {
-          this.$refs['Input'].currentValue = formatValue
-        }
-        this.currentValue = formatValue
-      }
-
-
       if (number) {
         this.dealNumber(this.item)
       } else {

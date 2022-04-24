@@ -15,14 +15,11 @@ export default {
       component: 'Input',
       label: '姓名',
       placeholder: '请输入姓名1',
-      type: 'positiveNumber',
-      maxlength: 10,
-      max: 40,
-      min: 20,
       rules: [{
         required: true,
         message: '请输入姓名'
-      }]
+      }],
+      type: 'number'
     },
     {
       name: 'favor',
