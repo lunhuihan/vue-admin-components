@@ -115,6 +115,7 @@ export default {
         columns: 2,
         // inline: true
         // size: 'large',
+        btnPositionReverse: true,
         resetBtn: {
           done: false,
         },

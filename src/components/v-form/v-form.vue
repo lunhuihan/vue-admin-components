@@ -529,29 +529,44 @@
       :class="[`align-${currentOptions.actionAlign}`, { 'inline': currentOptions.inline}]"
       :style="{paddingLeft: `${actionPL}px`}"
       v-if="(submitBtnOpts || resetBtnOpts) && !currentOptions.readonly">
+      <template v-if="currentOptions.btnPositionReverse">
+        <slot name="reset-before"></slot>
+        <Button v-if="resetBtnOpts" :class="resetBtnOpts.className"
+          :style="_calWidth(resetBtnOpts.long ? '100%' : resetBtnOpts.width, 'btn')"
+          :type="resetBtnOpts.type"
+          :size="resetBtnOpts.size || currentOptions.size"
+          :html-type="resetBtnOpts.htmlType" :ghost="resetBtnOpts.ghost"
+          :loading="resetBtnOpts.loading || resetBtnLoading"
+          :icon="resetBtnOpts.icon" :disabled="resetBtnOpts.disabled"
+          :long="resetBtnOpts.long" :shape="resetBtnOpts.shape"
+          @click="onReset">{{resetBtnOpts.text}}</Button>
+        <slot name="reset-after"></slot>
+      </template>
       <slot name="submit-before"></slot>
-      <Button v-if="submitBtnOpts" :class="submitBtnOpts.className"
-        :style="_calWidth(submitBtnOpts.long ? '100%' : submitBtnOpts.width, 'btn')"
-        :size="submitBtnOpts.size || currentOptions.size"
-        :type="submitBtnOpts.type" :ghost="submitBtnOpts.ghost"
-        :html-type="submitBtnOpts.htmlType"
-        :loading="submitBtnOpts.loading || submitBtnLoading"
-        :icon="submitBtnOpts.icon"
-        :disabled="submitBtnOpts.disabled || submitDisabled"
-        :long="submitBtnOpts.long" :shape="submitBtnOpts.shape"
-        @click="onSubmit">{{submitBtnOpts.text}}</Button>
+        <Button v-if="submitBtnOpts" :class="submitBtnOpts.className"
+          :style="_calWidth(submitBtnOpts.long ? '100%' : submitBtnOpts.width, 'btn')"
+          :size="submitBtnOpts.size || currentOptions.size"
+          :type="submitBtnOpts.type" :ghost="submitBtnOpts.ghost"
+          :html-type="submitBtnOpts.htmlType"
+          :loading="submitBtnOpts.loading || submitBtnLoading"
+          :icon="submitBtnOpts.icon"
+          :disabled="submitBtnOpts.disabled || submitDisabled"
+          :long="submitBtnOpts.long" :shape="submitBtnOpts.shape"
+          @click="onSubmit">{{submitBtnOpts.text}}</Button>
       <slot name="submit-after"></slot>
-      <slot name="reset-before"></slot>
-      <Button v-if="resetBtnOpts" :class="resetBtnOpts.className"
-        :style="_calWidth(resetBtnOpts.long ? '100%' : resetBtnOpts.width, 'btn')"
-        :type="resetBtnOpts.type"
-        :size="resetBtnOpts.size || currentOptions.size"
-        :html-type="resetBtnOpts.htmlType" :ghost="resetBtnOpts.ghost"
-        :loading="resetBtnOpts.loading || resetBtnLoading"
-        :icon="resetBtnOpts.icon" :disabled="resetBtnOpts.disabled"
-        :long="resetBtnOpts.long" :shape="resetBtnOpts.shape"
-        @click="onReset">{{resetBtnOpts.text}}</Button>
-      <slot name="reset-after"></slot>
+      <template v-if="!currentOptions.btnPositionReverse">
+        <slot name="reset-before"></slot>
+        <Button v-if="resetBtnOpts" :class="resetBtnOpts.className"
+          :style="_calWidth(resetBtnOpts.long ? '100%' : resetBtnOpts.width, 'btn')"
+          :type="resetBtnOpts.type"
+          :size="resetBtnOpts.size || currentOptions.size"
+          :html-type="resetBtnOpts.htmlType" :ghost="resetBtnOpts.ghost"
+          :loading="resetBtnOpts.loading || resetBtnLoading"
+          :icon="resetBtnOpts.icon" :disabled="resetBtnOpts.disabled"
+          :long="resetBtnOpts.long" :shape="resetBtnOpts.shape"
+          @click="onReset">{{resetBtnOpts.text}}</Button>
+        <slot name="reset-after"></slot>
+      </template>
     </div>
   </Form>
 </template>

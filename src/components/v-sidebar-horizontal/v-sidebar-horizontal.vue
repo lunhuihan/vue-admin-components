@@ -117,7 +117,7 @@ export default {
     calWidth () {
       let { fold, sidebarSubFold, width, subWidth } = this
       if (this.hasSidebarSub && !sidebarSubFold) {
-        return width + subWidth
+        return parseFloat(width) + parseFloat(subWidth)
       } else {
         return width
       }
@@ -183,7 +183,7 @@ export default {
           transform: rotate(0deg) !important;
         }
         .v-content{
-          left: ${parseFloat(width + subWidth)}px !important;
+          left: ${parseFloat(width) + parseFloat(subWidth)}px !important;
         }
         .v-sidebar-horizontal.fold + .v-content{
           left: ${parseFloat(subWidth)}px !important;
