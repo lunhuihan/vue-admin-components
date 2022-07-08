@@ -1,7 +1,7 @@
 <template>
   <div class="layout-page">
     <!-- nav -->
-    <v-nav :logo="logo" system-name="综合管理台" user-name="轮回韩1" :height="60" :fold="fold" @on-fold="toggle">
+    <v-nav system-name="综合管理台" user-name="轮回韩1" :height="60" :fold="fold" @on-fold="toggle">
       <div class="center" slot="center">这是slot的内容</div>
       <!-- <div class="user" slot="user">这是替换用户部分的内容</div> -->
     </v-nav>
@@ -22,7 +22,7 @@ import menu from '../utils/menu.js'
 export default {
   data () {
     return {
-      logo: require('../assets/logo.png'),
+      // logo: require('../assets/logo.png'),
       menuList: [],
       fold: false
     }

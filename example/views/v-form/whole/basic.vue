@@ -1,8 +1,14 @@
 <template>
   <div class="page v-form-page">
     <Button type="primary" @click="changeLang">切换成英文</Button>
-    <v-form ref="form" :model.async="form" :options="options" :fields="fields"
-      :data-source="dataSource" @on-submit="submit">
+    <v-form
+      ref="form"
+      :model.async="form"
+      :options="options"
+      :fields="fields"
+      :data-source="dataSource"
+      @on-submit="submit"
+    >
       <template v-slot:scoreSlot>分</template>
       <template v-slot:tipSlot>
         <Icon type="ios-search"></Icon>
@@ -11,28 +17,38 @@
         <Icon type="md-help-circle" size="20" />
       </template>
       <template v-slot:selectSlot>
-        <Button type="primary" style="margin-left: 5px;">校验</Button>
+        <Button type="primary" style="margin-left: 5px">校验</Button>
       </template>
-      <template v-slot:favorRadio="{field, value, data}">
-        <p class="item">这是签约文件{{value}}<a class="link">查看详情{{data.id}}</a></p>
+      <template v-slot:favorRadio="{ field, value, data }">
+        <p class="item">
+          这是签约文件{{ value }}<a class="link">查看详情{{ data.id }}</a>
+        </p>
       </template>
-      <template v-slot:checkboxSlot="{field, value, data}">
+      <template v-slot:checkboxSlot="{ field, value, data }">
         <span>轮回韩</span>
       </template>
-      <template v-slot:poptip="{index}">
+      <template v-slot:poptip="{ index }">
         <Table stripe :columns="columns1" :data="data1"></Table>
       </template>
       <template v-slot:action-before>
-        <Button type="error" style="margin-left: 5px;">提交</Button>
+        <Button type="error" style="margin-left: 5px" @click="customSubmit"
+          >自定义提交</Button
+        >
       </template>
       <template v-slot:submit-before>
-        <Button type="warning" style="margin-left: 5px;">提交之前</Button>
+        <Button type="warning" style="margin-left: 5px">提交之前</Button>
       </template>
       <template v-slot:submit-after>
-        <Button type="warning" style="margin-left: 5px;">提交之后</Button>
+        <Button type="warning" style="margin-left: 5px">提交之后</Button>
       </template>
     </v-form>
-    <Input v-model="value18" type="password" password placeholder="Enter something..." style="width: 200px">
+    <Input
+      v-model="value18"
+      type="password"
+      password
+      placeholder="Enter something..."
+      style="width: 200px"
+    >
       <span slot="append">.com</span>
     </Input>
   </div>
@@ -58,7 +74,7 @@ export default {
       columns1: [
         {
           title: 'Name',
-          key: 'name',
+          key: 'name'
         },
         {
           title: 'Age',
@@ -136,6 +152,12 @@ export default {
           required: true,
           appendSlot: 'scoreSlot',
           onChange: 'tets',
+          rules: [
+            {
+              required: true,
+              message: '请输入数字',
+            },
+          ],
           // number: true
         },
         {
@@ -147,7 +169,7 @@ export default {
           poptip: {
             placement: 'right',
             slot: 'poptip',
-            width: 500
+            width: 500,
           },
           // labelPosition: 'right'
         },
@@ -267,8 +289,7 @@ export default {
       this.show = true
     }, 5000)
   },
-  mounted() {
-  },
+  mounted() {},
   methods: {
     changeInline(value) {
       this.$set(this.config, 'inline', value)
@@ -278,6 +299,10 @@ export default {
     },
     onChange(key, value) {
       this.$set(this.config, key, value)
+    },
+    async customSubmit() {
+      let res = await this.$refs['form'].validate()
+      console.log(res)
     },
     queryCompany(query, field) {
       if (query !== '') {
@@ -315,9 +340,9 @@ export default {
     changeLang() {
       this.lang = 'en'
     },
-    tets () {
+    tets() {
       console.log(1)
-    }
+    },
   },
 }
 </script>
