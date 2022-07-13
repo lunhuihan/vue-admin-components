@@ -36,7 +36,7 @@
         >
       </template>
       <template v-slot:submit-before>
-        <Button type="warning" style="margin-left: 5px">提交之前</Button>
+        <Button type="warning" style="margin-left: 5px" @click="$refs['test-drawer'].toggle()">提交之前</Button>
       </template>
       <template v-slot:submit-after>
         <Button type="warning" style="margin-left: 5px">提交之后</Button>
@@ -51,14 +51,16 @@
     >
       <span slot="append">.com</span>
     </Input>
+    <test-drawer ref="test-drawer"></test-drawer>
   </div>
 </template>
 
 <script>
 import { deepCopy } from '../../../utils/assist'
+import testDrawer from './test-drawer.vue'
 export default {
   name: '',
-  components: {},
+  components: { testDrawer },
   data() {
     const qualityPwd = (rule, value, callback) => {
       if (!value) {
@@ -74,7 +76,7 @@ export default {
       columns1: [
         {
           title: 'Name',
-          key: 'name'
+          key: 'name',
         },
         {
           title: 'Age',
@@ -138,6 +140,14 @@ export default {
       },
       show: false,
       fields: [
+        {
+          name: 'item',
+          component: 'Cascader',
+          loadData: 'loadItemData',
+          trigger: 'hover',
+          changeOnSelect: true,
+          placeholder: '请选择商品类目',
+        },
         {
           name: 'test',
           component: 'Input',
@@ -261,6 +271,20 @@ export default {
             value: 2,
           },
         ],
+        item: [
+          {
+            value: 'beijing',
+            label: '北京',
+            children: [],
+            loading: false,
+          },
+          {
+            value: 'hangzhou',
+            label: '杭州',
+            children: [],
+            loading: false,
+          },
+        ],
       },
     }
   },
@@ -342,6 +366,40 @@ export default {
     },
     tets() {
       console.log(1)
+    },
+    async loadItemData(item, callback, field) {
+      item.loading = true
+      setTimeout(() => {
+        if (item.value === 'beijing') {
+          item.children = [
+            {
+              value: 'talkingdata',
+              label: 'TalkingData',
+            },
+            {
+              value: 'baidu',
+              label: '百度',
+            },
+            {
+              value: 'sina',
+              label: '新浪',
+            },
+          ]
+        } else if (item.value === 'hangzhou') {
+          item.children = [
+            {
+              value: 'ali',
+              label: '阿里巴巴',
+            },
+            {
+              value: '163',
+              label: '网易',
+            },
+          ]
+        }
+        item.loading = false
+        callback()
+      }, 1000)
     },
   },
 }

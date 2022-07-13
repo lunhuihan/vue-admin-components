@@ -29,7 +29,8 @@ export const componentNames = [
   'iCol',
   'Table',
   'iTable',
-  'Demo'
+  'Demo',
+  'Drawer'
 ]
 
 export const defaultOpts = {
