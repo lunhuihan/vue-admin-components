@@ -1,8 +1,15 @@
 <template>
   <div class="">
-    <search-table :table-config="tableConfig" :table-data="tableData" :page-config="pageConfig"
-      :loading="loading" @on-search="getData" :total="300">
+    <search-table
+      :table-config="tableConfig"
+      :table-data="tableData"
+      :page-config="pageConfig"
+      :loading="loading"
+      @on-search="getData"
+      :total="300"
+    >
     </search-table>
+    <Button @click="switchCol">切换类型</Button>
   </div>
 </template>
 
@@ -13,26 +20,26 @@ import pageConfig from './page-config'
 import data from './data'
 import filter from '../../../../utils/filter'
 export default {
-  data () {
+  data() {
     return {
       tableConfig,
       searchConfig,
       pageConfig,
       selection: [],
       tableData: [],
-      loading: false
+      loading: false,
     }
   },
   computed: {
-    selectNum () {
+    selectNum() {
       return this.selection.length
-    }
+    },
   },
-  created () {
+  created() {
     this.getData()
   },
   methods: {
-    getData (page, pageSize, done = () => { }) {
+    getData(page, pageSize, done = () => {}) {
       console.log(page)
       console.log(pageSize)
       console.log(done)
@@ -42,7 +49,10 @@ export default {
         this.loading = false
         done()
       }, 1000)
-    }
-  }
+    },
+    switchCol() {
+      tableConfig.columns[1].hidden = !tableConfig.columns[1].hidden
+    },
+  },
 }
 </script>

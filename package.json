@@ -1,7 +1,7 @@
 {
   "name": "vue-admin-components",
   "description": "some common admin components for vue2.0",
-  "version": "0.1.14",
+  "version": "0.1.20",
   "author": "hanjiahui",
   "license": "MIT",
   "private": false,
@@ -10,7 +10,7 @@
     "dist",
     "src"
   ],
-  "homepage": "http://www.bychjh.com/vue-admin-components",
+  "homepage": "https://sitwxp.cardpu.com/vue-admin-components",
   "scripts": {
     "dev": "webpack-dev-server --content-base example/ --open --inline --hot --config build/webpack.dev.config.js",
     "dist:style": "gulp --gulpfile build/build-style.js",
