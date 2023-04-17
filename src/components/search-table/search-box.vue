@@ -3,55 +3,99 @@
     <!-- prepend插槽 -->
     <slot name="search-prepend"></slot>
     <!-- 表单域 -->
-    <Form ref="form" :class="calFormClass" inline :model="search"
-      :rules="formRule" :label-width="Number(options.labelWidth)"
+    <Form
+      ref="form"
+      :class="calFormClass"
+      inline
+      :model="search"
+      :rules="formRule"
+      :label-width="Number(options.labelWidth)"
       :label-position="options.labelPosition ? options.labelPosition : 'right'"
       :label-colon="options.labelColon"
       :hide-required-mark="options.hideRequiredMark"
-      :show-message="options.showMessage" :style="formStyle">
-      <FormItem v-for="(item, fieldIndex) in fields"
-        :key="`field-${fieldIndex}`" :prop="item.name" :label="item.label"
-        :label-width="item.labelWidth" :class="_calFormItemClass(item)"
-        :required="item.required" :error="item.error"
-        :style="{width: !isSlot(item.slot) ? 'auto' : calFormItemWidth(item)}">
+      :show-message="options.showMessage"
+      :style="formStyle"
+    >
+      <FormItem
+        v-for="(item, fieldIndex) in fields"
+        :key="`field-${fieldIndex}`"
+        :prop="item.name"
+        :label="item.label"
+        :label-width="item.labelWidth"
+        :class="_calFormItemClass(item)"
+        :required="item.required"
+        :error="item.error"
+        :style="{ width: !isSlot(item.slot) ? 'auto' : calFormItemWidth(item) }"
+      >
         <!-- 系统内置组件 -->
         <template v-if="!isSlot(item.slot)">
           <!-- Html -->
           <v-html v-if="item.component === 'Html'" :item="item"></v-html>
           <!-- Input -->
-          <v-input v-if="item.component === 'Input'" :ref="item.name"
-            v-model="search[item.name]" :item="item" @deal-event="dealEvent" @deal-number="dealNumber">
+          <v-input
+            v-if="item.component === 'Input'"
+            :ref="item.name"
+            v-model="search[item.name]"
+            :item="item"
+            @deal-event="dealEvent"
+            @deal-number="dealNumber"
+          >
             <!-- 前置slot -->
-            <template v-slot:prepend
-              v-if="(!item.type || item.type === 'text') && item.prependSlot">
-              <slot :name="item.prependSlot" :field="item">
-              </slot>
+            <template
+              v-slot:prepend
+              v-if="(!item.type || item.type === 'text') && item.prependSlot"
+            >
+              <slot :name="item.prependSlot" :field="item"> </slot>
             </template>
             <!-- 后置slot -->
-            <template v-slot:append
-              v-if="(!item.type || item.type === 'text') && item.appendSlot">
-              <slot :name="item.appendSlot" :field="item">
-              </slot>
+            <template
+              v-slot:append
+              v-if="(!item.type || item.type === 'text') && item.appendSlot"
+            >
+              <slot :name="item.appendSlot" :field="item"> </slot>
             </template>
           </v-input>
 
           <!-- InputNumber -->
-          <v-input-number :ref="item.name"
-            v-if="item.component === 'InputNumber'" v-model="search[item.name]"
-            :item="item" @deal-event="dealEvent">
+          <v-input-number
+            :ref="item.name"
+            v-if="item.component === 'InputNumber'"
+            v-model="search[item.name]"
+            :item="item"
+            @deal-event="dealEvent"
+          >
           </v-input-number>
 
           <!-- Select -->
-          <v-select :ref="item.name" v-if="item.component === 'Select'"
-            v-model="search[item.name]" :item="item" transfer @deal-event="dealEvent">
-            <template v-slot:options
-              v-if="typeOf(dataSource[item.name]) === 'array' && dataSource[item.name].length">
-              <Option v-for="(optionItem, optionIndex) in dataSource[item.name]"
-                :value="optionItem.value" :label="optionItem.label"
-                :key="optionIndex" :disabled="optionItem.disabled">
+          <v-select
+            :ref="item.name"
+            v-if="item.component === 'Select'"
+            v-model="search[item.name]"
+            :item="item"
+            transfer
+            @deal-event="dealEvent"
+          >
+            <template
+              v-slot:options
+              v-if="
+                typeOf(dataSource[item.name]) === 'array' &&
+                dataSource[item.name].length
+              "
+            >
+              <Option
+                v-for="(optionItem, optionIndex) in dataSource[item.name]"
+                :value="optionItem.value"
+                :label="optionItem.label"
+                :key="optionIndex"
+                :disabled="optionItem.disabled"
+              >
                 <template v-slot:default v-if="item.optionSlot">
-                  <slot :name="item.optionSlot" :field="item"
-                    :label="optionItem.label" :value="optionItem.value">
+                  <slot
+                    :name="item.optionSlot"
+                    :field="item"
+                    :label="optionItem.label"
+                    :value="optionItem.value"
+                  >
                   </slot>
                 </template>
               </Option>
@@ -59,71 +103,115 @@
           </v-select>
 
           <!-- DatePicker -->
-          <v-date-picker :ref="item.name" v-if="item.component === 'DatePicker'"
-            v-model="search[item.name]" :item="item" transfer @deal-event="dealEvent">
+          <v-date-picker
+            :ref="item.name"
+            v-if="item.component === 'DatePicker'"
+            v-model="search[item.name]"
+            :item="item"
+            transfer
+            @deal-event="dealEvent"
+          >
           </v-date-picker>
 
           <!-- RadioGroup -->
-          <v-radio-group :ref="item.name" v-if="item.component === 'RadioGroup'"
-            v-model="search[item.name]" :item="item"
-            :data-source="dataSource[item.name]" @deal-event="dealEvent">
+          <v-radio-group
+            :ref="item.name"
+            v-if="item.component === 'RadioGroup'"
+            v-model="search[item.name]"
+            :item="item"
+            :data-source="dataSource[item.name]"
+            @deal-event="dealEvent"
+          >
             <template v-slot:default="slotProps" v-if="item.radioSlot">
-              <slot :name="item.radioSlot" :field="item"
-                :label="slotProps.label" :value="slotProps.value">
+              <slot
+                :name="item.radioSlot"
+                :field="item"
+                :label="slotProps.label"
+                :value="slotProps.value"
+              >
               </slot>
             </template>
           </v-radio-group>
 
           <!-- Checkbox -->
-          <v-checkbox :ref="item.name" v-if="item.component === 'Checkbox'"
-            v-model="search[item.name]" :item="item" @deal-event="dealEvent">
+          <v-checkbox
+            :ref="item.name"
+            v-if="item.component === 'Checkbox'"
+            v-model="search[item.name]"
+            :item="item"
+            @deal-event="dealEvent"
+          >
           </v-checkbox>
 
           <!-- CheckboxGroup -->
-          <v-checkbox-group :ref="item.name"
+          <v-checkbox-group
+            :ref="item.name"
             v-if="item.component === 'CheckboxGroup'"
-            v-model="search[item.name]" :item="item"
-            :data-source="dataSource[item.name]" @deal-event="dealEvent">
+            v-model="search[item.name]"
+            :item="item"
+            :data-source="dataSource[item.name]"
+            @deal-event="dealEvent"
+          >
           </v-checkbox-group>
 
           <!-- Switch -->
-          <v-switch :ref="item.name" v-if="item.component === 'Switch'"
-            v-model="search[item.name]" :item="item" @deal-event="dealEvent">
+          <v-switch
+            :ref="item.name"
+            v-if="item.component === 'Switch'"
+            v-model="search[item.name]"
+            :item="item"
+            @deal-event="dealEvent"
+          >
           </v-switch>
 
           <!-- AutoComplete 数据源使用item.data-->
-          <v-auto-complete :ref="item.name"
-            v-if="item.component === 'AutoComplete'" v-model="search[item.name]"
-            :item="item" :data-source="item.data" transfer @deal-event="dealEvent">
+          <v-auto-complete
+            :ref="item.name"
+            v-if="item.component === 'AutoComplete'"
+            v-model="search[item.name]"
+            :item="item"
+            :data-source="item.data"
+            transfer
+            @deal-event="dealEvent"
+          >
             <template v-slot:default v-if="item.dropdownSlot">
-              <slot :name="item.dropdownSlot" :field="item">
-              </slot>
+              <slot :name="item.dropdownSlot" :field="item"> </slot>
             </template>
             <template v-slot:default v-else-if="!item.filterMethod">
-              <Option v-for="(item, index) in item.data" :value="item"
-                :key="`autocomplete-${index}`">{{ item }}</Option>
+              <Option
+                v-for="(item, index) in item.data"
+                :value="item"
+                :key="`autocomplete-${index}`"
+                >{{ item }}</Option
+              >
             </template>
           </v-auto-complete>
 
           <!-- Cascader 数据源使用item.data-->
-          <v-cascader :ref="item.name" v-if="item.component === 'Cascader'"
-            v-model="search[item.name]" :item="item" transfer :data-source="item.data"
-            @deal-event="dealEvent">
+          <v-cascader
+            :ref="item.name"
+            v-if="item.component === 'Cascader'"
+            v-model="search[item.name]"
+            :item="item"
+            transfer
+            :data-source="item.data"
+            @deal-event="dealEvent"
+          >
             <template v-slot:default v-if="item.selectSlot">
-              <slot :name="item.selectSlot" :field="item">
-              </slot>
+              <slot :name="item.selectSlot" :field="item"> </slot>
             </template>
           </v-cascader>
 
           <!-- Button -->
-          <v-button v-if="item.component === 'Button'" :item="item"
-            @deal-event="dealEvent">
+          <v-button
+            v-if="item.component === 'Button'"
+            :item="item"
+            @deal-event="dealEvent"
+          >
             <template v-slot:default v-if="item.contentSlot">
-              <slot :name="item.contentSlot" :field="item">
-              </slot>
+              <slot :name="item.contentSlot" :field="item"> </slot>
             </template>
           </v-button>
-
         </template>
         <!-- 自定义组件 -->
         <template v-else>
@@ -135,13 +223,25 @@
       <!-- 1.操作按钮另起一行 -->
       <div class="action-line-feed-wrap" v-if="options.actionLineFeed">
         <slot name="action-prepend"></slot>
-        <Button v-if="options.searchBtn" type="primary"
-          :size="actionSize" :icon="options.hiddenActionIcon ? '' : 'md-search'"
-          :loading="searchBtnLoading" @click="onSearch">搜索</Button>
-        <Button v-if="options.resetBtn" type="primary" ghost
+        <Button
+          v-if="options.searchBtn"
+          type="primary"
+          :size="actionSize"
+          :icon="options.hiddenActionIcon ? '' : 'md-search'"
+          :loading="searchBtnLoading"
+          @click="onSearch"
+          >搜索</Button
+        >
+        <Button
+          v-if="options.resetBtn"
+          type="primary"
+          ghost
           :size="actionSize"
           :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
-          :loading="resetBtnLoading" @click="onReset">重置</Button>
+          :loading="resetBtnLoading"
+          @click="onReset"
+          >重置</Button
+        >
         <slot name="action-append"></slot>
       </div>
       <template v-else>
@@ -149,24 +249,47 @@
         <template v-if="typeOf(options.fold) === 'boolean'">
           <div class="action-wrap">
             <slot name="action-prepend"></slot>
-            <Button v-if="options.searchBtn" type="primary"
+            <Button
+              v-if="options.searchBtn"
+              type="primary"
               :size="actionSize"
               :icon="options.hiddenActionIcon ? '' : 'md-search'"
-              :loading="searchBtnLoading" @click="onSearch">搜索</Button>
-            <Button v-if="options.resetBtn" type="primary" ghost
+              :loading="searchBtnLoading"
+              @click="onSearch"
+              >搜索</Button
+            >
+            <Button
+              v-if="options.resetBtn"
+              type="primary"
+              ghost
               :size="actionSize"
               :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
-              :loading="resetBtnLoading" @click="onReset">重置</Button>
+              :loading="resetBtnLoading"
+              @click="onReset"
+              >重置</Button
+            >
             <slot name="action-append"></slot>
             <template
-              v-if="options.searchBtn || options.resetBtn || $scopedSlots['action-prepend'] || $scopedSlots['action-append']">
-              <span class="fold-bar" v-show="options.fold"
-                @click="toggleFold(false)">
+              v-if="
+                options.searchBtn ||
+                options.resetBtn ||
+                $scopedSlots['action-prepend'] ||
+                $scopedSlots['action-append']
+              "
+            >
+              <span
+                class="fold-bar"
+                v-show="options.fold"
+                @click="toggleFold(false)"
+              >
                 展开
                 <Icon type="ios-arrow-down" size="16" />
               </span>
-              <span class="fold-bar" v-show="!options.fold"
-                @click="toggleFold(true)">
+              <span
+                class="fold-bar"
+                v-show="!options.fold"
+                @click="toggleFold(true)"
+              >
                 收起
                 <Icon type="ios-arrow-up" size="16" />
               </span>
@@ -177,14 +300,25 @@
         <template v-if="typeOf(options.fold) !== 'boolean'">
           <slot name="action-prepend"></slot>
           <FormItem v-if="options.searchBtn" :label-width="0">
-            <Button type="primary" :size="actionSize"
+            <Button
+              type="primary"
+              :size="actionSize"
               :icon="options.hiddenActionIcon ? '' : 'md-search'"
-              :loading="searchBtnLoading" @click="onSearch">搜索</Button>
+              :loading="searchBtnLoading"
+              @click="onSearch"
+              >搜索</Button
+            >
           </FormItem>
           <FormItem v-if="options.resetBtn" :label-width="0">
-            <Button type="primary" ghost :size="actionSize"
+            <Button
+              type="primary"
+              ghost
+              :size="actionSize"
               :icon="options.hiddenActionIcon ? '' : 'md-refresh'"
-              :loading="resetBtnLoading" @click="onReset">重置</Button>
+              :loading="resetBtnLoading"
+              @click="onReset"
+              >重置</Button
+            >
           </FormItem>
           <slot name="action-append"></slot>
         </template>
@@ -220,7 +354,21 @@ import VButton from '../field-components/v-button'
 
 const time = new Time()
 
-const InputTypeRange = ['text', 'tel', 'integer', 'number', 'positiveInteger', 'positiveNumber', 'password', 'textarea', 'url', 'email', 'date', 'number', 'tel']
+const InputTypeRange = [
+  'text',
+  'tel',
+  'integer',
+  'number',
+  'positiveInteger',
+  'positiveNumber',
+  'password',
+  'textarea',
+  'url',
+  'email',
+  'date',
+  'number',
+  'tel',
+]
 
 const componentTypeRange = [
   'Input',
@@ -272,12 +420,16 @@ export default {
                 )}以外的值！`
               )
             }
-            if (component === 'Input' && type && !InputTypeRange.includes(type)) {
+            if (
+              component === 'Input' &&
+              type &&
+              !InputTypeRange.includes(type)
+            ) {
               throw new RangeError(
-                  `Input组件的type属性不支持${InputTypeRange.join(
-                    '、'
-                  )}以外的值！`
-                )
+                `Input组件的type属性不支持${InputTypeRange.join(
+                  '、'
+                )}以外的值！`
+              )
             }
             if ((!name || nameList.includes(name)) && component !== 'Button') {
               throw new Error('请为每一个表单项设置唯一的name属性！')

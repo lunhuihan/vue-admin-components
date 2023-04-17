@@ -1,10 +1,19 @@
 <template>
   <div>
-    <Input v-model="inputValue" type="text"/>
-    <search-table ref="search-table" :model.sync="model" :search-config="searchConfig"
-      :table-config="tableConfig" :table-data="tableData"
-      :page-config="pageConfig" @on-search="getData" @on-reset="onReset" @on-fold-toggle="foldToggle"
-      :total="100">
+    <Input v-model="inputValue" type="text" />
+    <search-table
+      ref="search-table"
+      :model.sync="model"
+      :search-config="searchConfig"
+      :table-config="tableConfig"
+      :table-data="tableData"
+      :page-config="pageConfig"
+      :to-page-one-after-search="false"
+      @on-search="getData"
+      @on-reset="onReset"
+      @on-fold-toggle="foldToggle"
+      :total="100"
+    >
       <Select v-model="select" slot="inputPrependSlot" style="width: 80px">
         <Option value="http">http://</Option>
         <Option value="https">https://</Option>
@@ -13,11 +22,10 @@
         <Option value="http">http://</Option>
         <Option value="https">https://</Option>
       </Select>
-      <template v-slot:custom="{search}">
+      <template v-slot:custom="{ search }">
         <p class="custom">自定义组件</p>
       </template>
-      <template v-slot:action-append="{search}">
-      </template>
+      <template v-slot:action-append="{ search }"> </template>
     </search-table>
     <Button type="primary" @click="reset">手动重置</Button>
   </div>
@@ -34,7 +42,7 @@ export default {
     return {
       inputValue: '',
       model: {
-        name: ''
+        name: '',
       },
       searchConfig,
       tableConfig,
@@ -43,10 +51,8 @@ export default {
       select: 'http',
     }
   },
-  created() {
-  },
-  mounted () {
-  },
+  created() {},
+  mounted() {},
   methods: {
     getData(page, pageSize, done, eventType) {
       console.log('page:', page)
@@ -66,13 +72,12 @@ export default {
       console.log('key5:', key5)
     },
     reset() {
-      this.$refs['search-table'].clearCurrentRow()
+      this.$refs['search-table'].reset()
     },
     search() {
       this.$refs['search-table'].search()
     },
-    foldToggle (fold) {
-    }
+    foldToggle(fold) {},
   },
   components: {},
 }

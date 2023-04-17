@@ -1,7 +1,7 @@
 {
   "name": "vue-admin-components",
   "description": "some common admin components for vue2.0",
-  "version": "0.1.20",
+  "version": "0.1.22",
   "author": "hanjiahui",
   "license": "MIT",
   "private": false,

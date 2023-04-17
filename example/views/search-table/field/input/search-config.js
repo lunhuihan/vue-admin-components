@@ -15,11 +15,7 @@ export default {
       component: 'Input',
       label: '姓名',
       placeholder: '请输入姓名1',
-      rules: [{
-        required: true,
-        message: '请输入姓名'
-      }],
-      type: 'number'
+      type: 'number',
     },
     {
       name: 'favor',
@@ -33,17 +29,17 @@ export default {
       data: [
         {
           desc: '羽毛球',
-          code: 0
+          code: 0,
         },
         {
           desc: '篮球',
-          code: 1
+          code: 1,
         },
         {
           desc: '足球',
-          code: 2
-        }
-      ]
+          code: 2,
+        },
+      ],
     },
     {
       name: 'event',
@@ -53,22 +49,22 @@ export default {
       data: [
         {
           value: 'dy',
-          label: '电影'
+          label: '电影',
         },
         {
           value: 'dsj',
-          label: '电视剧'
+          label: '电视剧',
         },
         {
           value: 'xs',
-          label: '小说'
-        }
+          label: '小说',
+        },
       ],
-      onChange (checked, field, search) {
+      onChange(checked, field, search) {
         console.log('checked:', checked)
         console.log('field:', field)
         console.log('search:', search)
-      }
+      },
     },
     {
       name: 'InputB',

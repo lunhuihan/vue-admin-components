@@ -176,6 +176,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    toPageOneAfterSearch: {
+      type: Boolean,
+      default: true, // 查询/重置后是否自动跳转到表哥第一页
+    },
   },
   mixins: [findVm],
   data() {
@@ -278,16 +282,22 @@ export default {
     }
   },
   methods: {
-    dealSearch(done = () => {}, page = 1, eventType = 'search') {
+    dealSearch(done = () => {}, page, eventType = 'search') {
       // 搜索
       let pageBox = this.$refs['page-box']
-      pageBox && pageBox.changePage(page)
       if (pageBox) {
-        this.page = page
+        if (page) {
+          pageBox.changePage(page)
+          this.page = page
+        } else {
+          let current = this.toPageOneAfterSearch ? 1 : pageBox.current
+          pageBox.changePage(current)
+          this.page = current
+        }
         this.pageSize = pageBox.currentPageConfig.pageSize
         this.$emit(
           'on-search',
-          page,
+          this.page,
           pageBox.currentPageConfig.pageSize,
           done,
           eventType
@@ -296,12 +306,14 @@ export default {
         this.$emit('on-search', 1, 0, done, eventType)
       }
     },
-    dealReset(page = 1) {
+    dealReset() {
       let pageBox = this.$refs['page-box']
       if (pageBox) {
-        this.page = page
+        let current = this.toPageOneAfterSearch ? 1 : pageBox.current
+        pageBox.changePage(current)
+        this.page = current
         this.pageSize = pageBox.currentPageConfig.pageSize
-        this.$emit('on-reset', page, pageBox.currentPageConfig.pageSize)
+        this.$emit('on-reset', this.page, pageBox.currentPageConfig.pageSize)
       } else {
         this.$emit('on-reset', 1, 0)
       }
